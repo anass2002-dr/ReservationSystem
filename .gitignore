@@ -1,0 +1,23 @@
+# Node.js
+node_modules/
+dist/
+App/dist/
+App/.angular/
+
+# .NET Core
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vsidx
+
+# Environment
+.env
+
+# MacOS
+.DS_Store
