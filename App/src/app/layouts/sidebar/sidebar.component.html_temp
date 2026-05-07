@@ -1,0 +1,27 @@
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-currency-dollar"></i><span>Finance</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                             <li>
+                                <a routerLink="/Finance/list-account">
+                                    <i class="bi bi-circle"></i><span>Accounts</span>
+                                </a>
+                            </li>
+                             <li>
+                                <a routerLink="/Finance/list-journal-entry">
+                                    <i class="bi bi-circle"></i><span>Journal Entries</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/Finance/Invoice/Invoice-List"> <!-- New Invoice Link -->
+                                    <i class="bi bi-circle"></i><span>Invoices</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="/Finance/BankAccount/BankAccount-List"> <!-- New Bank Account Link -->
+                                    <i class="bi bi-circle"></i><span>Bank Accounts</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>

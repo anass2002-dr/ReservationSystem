@@ -1,0 +1,16 @@
+#footer {
+  background: #f1f1f1;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none; /* or block if you want it to show by default */
+}
+
+.back-to-top.show {
+  display: flex;
+}

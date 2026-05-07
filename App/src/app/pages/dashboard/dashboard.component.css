@@ -1,0 +1,33 @@
+.module-card {
+  transition: all 0.3s ease-in-out;
+  border: none;
+  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 30px rgba(1, 41, 112, 0.2);
+}
+
+.module-card .card-icon {
+  transition: all 0.3s ease-in-out;
+}
+
+.module-card:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.module-card .card-title {
+  padding: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #012970;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 0;
+}
+
+.module-card .card-title span {
+  color: #899bbd;
+  font-size: 14px;
+  font-weight: 400;
+}

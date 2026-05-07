@@ -31,6 +31,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ReservationSystem_backend.Services.CustomerService.ICustomerService, ReservationSystem_backend.Services.CustomerService.CustomerService>();
 builder.Services.AddScoped<ReservationSystem_backend.Repository.CustomerRepo.ICustomerRepo, ReservationSystem_backend.Repository.CustomerRepo.CustomerRepo>();
 
+builder.Services.AddScoped<ReservationSystem_backend.Services.CountryService.ICountryService, ReservationSystem_backend.Services.CountryService.CountryService>();
+builder.Services.AddScoped<ReservationSystem_backend.Repository.CountryRepo.ICountryRepo, ReservationSystem_backend.Repository.CountryRepo.CountryRepo>();
+
 builder.Services.AddScoped<ReservationSystem_backend.Services.PilotService.IPilotService, ReservationSystem_backend.Services.PilotService.PilotService>();
 builder.Services.AddScoped<ReservationSystem_backend.Repository.PilotRepo.IPilotRepo, ReservationSystem_backend.Repository.PilotRepo.PilotRepo>();
 

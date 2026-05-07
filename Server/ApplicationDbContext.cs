@@ -12,6 +12,7 @@ namespace ReservationSystem_backend
         public DbSet<Customer> Customers { get; set; } = null!;
         public DbSet<Pilot> Pilots { get; set; } = null!;
         public DbSet<TransportGroup> TransportGroups { get; set; } = null!;
+        public DbSet<Country> Countries { get; set; } = null!;
         public DbSet<FlightPackage> FlightPackages { get; set; } = null!;
         public DbSet<ExtraService> ExtraServices { get; set; } = null!;
         public DbSet<Reservation> Reservations { get; set; } = null!;
@@ -55,6 +56,12 @@ namespace ReservationSystem_backend
                 .WithMany(f => f.Reservations)
                 .HasForeignKey(r => r.FlightPackageId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.Country)
+                .WithMany(co => co.Customers)
+                .HasForeignKey(c => c.CountryId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // 2. Logistics: Reservation -> TransportGroup
             modelBuilder.Entity<Reservation>()

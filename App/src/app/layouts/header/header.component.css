@@ -1,0 +1,31 @@
+.header {
+  background-color: var(--color-global);
+}
+
+.logo {
+  width: 120px;
+}
+
+.header * {
+  color: var(--color-text-global);
+}
+
+.bi-search::before {
+  color: var(--color-text-global) !important;
+}
+
+.profile * {
+  color: var(--color-text-global);
+}
+
+.dropdown-header, .notification-item h4, .dropdown-footer a, select * {
+  color: #000 !important;
+}
+
+.select-dossiers {
+  color: #000 !important;
+}
+
+.dropdown-menu span {
+  cursor: pointer;
+}

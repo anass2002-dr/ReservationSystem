@@ -1,0 +1,195 @@
+<main id="main" class="main">
+   <div class="pagetitle">
+      <h1>{{ Depot }}</h1>
+      <nav>
+         <!-- <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+             <li class="breadcrumb-item">Pages</li>
+             <li class="breadcrumb-item active">Blank</li>
+          </ol> -->
+      </nav>
+   </div>
+   <section class="section">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="card">
+               <div class="card-body">
+                  <!-- <h5 class="card-title">Example Card</h5> -->
+                  <div class="row">
+                     <div class="col-md-12 mt-3 mb-2 d-flex justify-content-center">
+                        <div class="ui calendar date_range dateStart" id="dateStart">
+                           <div class="ui input left icon">
+                              <i class="bi bi-calendar icon"></i>
+                              <input type="text" placeholder="Start">
+                           </div>
+                        </div>
+                        <div class="ui calendar date_range dateEnd" id="dateEnd">
+                           <div class="ui input left icon">
+                              <i class="bi bi-calendar icon"></i>
+                              <input type="text" placeholder="End">
+                           </div>
+                        </div>
+                        <button type="button" class="fs-6 btn btn-outline-ittone btn-floating" title="Filtre"
+                           id="filterDateEntet">
+                           <i class="bi bi-funnel-fill"></i>
+                        </button>
+                     </div>
+                     <div class="col-md-6 mt-3">
+                        <button type="button" class="btn btn-primary btn-rounded" id="btnCreer">Creer</button>
+                        <button type="button" class="btn btn-outline-tertiary btn-rounded">Imprimmer</button>
+                     </div>
+                     <div class="col-md-6 mt-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-outline-tertiary btn-floating"
+                           style="font-size: 20px;font-weight: 900;text-align: center;">
+                           <i class='bi bi-file-earmark-pdf'></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-tertiary btn-floating"
+                           style="font-size: 20px;font-weight: 900;text-align: center;">
+                           <i class="bi bi-file-earmark-excel"></i>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="card">
+               <div class="card-body">
+                  <!-- <h5 class="card-title">Example Card</h5> -->
+                  <table class="table datatable">
+                     <thead>
+                        <tr>
+                           <th scope="col">#</th>
+                           <th scope="col">Customer</th>
+                           <th scope="col">Product</th>
+                           <th scope="col">Price</th>
+                           <th scope="col">Status</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <th scope="row"><a href="#">#2457</a></th>
+                           <td>Brandon Jacob</td>
+                           <td><a href="#" class="text-primary">At praesentium minu</a></td>
+                           <td>$64</td>
+                           <td>hfgf</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2147</a></th>
+                           <td>Bridie Kessler</td>
+                           <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
+                           <td>$47</td>
+                           <td>bvcknvbkc</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2049</a></th>
+                           <td>Ashleigh Langosh</td>
+                           <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                           <td>$147</td>
+                           <td>hfgf</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2644</a></th>
+                           <td>Angus Grady</td>
+                           <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                           <td>$67</td>
+                           <td>vbhcxv</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2644</a></th>
+                           <td>Raheem Lehner</td>
+                           <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                           <td>$165</td>
+                           <td>hfgf</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2049</a></th>
+                           <td>Ashleigh Langosh</td>
+                           <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
+                           <td>$147</td>
+                           <td>hfgf</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2644</a></th>
+                           <td>Angus Grady</td>
+                           <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
+                           <td>$67</td>
+                           <td>vbhcxv</td>
+                        </tr>
+                        <tr>
+                           <th scope="row"><a href="#">#2644</a></th>
+                           <td>Raheem Lehner</td>
+                           <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
+                           <td>$165</td>
+                           <td>hfgf</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <div id="popup" class="overlay light d-none">
+      <a class="cancel"></a>
+      <div class="popups" style="height: 50%;">
+         <a class="close">&times;</a>
+         <div class="containers" style="height: 50%;">
+            <header class="header-popup">Ajouter un Depot</header>
+            <form action="#" style="height: 300px;">
+               <div class="form first">
+                  <div class="details personal">
+                     <span class="title"> </span>
+
+                     <div class="fields">
+                        <div class="input-field">
+                           <label>Nom Depot :</label>
+                           <input type="text" placeholder="Entrer le nom" id="nom" >
+                        </div>
+                        <div class="input-field"></div>
+                        <div class="input-field">
+                           <label>Adresse Depot :</label>
+                           <input type="text" placeholder="Entrer l'Adresse" id="prenom">
+                        </div>
+                        <!-- <div class="input-field">
+                    <label>Date de Naissance :</label>
+                    <div class="ui calendar" style="margin-bottom: 5px;">
+                      <div class="ui input left icon type_date">
+                        <i class="bi bi-calendar icon"></i>
+                        <input type="text" id="dateNai" placeholder="Date de Naissance" autocomplete="off"
+                          style="width: 100%;" />
+                      </div>
+                    </div>
+                  </div> -->
+                        <div class="input-field">
+                           <label>Ville :</label>
+                           <select id="sexe">
+                              <option disabled selected>sélectionnez une Ville</option>
+                              <option>Martil</option>
+                              <option>Tetouan</option>
+                              <option>Tanger</option>
+                           </select>
+                        </div>
+                        <div class="input-field"></div>
+                        <div class="input-field">
+                           <label>Pays :</label>
+                           <select id="natio" style="width: 100%;z-index: 1111">
+                              <option disabled selected>sélectionnez une Pays</option>
+                              <option>Maroc</option>
+                              <option>France</option>
+                           </select>
+                        </div>
+                        <div>
+                           <label for="prcpDepot">Date de Naissance :</label>
+                           <input class="form-check-input" type="checkbox" id="prcpDepot">
+                        </div>
+                     </div>
+                     <button class="nextBtn button" type="submit">
+                        <span class="btnText">Ajouter</span>
+                        <i class="uil uil-navigator"></i>
+                     </button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</main>

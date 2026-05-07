@@ -1,1 +1,142 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '@ng-select/ng-select/themes/material.theme.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content wrapper - this will grow to push footer down */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Use viewport height */
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #f1f1f1;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.main {
+  padding-bottom: 80px; /* Make space for fixed footer */
+}
+
+/* Back to top button */
+.back-to-top {
+  position: fixed;
+  bottom: 80px; /* Adjust based on footer height */
+  right: 15px;
+  z-index: 99;
+  /* Add your existing button styles */
+}
+
+.bg-pdf {
+  background-color: rgb(142, 43, 43);
+  color: white;
+
+}
+
+.bg-excel {
+  background-color: rgb(19, 217, 75);
+  color: white;
+
+}
+
+.model_erp {
+  background-color: #ffffff;
+  width: 30%;
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  border-radius: 10px;
+  padding: 20px;
+  -webkit-box-shadow: 10px 10px 45px -14px rgba(0, 0, 0, 0.53);
+  -moz-box-shadow: 10px 10px 45px -14px rgba(0, 0, 0, 0.53);
+  box-shadow: 10px 10px 45px -14px rgba(0, 0, 0, 0.53);
+}
+
+.model_header {
+  text-align: center;
+
+}
+
+.model_footer {
+  text-align: center;
+}
+
+.model_footer button {
+  margin: 5px;
+}
+
+.model_footer #add_model {
+  background-color: #1abe5c;
+  color: rgb(255, 255, 255);
+
+}
+
+.model_footer #close_model {
+  background-color: rgb(221, 0, 0);
+  color: rgb(255, 255, 255);
+
+}
+
+.disabled-section {
+  pointer-events: none;
+  opacity: 0.6;
+  /* Optional: Makes the section look visually disabled */
+}
+.mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-icon-button {
+  margin: 0 4px;
+}
+.icon_close {
+  color: rgb(221, 0, 0);
+  cursor: pointer;
+}
+
+.menu_item {
+  border: 2px solid rgb(255 255 255);
+  border-radius: 20px;
+  background-color: rgb(184 232 253 / 80%);
+  width: 100%;
+  height: 110px;
+  text-align: center;
+  padding: 20px;
+  transition: 1s;
+}
+
+.menu_item:hover {
+  border: 3px solid rgb(255, 255, 255);
+  background-color: rgba(66, 198, 255, 0.785);
+  color: white;
+  transition: 100ms;
+}
+
+.selected-row {
+  background-color: #e0f7fa;
+  /* Light blue background for selected row */
+  transition: background-color 0.3s ease;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* Full viewport height */
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

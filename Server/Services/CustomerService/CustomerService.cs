@@ -32,7 +32,7 @@ namespace ReservationSystem_backend.Services.CustomerService
                 DateOfBirth = dto.DateOfBirth,
                 PhoneNumber = dto.PhoneNumber,
                 Email = dto.Email,
-                Country = dto.Country,
+                CountryId = dto.CountryId,
             };
             return _repo.AddCustomer(entity);
         }
@@ -46,7 +46,7 @@ namespace ReservationSystem_backend.Services.CustomerService
                 existingEntity.DateOfBirth = dto.DateOfBirth;
                 existingEntity.PhoneNumber = dto.PhoneNumber ?? existingEntity.PhoneNumber;
                 existingEntity.Email = dto.Email ?? existingEntity.Email;
-                existingEntity.Country = dto.Country ?? existingEntity.Country;
+                existingEntity.CountryId = dto.CountryId;
             }
             return _repo.UpdateCustomer(id, existingEntity);
         }

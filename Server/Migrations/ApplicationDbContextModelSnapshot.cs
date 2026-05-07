@@ -22,6 +22,34 @@ namespace ReservationSystem_backend.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("ReservationSystem_backend.Models.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("ReservationSystem_backend.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -30,9 +58,8 @@ namespace ReservationSystem_backend.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -58,6 +85,8 @@ namespace ReservationSystem_backend.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("Customers");
                 });
@@ -279,6 +308,16 @@ namespace ReservationSystem_backend.Migrations
                     b.ToTable("TransportGroups");
                 });
 
+            modelBuilder.Entity("ReservationSystem_backend.Models.Customer", b =>
+                {
+                    b.HasOne("ReservationSystem_backend.Models.Country", "Country")
+                        .WithMany("Customers")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("ReservationSystem_backend.Models.Payment", b =>
                 {
                     b.HasOne("ReservationSystem_backend.Models.Reservation", "Reservation")
@@ -341,6 +380,11 @@ namespace ReservationSystem_backend.Migrations
                     b.Navigation("ExtraService");
 
                     b.Navigation("Reservation");
+                });
+
+            modelBuilder.Entity("ReservationSystem_backend.Models.Country", b =>
+                {
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("ReservationSystem_backend.Models.Customer", b =>
