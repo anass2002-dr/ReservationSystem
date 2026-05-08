@@ -7,6 +7,7 @@ import { TransportGroupsComponent } from './pages/transport-groups/transport-gro
 import { FlightPackagesComponent } from './pages/flight-packages/flight-packages.component';
 import { ExtraServicesComponent } from './pages/extra-services/extra-services.component';
 import { ReservationsComponent } from './pages/reservations/reservations.component';
+import { ReservationFormComponent } from './pages/reservation-form/reservation-form.component';
 import { PaymentsComponent } from './pages/payments/payments.component';
 
 export const routes: Routes = [
@@ -18,6 +19,8 @@ export const routes: Routes = [
   { path: 'FlightPackages', component: FlightPackagesComponent },
   { path: 'ExtraServices', component: ExtraServicesComponent },
   { path: 'Reservations', component: ReservationsComponent },
+  { path: 'Reservations/Add', component: ReservationFormComponent },
+  { path: 'Reservations/Edit/:id', component: ReservationFormComponent },
   { path: 'Payments', component: PaymentsComponent }
 ];
 @NgModule({

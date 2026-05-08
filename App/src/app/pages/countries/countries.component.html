@@ -28,8 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (c of countries; track c.id) {
-              <tr>
+              <tr *ngFor="let c of countries">
                 <th scope="row">{{c.id}}</th>
                 <td>{{c.name}}</td>
                 <td>{{c.code}}</td>
@@ -38,12 +37,9 @@
                   <button class="btn btn-sm btn-danger" (click)="deleteCountry(c.id!)"><i class="bi bi-trash"></i></button>
                 </td>
               </tr>
-              }
-              @empty {
-              <tr>
+              <tr *ngIf="countries.length === 0">
                 <td colspan="4" class="text-center">No countries found.</td>
               </tr>
-              }
             </tbody>
           </table>
         </div>
@@ -51,3 +47,31 @@
     </div>
   </div>
 </section>
+
+<!-- Country Modal -->
+<div class="modal fade" id="countryModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Country' : 'Add Country' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <form (ngSubmit)="saveCountry()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="countryName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="countryName" name="name" [(ngModel)]="currentCountry.name" required>
+          </div>
+          <div class="mb-3">
+            <label for="countryCode" class="form-label">Code</label>
+            <input type="text" class="form-control" id="countryCode" name="code" [(ngModel)]="currentCountry.code" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -51,6 +51,7 @@ import { TransportGroupsComponent } from './pages/transport-groups/transport-gro
 import { FlightPackagesComponent } from './pages/flight-packages/flight-packages.component';
 import { ExtraServicesComponent } from './pages/extra-services/extra-services.component';
 import { ReservationsComponent } from './pages/reservations/reservations.component';
+import { ReservationFormComponent } from './pages/reservation-form/reservation-form.component';
 import { PaymentsComponent } from './pages/payments/payments.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -110,6 +111,7 @@ import { SafePipe } from './pipes/safe.pipe';
         FlightPackagesComponent,
         ExtraServicesComponent,
         ReservationsComponent,
+        ReservationFormComponent,
         PaymentsComponent,
         SafePipe
     ],

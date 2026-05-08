@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { Country } from '../../models/models';
 import { CountryService } from '../../services/country.service';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-countries',
-  standalone: false,
   templateUrl: './countries.component.html',
-  styleUrl: './countries.component.css'
+  styleUrl: './countries.component.css',
+  standalone: false
 })
 export class CountriesComponent implements OnInit {
   countries: Country[] = [];
+  currentCountry: Country = { id: 0, name: '', code: '' };
+  isEditing = false;
+  private modalInstance: any;
 
   constructor(private countryService: CountryService) { }
 
@@ -26,12 +29,53 @@ export class CountriesComponent implements OnInit {
     });
   }
 
+  openModal(): void {
+    const modalElement = document.getElementById('countryModal');
+    if (modalElement) {
+      if (!this.modalInstance) {
+        this.modalInstance = new bootstrap.Modal(modalElement);
+      }
+      this.modalInstance.show();
+    }
+  }
+
+  closeModal(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
+
   addCountry(): void {
-    // Navigate or open modal
+    this.isEditing = false;
+    this.resetForm();
+    this.openModal();
   }
 
   editCountry(c: Country): void {
-    // Navigate or open modal
+    this.isEditing = true;
+    this.currentCountry = { ...c };
+    this.openModal();
+  }
+
+  saveCountry(): void {
+    if (this.isEditing) {
+      this.countryService.updateCountry(this.currentCountry.id!, this.currentCountry).subscribe({
+        next: () => {
+          this.loadCountries();
+          this.closeModal();
+        },
+        error: (err) => console.error('Error updating country', err)
+      });
+    } else {
+      const newCountry = { name: this.currentCountry.name, code: this.currentCountry.code };
+      this.countryService.addCountry(newCountry).subscribe({
+        next: () => {
+          this.loadCountries();
+          this.closeModal();
+        },
+        error: (err) => console.error('Error creating country', err)
+      });
+    }
   }
 
   deleteCountry(id: number): void {
@@ -42,6 +86,8 @@ export class CountriesComponent implements OnInit {
       });
     }
   }
+
+  resetForm(): void {
+    this.currentCountry = { id: 0, name: '', code: '' };
+  }
 }
-
-

@@ -3,7 +3,7 @@
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">People</li>
+      <li class="breadcrumb-item">Entities</li>
       <li class="breadcrumb-item active">Pilots</li>
     </ol>
   </nav>
@@ -18,42 +18,70 @@
             <button class="btn btn-primary btn-sm float-end" (click)="addPilot()"><i class="bi bi-plus-lg"></i> Add Pilot</button>
           </h5>
           
-          <table class="table table-striped table-hover datatable">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Full Name</th>
-                <th scope="col">License Number</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (pilot of pilots; track pilot.id) {
-              <tr>
-                <th scope="row">{{pilot.id}}</th>
-                <td>{{pilot.fullName}}</td>
-                <td>{{pilot.licenseNumber}}</td>
-                <td>
-                  <span class="badge" [ngClass]="{'bg-success': pilot.status === 0, 'bg-warning': pilot.status === 1, 'bg-secondary': pilot.status === 2}">
-                    {{ pilot.status === 0 ? 'Active' : pilot.status === 1 ? 'In Flight' : 'Off Duty' }}
-                  </span>
-                </td>
-                <td>
-                  <button class="btn btn-sm btn-info me-2" (click)="editPilot(pilot)"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-sm btn-danger" (click)="deletePilot(pilot.id!)"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
-              }
-              @empty {
-              <tr>
-                <td colspan="5" class="text-center">No pilots found.</td>
-              </tr>
-              }
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover datatable">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">License Number</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of pilots">
+                  <th scope="row">{{p.id}}</th>
+                  <td>{{p.fullName}}</td>
+                  <td>{{p.licenseNumber}}</td>
+                  <td><span class="badge {{getStatusBadgeClass(p.status)}}">{{getStatusLabel(p.status)}}</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-info me-2" (click)="editPilot(p)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-danger" (click)="deletePilot(p.id!)"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+                <tr *ngIf="pilots.length === 0">
+                  <td colspan="5" class="text-center">No pilots found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Pilot Modal -->
+<div class="modal fade" id="pilotModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Pilot' : 'Add Pilot' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <form (ngSubmit)="savePilot()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="currentPilot.fullName" required>
+          </div>
+          <div class="mb-3">
+            <label for="licenseNumber" class="form-label">License Number</label>
+            <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" [(ngModel)]="currentPilot.licenseNumber" required>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status" [(ngModel)]="currentPilot.status" required>
+              <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

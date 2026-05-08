@@ -1,0 +1,99 @@
+<div class="pagetitle">
+  <h1>{{ isEditing ? 'Edit Reservation' : 'New Reservation' }}</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item"><a routerLink="/Reservations">Reservations</a></li>
+      <li class="breadcrumb-item active">{{ isEditing ? 'Edit' : 'New' }}</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Reservation Details</h5>
+
+          <form (ngSubmit)="save()" #reservationForm="ngForm">
+            
+            <div class="row mb-3">
+              <label for="customerId" class="col-sm-3 col-form-label">Customer <span class="text-danger">*</span></label>
+              <div class="col-sm-9">
+                <ng-select [items]="customers" bindLabel="fullName" bindValue="id" [(ngModel)]="reservation.customerId" name="customerId" required placeholder="Select a Customer">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="pilotId" class="col-sm-3 col-form-label">Pilot <span class="text-danger">*</span></label>
+              <div class="col-sm-9">
+                <ng-select [items]="pilots" bindLabel="fullName" bindValue="id" [(ngModel)]="reservation.pilotId" name="pilotId" required placeholder="Select a Pilot">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="flightPackageId" class="col-sm-3 col-form-label">Flight Package <span class="text-danger">*</span></label>
+              <div class="col-sm-9">
+                <ng-select [items]="flightPackages" bindLabel="title" bindValue="id" [(ngModel)]="reservation.flightPackageId" name="flightPackageId" required placeholder="Select a Package">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="flightDate" class="col-sm-3 col-form-label">Flight Date & Time <span class="text-danger">*</span></label>
+              <div class="col-sm-9">
+                <input type="datetime-local" class="form-control" id="flightDate" name="flightDate" [(ngModel)]="reservation.flightDate" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="transportGroupId" class="col-sm-3 col-form-label">Transport Group</label>
+              <div class="col-sm-9">
+                <ng-select [items]="transportGroups" bindLabel="driverName" bindValue="id" [(ngModel)]="reservation.transportGroupId" name="transportGroupId" placeholder="Select Transport (Optional)">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="extraServiceIds" class="col-sm-3 col-form-label">Extra Services</label>
+              <div class="col-sm-9">
+                <ng-select [items]="extraServices" bindLabel="name" bindValue="id" [multiple]="true" [(ngModel)]="reservation.extraServiceIds" name="extraServiceIds" placeholder="Select Extra Services">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="status" class="col-sm-3 col-form-label">Status <span class="text-danger">*</span></label>
+              <div class="col-sm-9">
+                <select class="form-select" id="status" name="status" [(ngModel)]="reservation.status" required>
+                  <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">Weight Limit Status</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch mt-2">
+                  <input class="form-check-input" type="checkbox" id="weightLimitStatus" name="weightLimitStatus" [(ngModel)]="reservation.weightLimitStatus">
+                  <label class="form-check-label" for="weightLimitStatus">Checked and Valid</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-sm-12 text-end">
+                <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!reservationForm.form.valid">Save Reservation</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
