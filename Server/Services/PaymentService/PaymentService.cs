@@ -32,6 +32,7 @@ namespace ReservationSystem_backend.Services.PaymentService
                 Currency = dto.Currency,
                 Method = dto.Method,
                 PaymentDate = dto.PaymentDate,
+                Notes = dto.Notes,
                 ReservationId = dto.ReservationId,
             };
             return _repo.AddPayment(entity);
@@ -46,6 +47,7 @@ namespace ReservationSystem_backend.Services.PaymentService
                 existingEntity.Currency = dto.Currency;
                 existingEntity.Method = dto.Method;
                 existingEntity.PaymentDate = dto.PaymentDate;
+                existingEntity.Notes = dto.Notes;
                 existingEntity.ReservationId = dto.ReservationId;
             }
             return _repo.UpdatePayment(id, existingEntity);

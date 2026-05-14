@@ -1,1 +1,8 @@
-/* app.component.css */
+.login-mode {
+  margin-left: 0 !important;
+  padding: 0 !important;
+}
+
+main.login-mode {
+  min-height: 100vh;
+}

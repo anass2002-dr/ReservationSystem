@@ -1,0 +1,234 @@
+.reservation-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.premium-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-header-premium {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  color: white;
+  padding: 30px;
+  border-bottom: none;
+}
+
+.card-header-premium h5 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f8f9fa;
+  display: flex;
+  align-items: center;
+}
+
+.section-title i {
+  margin-right: 10px;
+  color: #0d6efd;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-control, .form-select {
+  border: 2px solid #f1f3f5;
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+}
+
+.passenger-card {
+  background: #fdfdfd;
+  border: 2px solid #f1f3f5;
+  border-radius: 18px;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.passenger-card:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 10px 30px rgba(13, 110, 253, 0.05);
+}
+
+.passenger-header {
+  padding: 15px 25px;
+  border-bottom: 2px solid #f1f3f5;
+  background: #fafbfc;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.passenger-body {
+  padding: 25px;
+}
+
+.passenger-number {
+  background: #0d6efd;
+  color: white;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.add-passenger-btn {
+  border: 2px dashed #dee2e6;
+  background: transparent;
+  color: #6c757d;
+  padding: 20px;
+  border-radius: 18px;
+  font-weight: 600;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.add-passenger-btn:hover {
+  background: rgba(13, 110, 253, 0.05);
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.map-container {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid #f1f3f5;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.btn-primary-premium {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  border: none;
+  padding: 14px 35px;
+  border-radius: 14px;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-primary-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(13, 110, 253, 0.3);
+  color: white;
+}
+
+.btn-secondary-premium {
+  background: #f8f9fa;
+  border: none;
+  padding: 14px 35px;
+  border-radius: 14px;
+  font-weight: 700;
+  color: #495057;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-premium:hover {
+  background: #e9ecef;
+  color: #212529;
+}
+
+.input-group-premium .btn {
+  border-radius: 0 12px 12px 0;
+  padding: 12px 20px;
+}
+
+.logistics-badge {
+  background: #e7f1ff;
+  color: #0d6efd;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Custom NgSelect Styling */
+::ng-deep .ng-select .ng-select-container {
+  border: 2px solid #f1f3f5 !important;
+  border-radius: 12px !important;
+  min-height: 50px !important;
+  padding: 0 10px !important;
+}
+
+::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.premium-card, .passenger-card {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.passenger-card:nth-child(2) { animation-delay: 0.1s; }
+.passenger-card:nth-child(3) { animation-delay: 0.2s; }
+
+.height-60 {
+  height: 60px !important;
+}
+
+.line-height-1 {
+  line-height: 1 !important;
+}
+
+/* Ensure ng-select matches height-60 when used inside it */
+::ng-deep .custom-ng-select .ng-select-container {
+  min-height: 60px !important;
+  height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+::ng-deep .custom-ng-select .ng-value-container {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Align input-group spans */
+.input-group-text {
+  border: 2px solid #f1f3f5;
+  border-radius: 12px 0 0 12px;
+}
+
+.form-control.border-start-0 {
+  border-left: none;
+}
+

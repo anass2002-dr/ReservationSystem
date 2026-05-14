@@ -9,6 +9,7 @@ namespace ReservationSystem_backend.DTOs
         public string FullName { get; set; }
         public string LicenseNumber { get; set; }
         public PilotStatus Status { get; set; }
+        public int? PilotGroupId { get; set; }
 
         public PilotDtos() { }
 
@@ -18,6 +19,7 @@ namespace ReservationSystem_backend.DTOs
             FullName = model.FullName;
             LicenseNumber = model.LicenseNumber;
             Status = model.Status;
+            PilotGroupId = model.PilotGroupId;
         }
     }
 }

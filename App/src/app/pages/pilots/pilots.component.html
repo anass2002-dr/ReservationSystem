@@ -15,15 +15,23 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Pilots List
-            <button class="btn btn-primary btn-sm float-end" (click)="addPilot()"><i class="bi bi-plus-lg"></i> Add Pilot</button>
+            <div class="float-end">
+              <button class="btn btn-outline-primary btn-sm me-2" (click)="openGroupModal()">
+                <i class="bi bi-people"></i> Manage Groups
+              </button>
+              <button class="btn btn-primary btn-sm" (click)="addPilot()">
+                <i class="bi bi-plus-lg"></i> Add Pilot
+              </button>
+            </div>
           </h5>
-          
+
           <div class="table-responsive">
             <table class="table table-striped table-hover datatable">
               <thead>
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Full Name</th>
+                  <th scope="col">Group</th>
                   <th scope="col">License Number</th>
                   <th scope="col">Status</th>
                   <th scope="col">Actions</th>
@@ -33,6 +41,7 @@
                 <tr *ngFor="let p of pilots">
                   <th scope="row">{{p.id}}</th>
                   <td>{{p.fullName}}</td>
+                  <td>{{getGroupName(p.pilotGroupId)}}</td>
                   <td>{{p.licenseNumber}}</td>
                   <td><span class="badge {{getStatusBadgeClass(p.status)}}">{{getStatusLabel(p.status)}}</span></td>
                   <td>
@@ -41,7 +50,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="pilots.length === 0">
-                  <td colspan="5" class="text-center">No pilots found.</td>
+                  <td colspan="6" class="text-center">No pilots found.</td>
                 </tr>
               </tbody>
             </table>
@@ -67,6 +76,13 @@
             <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="currentPilot.fullName" required>
           </div>
           <div class="mb-3">
+            <label for="pilotGroupId" class="form-label">Pilot Group</label>
+            <select class="form-select" id="pilotGroupId" name="pilotGroupId" [(ngModel)]="currentPilot.pilotGroupId">
+              <option [ngValue]="undefined">No Group</option>
+              <option *ngFor="let group of pilotGroups" [ngValue]="group.id">{{ group.name }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
             <label for="licenseNumber" class="form-label">License Number</label>
             <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" [(ngModel)]="currentPilot.licenseNumber" required>
           </div>
@@ -82,6 +98,55 @@
           <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Group Management Modal -->
+<div class="modal fade show" [class.d-block]="showGroupModal" *ngIf="showGroupModal" style="background: rgba(0,0,0,0.5)">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pilot Groups Management</h5>
+        <button type="button" class="btn-close" (click)="closeGroupModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col">
+            <h6>{{ isEditingGroup ? 'Edit Group' : 'Create New Group' }}</h6>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Group Name" [(ngModel)]="currentGroup.name">
+              <button class="btn btn-success" (click)="saveGroup()">
+                {{ isEditingGroup ? 'Update' : 'Create' }}
+              </button>
+              <button class="btn btn-secondary" *ngIf="isEditingGroup" (click)="openGroupModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <h6>Existing Groups</h6>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Pilots</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let g of pilotGroups">
+                <td>{{ g.name }}</td>
+                <td>{{ g.pilots?.length || 0 }} pilots</td>
+                <td class="text-end">
+                  <button class="btn btn-link btn-sm p-0 me-2" (click)="openGroupModal(g)">Edit</button>
+                  <button class="btn btn-link btn-sm p-0 text-danger" (click)="deleteGroup(g.id!)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>

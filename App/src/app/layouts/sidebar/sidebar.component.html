@@ -1,239 +1,100 @@
 <aside id="sidebar" class="sidebar toggle-sidebar2" (mousedown)="sidebar_mouse_event()">
   <ul class="sidebar-nav" id="sidebar-nav">
-    <li class="nav-item"> <a class="nav-link " routerLink="/home"> <i class="fi fi-rs-house-chimney"></i>
-        <span class="toggle-sidebar_text">Home</span> </a></li>
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#product_family" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-bs-box-open-full"></i><span class="toggle-sidebar_text">Article</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="product_family" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <!-- <li> <a routerLink="/add-family"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">New Family</span> </a></li> -->
-        <li> <a routerLink="Article//list-family"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Family</span> </a></li>
-        <li> <a routerLink="Article/list-brand"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Brand</span> </a></li>
-        <!-- <li> <a routerLink="/add-article"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Add Article</span> </a></li> -->
-        <li> <a routerLink="Article//list-article"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Article</span> </a></li>
-      </ul>
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="bi bi-grid"></i>
+        <span class="toggle-sidebar_text">Dashboard</span>
+      </a>
     </li>
+
+    <li class="nav-heading">Core</li>
+
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#purchases" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-ss-dolly-flatbed"></i><span class="toggle-sidebar_text">Purchases</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="purchases" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="Suppliers/list-Suppliers"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Suppliers</span> </a></li>
-        <li> <a routerLink="purchases/list-Purchases"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Purchases</span> </a>
+      <a class="nav-link collapsed" routerLink="/reservations" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-calendar-check"></i>
+        <span class="toggle-sidebar_text">Reservations</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/Customers" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-people"></i>
+        <span class="toggle-sidebar_text">Customers</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/agencies" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-building"></i>
+        <span class="toggle-sidebar_text">Agencies</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/payments" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-cash-stack"></i>
+        <span class="toggle-sidebar_text">Payments</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" routerLink="/exchange-rates" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: false}">
+        <i class="bi bi-currency-exchange"></i>
+        <span class="toggle-sidebar_text">Exchange Rates</span>
+      </a>
+    </li>
+
+    <li class="nav-heading">Setup</li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#setup-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-gear"></i><span class="toggle-sidebar_text">Configuration</span>
+        <i class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i>
+      </a>
+      <ul id="setup-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+        <li>
+          <a routerLink="/pilots" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Pilots</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/transport-groups" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Transport Groups</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/flight-packages" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Packages</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/extra-services" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Extra Services</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/flight-times" routerLinkActive="active">
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Times</span>
+          </a>
         </li>
       </ul>
     </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#sales" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-rr-cart-shopping-fast"></i><span class="toggle-sidebar_text">Sales</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-          
-      <ul id="sales" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="sales"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">sales</span>
-          </a></li>
-        <li> <a routerLink="Customers/list-Customers"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Customer</span>
-          </a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#Info" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-sr-info"></i><span class="toggle-sidebar_text">Info</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="Info" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="Info/Country"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Country</span>
-          </a></li>
-        <li> <a routerLink="Info/City"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">City</span>
-          </a></li>
 
-        <li> <a routerLink="Info/Currency"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Currency</span>
-          </a></li>
-        <li> <a routerLink="Info/TaxConfiguration"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Tax Config</span>
-          </a></li>
+    <li class="nav-heading" *ngIf="authService.isAdmin()">Admin</li>
 
-
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#Inventory" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-rr-supplier-alt"></i><span class="toggle-sidebar_text">Inventory</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="Inventory" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-        <li> <a routerLink="Inventory/Warehouses/list_warehouses"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Warehouses</span>
-          </a></li>
-        <li> <a routerLink="Inventory/Mouvement/WarehousesMovement"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Warehouses Movement</span>
-          </a></li>
-        <li> <a routerLink="Inventory/BOM/list-bom"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Bill of Materials</span>
-          </a></li>
-        <li> <a routerLink="Inventory/UOM/list-uom"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Unit of Measure</span>
-          </a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#Finance" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-rs-money-check-edit"></i><span class="toggle-sidebar_text">Finance</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="Finance" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="Finance/list-account"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Accounts</span>
-          </a></li>
-        <li> <a routerLink="Finance/list-journal-entry"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Journal Entries</span>
-          </a></li>
-        <li> <a routerLink="Finance/Invoice/Invoice-List"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Invoices</span>
-          </a></li>
-        <li> <a routerLink="Finance/BankAccount/BankAccount-List"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Bank Accounts</span>
-          </a></li>
-        <li> <a routerLink="Finance/Payment/Payment-List"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Payments</span>
-          </a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#HR" data-bs-toggle="collapse" href="#"><i
-          class="fi fi-sr-department"></i>
-        <span class="toggle-sidebar_text">HR Management </span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="HR" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-        <li> <a routerLink="HR-Management"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">HR
-              Dashboard</span>
-          </a></li>
-        <li> <a routerLink="HR-Management/Employee"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Employee</span>
-          </a></li>
-        <li> <a routerLink="HR-Management/Attendance"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Attendance Management</span>
-          </a></li>
-
-        <li> <a routerLink="HR-Management/Leave"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Leave Management </span>
-          </a></li>
-
-        <li> <a routerLink="HR-Management/Payroll"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Payroll Management </span>
-          </a></li>
-
-        <li> <a routerLink="HR-Management/PerformanceReview"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Performance Management </span>
-          </a></li>
-
-        <li> <a routerLink="HR-Management/Recruitment/Applicants"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Recruitment </span>
-          </a></li>
-        <li> <a routerLink="HR-Management/Training"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Training Development </span>
-          </a></li>
-      </ul>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#UsersManagement" data-bs-toggle="collapse" href="#"> <i
-          class="fi fi-sr-users-alt"></i>
-        <span class="toggle-sidebar_text">Users Management</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="UsersManagement" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/Users-Management"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Admin
-              Dashboard</span>
-          </a></li>
-        <li> <a routerLink="/Users-Management/List-Users"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Users List</span>
-          </a></li>
-        <li> <a routerLink="Users-Management/Permission"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">User Permission</span>
-          </a></li>
-
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#"> <i
-          class="bi bi-journal-text"></i><span class="toggle-sidebar_text">Forms</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/form-elements"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Form
-              Elements</span> </a></li>
-        <li> <a routerLink="/form-layouts"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Form
-              Layouts</span> </a></li>
-        <li> <a routerLink="/form-editors"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Form
-              Editors</span> </a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#"> <i
-          class="bi bi-layout-text-window-reverse"></i><span class="toggle-sidebar_text">Tables</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i>
+    <li class="nav-item" *ngIf="authService.isAdmin()">
+      <a class="nav-link collapsed" routerLink="/admin/users" routerLinkActive="active">
+        <i class="bi bi-person-badge"></i>
+        <span class="toggle-sidebar_text">Manage Users</span>
       </a>
-      <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/tables-general"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">General
-              Tables</span> </a></li>
-        <li> <a routerLink="/tables-data"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Data
-              Tables</span> </a></li>
-      </ul>
     </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#"> <i
-          class="bi bi-bar-chart"></i><span class="toggle-sidebar_text">Charts</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i>
-      </a>
-      <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/charts-chartjs"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Chart.js</span> </a></li>
-        <li> <a routerLink="/charts-apexcharts"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">ApexCharts</span> </a></li>
-      </ul>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#"> <i
-          class="bi bi-gem"></i><span class="toggle-sidebar_text">Icons</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i> </a>
-      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/icons-bootstrap"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Bootstrap Icons</span> </a></li>
-        <li> <a routerLink="/icons-remix"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Remix
-              Icons</span> </a></li>
-        <li> <a routerLink="/icons-boxicons"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Boxicons</span> </a></li>
-      </ul>
-    </li>
-    <li class="nav-heading">Pages</li>
-    <li class="nav-item"> <a class="nav-link collapsed" routerLink="/pages-blank"> <i class="bi bi-file-earmark"></i>
-        <span class="toggle-sidebar_text">Blank</span> </a></li>
-    <!-- <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#Info-nav" data-bs-toggle="collapse" href="#"> <i
-          class="bi bi-info-circle"></i><span class="toggle-sidebar_text">Info</span><i
-          class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i>
-      </a>
-      <ul id="Info-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li> <a routerLink="/pages-info-depot"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Dépot</span> </a></li>
-        <li> <a routerLink="/pages-info-tresoreries"> <i class="bi bi-square-fill"></i><span
-              class="toggle-sidebar_text">Trésoreries</span> </a>
-        </li>
-        <li> <a routerLink="/Info-boxInfo"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Mode
-              Reglement</span> </a></li>
-        <li> <a routerLink="/Info-boxInfo"> <i class="bi bi-square-fill"></i><span class="toggle-sidebar_text">Mode
-              TVA</span> </a></li>
-      </ul>
-
-    </li> -->
   </ul>
-  <a class="nav-link nav-profile d-flex align-items-center pe-0 " href="#" data-bs-toggle="dropdown"> <img
-      src="assets/img/me.jpg" alt="Profile" class="rounded-circle "> <span class="dropdown-toggle ps-2 prf d-none">Anass
-      Dermaj</span> </a>
+
+
 </aside>

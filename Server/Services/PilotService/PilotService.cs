@@ -31,6 +31,7 @@ namespace ReservationSystem_backend.Services.PilotService
                 FullName = dto.FullName,
                 LicenseNumber = dto.LicenseNumber,
                 Status = dto.Status,
+                PilotGroupId = dto.PilotGroupId
             };
             return _repo.AddPilot(entity);
         }
@@ -43,6 +44,7 @@ namespace ReservationSystem_backend.Services.PilotService
                 existingEntity.FullName = string.IsNullOrEmpty(dto.FullName) ? existingEntity.FullName : dto.FullName;
                 existingEntity.LicenseNumber = string.IsNullOrEmpty(dto.LicenseNumber) ? existingEntity.LicenseNumber : dto.LicenseNumber;
                 existingEntity.Status = dto.Status;
+                existingEntity.PilotGroupId = dto.PilotGroupId;
             }
             return _repo.UpdatePilot(id, existingEntity);
         }

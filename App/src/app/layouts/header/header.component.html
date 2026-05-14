@@ -1,73 +1,90 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
-  <div class="d-flex align-items-center justify-content-between"><i (click)="sidebarToggle()"
-      class="bi bi-list toggle-sidebar-btn" style="margin-right: 5px;"></i> <a routerLink="/Home"
-      class="logo d-flex align-items-center"> <img src="assets/img/MylogoSmall.png" alt="" class="logo"> <span
-        class="d-none d-lg-block"></span> </a> </div>
+  <div class="d-flex align-items-center justify-content-between">
+    <i (click)="sidebarToggle()" class="bi bi-list toggle-sidebar-btn"></i>
+    <a routerLink="/" class="logo d-flex align-items-center">
+      <img src="assets/img/gravity_logo.png" alt="" class="logo">
+    </a>
+  </div>
 
-  <nav class="header-nav ms-auto">
+  <!-- Currency Ticker -->
+  <div class="d-flex align-items-center ms-4 d-none d-lg-flex" *ngIf="rates">
+    <div class="currency-pill">
+      <div class="currency-label">USD/TRY</div>
+      <div class="currency-value">{{ rates['TRY'] | number:'1.2-2' }}</div>
+    </div>
+    <div class="currency-pill">
+      <div class="currency-label">USD/EUR</div>
+      <div class="currency-value">{{ rates['EUR'] | number:'1.2-3' }}</div>
+    </div>
+    <div class="currency-pill">
+      <div class="currency-label">USD/GBP</div>
+      <div class="currency-value">{{ rates['GBP'] | number:'1.2-3' }}</div>
+    </div>
+  </div>
+
+  <!-- Quick Converter -->
+  <div class="quick-converter d-flex align-items-center ms-auto d-none d-xl-flex me-4">
+    <i class="bi bi-calculator text-primary me-2"></i>
+    <input type="number" class="converter-input" [(ngModel)]="calcAmount" (input)="calculate()" placeholder="Amount">
+
+    <select class="converter-select" [(ngModel)]="calcFrom" (change)="calculate()">
+      <option *ngFor="let c of displayCurrencies" [value]="c">{{ c }}</option>
+    </select>
+
+    <i class="bi bi-arrow-right-short text-muted mx-1"></i>
+
+    <select class="converter-select" [(ngModel)]="calcTo" (change)="calculate()">
+      <option *ngFor="let c of displayCurrencies" [value]="c">{{ c }}</option>
+    </select>
+
+    <div class="converter-result ms-3">
+      {{ calcResult | number:'1.2-2' }}
+    </div>
+  </div>
+
+  <nav class="header-nav ms-auto ms-xl-0">
     <ul class="d-flex align-items-center">
-      <li class="nav-item d-block d-lg-none"> <a class="nav-link nav-icon search-bar-toggle " href="#"> <i
-            class="bi bi-search"></i> </a></li>
-      <div class="dropdown">
-        <span data-mdb-dropdown-init class="dropdown-toggle" id="Dropdown" role="button" data-mdb-toggle="dropdown"
-          aria-expanded="false">
+      <li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
           <i *ngIf="lang=='En'" class="flag-united-kingdom flag m-0"></i>
           <i *ngIf="lang=='Fr'" class="flag-france flag m-0"></i>
           <i *ngIf="lang=='Ar'" class="flag-saudi-arabia flag m-0"></i>
-        </span>
-
-        <ul class="dropdown-menu" aria-labelledby="Dropdown">
-          <li>
-            <span class="dropdown-item" lang="En" (click)="changeLangue('En')"><i
-                class="flag-united-kingdom flag"></i>English <i *ngIf="lang=='En'"
-                class="fa fa-check text-success ms-2"></i></span>
-          </li>
-          <li>
-            <hr class="dropdown-divider" />
-          </li>
-          <li>
-            <span class="dropdown-item" lang="Fr" (click)="changeLangue('Fr')"><i class="flag-france flag"></i>Français
-              <i *ngIf="lang=='Fr'" class="fa fa-check text-success ms-2"></i></span>
-          </li>
-          <li>
-            <span class="dropdown-item" lang="Ar" (click)="changeLangue('Ar')"><i
-                class="flag-saudi-arabia flag"></i>Arabe <i *ngIf="lang=='Ar'"
-                class="fa fa-check text-success ms-2"></i></span>
-          </li>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+          <li><span class="dropdown-item" (click)="changeLangue('En')"><i
+                class="flag-united-kingdom flag me-2"></i>English</span></li>
+          <li><span class="dropdown-item" (click)="changeLangue('Fr')"><i
+                class="flag-france flag me-2"></i>Français</span></li>
+          <li><span class="dropdown-item" (click)="changeLangue('Ar')"><i
+                class="flag-saudi-arabia flag me-2"></i>Arabe</span></li>
         </ul>
-      </div>
+      </li>
 
       <li class="nav-item dropdown pe-3">
-        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown"> <img
-            src="assets/img/me.jpg" alt="Profile" class="rounded-circle"> <span
-            class="d-none d-md-block dropdown-toggle ps-2">{{ user?.['userName'] }}</span> </a>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-          <li class="dropdown-header">
-            <img src="assets/img/me.jpg" style="width: 25%;" alt="Profile" class="rounded-circle">
-            <h6>{{ user?.['userName'] }}</h6>
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          <img [src]="user?.profileImageUrl || 'assets/img/me.jpg'" alt="Profile" class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover;">
+          <span class="d-none d-md-block dropdown-toggle ps-2 fw-bold text-dark">{{ user?.fullName || user?.username ||
+            'User' }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 profile">
+          <li class="dropdown-header text-start">
+            <h6 class="fw-bold mb-0 text-dark">{{ user?.fullName || user?.username }}</h6>
+            <small class="text-muted">{{ user?.roles?.join(', ') }}</small>
           </li>
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li> <a class="dropdown-item d-flex align-items-center" routerLink="/user-profile"> <i
-                class="bi bi-person"></i> <span>My Profile</span> </a></li>
+          <li><a class="dropdown-item d-flex align-items-center text-dark" routerLink="/profile"><i
+                class="bi bi-person"></i><span>My Profile</span></a></li>
+          <li *ngIf="authService.isAdmin()"><a class="dropdown-item d-flex align-items-center text-dark"
+              routerLink="/admin/users"><i class="bi bi-people"></i><span>Manage Users</span></a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li> <a class="dropdown-item d-flex align-items-center" routerLink="/pages-contact"> <i
-                class="bi bi-envelope"></i> <span>Contact</span> </a></li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <!-- <li> <a class="dropdown-item d-flex align-items-center" routerLink="/pages-faq"> <i
-                        class="bi bi-question-circle"></i> <span>Need Help?</span> </a></li>
-               <li>
-                  <hr class="dropdown-divider">
-               </li> -->
-          <li> <a class="dropdown-item d-flex align-items-center" routerLink="/pages-login"> <i
-                class="bi bi-box-arrow-right"></i> <span>Sign Out</span> </a></li>
+          <li><a class="dropdown-item d-flex align-items-center text-danger cursor-pointer" (click)="logout()"><i
+                class="bi bi-box-arrow-right"></i><span>Sign Out</span></a></li>
         </ul>
       </li>
     </ul>
   </nav>
-</header>
+</header>>

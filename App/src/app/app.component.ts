@@ -4,6 +4,8 @@ import { HeaderComponent } from './layouts/header/header.component';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 
+import { AuthService } from './services/auth.service';
+
 @Component({
   selector: 'app-root',
   standalone: false,
@@ -13,8 +15,10 @@ import { FooterComponent } from './layouts/footer/footer.component';
 export class AppComponent {
   title = 'ReservationSystemApp';
 
-  hide() {
-    // Basic sidebar toggle logic
+  constructor(public authService: AuthService) {}
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 }
 

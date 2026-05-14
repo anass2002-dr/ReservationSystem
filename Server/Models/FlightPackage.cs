@@ -10,7 +10,9 @@ namespace ReservationSystem_backend.Models
 
         public decimal Price { get; set; }
 
+        public string? Details { get; set; }
+
         // Navigation property
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
     }
 }

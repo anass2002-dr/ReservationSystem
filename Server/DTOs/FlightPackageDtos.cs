@@ -8,6 +8,7 @@ namespace ReservationSystem_backend.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
+        public string? Details { get; set; }
 
         public FlightPackageDtos() { }
 
@@ -16,6 +17,7 @@ namespace ReservationSystem_backend.DTOs
             Id = model.Id;
             Title = model.Title;
             Price = model.Price;
+            Details = model.Details;
         }
     }
 }

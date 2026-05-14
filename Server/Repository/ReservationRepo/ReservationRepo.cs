@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using ReservationSystem_backend.Models;
 
 namespace ReservationSystem_backend.Repository.ReservationRepo
@@ -15,12 +16,24 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
 
         public List<Reservation> GetReservations()
         {
-            return _context.Reservations.ToList();
+            return _context.Reservations
+                .Include(r => r.FlightTime)
+                .Include(r => r.ReservationDetails)
+                    .ThenInclude(rd => rd.ReservationExtras)
+                .Include(r => r.ReservationDetails)
+                    .ThenInclude(rd => rd.Customer)
+                .ToList();
         }
 
         public Reservation GetReservationById(int id)
         {
-            return _context.Reservations.FirstOrDefault(e => e.Id == id);
+            return _context.Reservations
+                .Include(r => r.FlightTime)
+                .Include(r => r.ReservationDetails)
+                    .ThenInclude(rd => rd.ReservationExtras)
+                .Include(r => r.ReservationDetails)
+                    .ThenInclude(rd => rd.Customer)
+                .FirstOrDefault(e => e.Id == id);
         }
 
         public Reservation AddReservation(Reservation entity)

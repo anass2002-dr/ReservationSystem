@@ -1,99 +1,293 @@
-<div class="pagetitle">
-  <h1>{{ isEditing ? 'Edit Reservation' : 'New Reservation' }}</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item"><a routerLink="/Reservations">Reservations</a></li>
-      <li class="breadcrumb-item active">{{ isEditing ? 'Edit' : 'New' }}</li>
-    </ol>
-  </nav>
-</div>
+<div class="reservation-container">
+  <div class="pagetitle mb-4">
+    <h1 class="fw-bold text-dark">{{ isEditing ? 'Edit Reservation' : 'New Reservation' }}</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/reservations">Reservations</a></li>
+        <li class="breadcrumb-item active text-primary">{{ isEditing ? 'Edit' : 'New' }}</li>
+      </ol>
+    </nav>
+  </div>
 
-<section class="section">
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Reservation Details</h5>
+  <form (ngSubmit)="save()" #reservationForm="ngForm">
+    <div class="premium-card mb-5">
+      <div class="card-header-premium d-flex justify-content-between align-items-center">
+        <div>
+          <h5><i class="bi bi-calendar-check me-2"></i> {{ isEditing ? 'Update Flight Details' : 'Book a New Flight' }}
+          </h5>
+          <p class="mb-0 text-white-50 small mt-1">Please provide the flight and passenger details below.</p>
+        </div>
+        <div *ngIf="isEditing">
+          <span *ngIf="isFullyPaid()" class="badge bg-white text-success px-4 py-2 rounded-pill shadow-sm fw-bold">
+            <i class="bi bi-check-circle-fill me-1"></i> PAID IN FULL
+          </span>
+          <span *ngIf="!isFullyPaid()" class="badge bg-white text-danger px-4 py-2 rounded-pill shadow-sm fw-bold">
+            <i class="bi bi-exclamation-circle me-1"></i> {{ remainingBalance | currency:'USD' }} DUE
+          </span>
+        </div>
+      </div>
 
-          <form (ngSubmit)="save()" #reservationForm="ngForm">
-            
-            <div class="row mb-3">
-              <label for="customerId" class="col-sm-3 col-form-label">Customer <span class="text-danger">*</span></label>
-              <div class="col-sm-9">
-                <ng-select [items]="customers" bindLabel="fullName" bindValue="id" [(ngModel)]="reservation.customerId" name="customerId" required placeholder="Select a Customer">
-                </ng-select>
+      <div class="card-body p-4 p-md-5">
+        <!-- General Info Section -->
+        <div class="section-title">
+          <i class="bi bi-info-circle-fill"></i> General Information
+        </div>
+
+        <div class="row g-4 mb-5">
+          <div class="col-md-12">
+            <label class="form-label">Reservation Title</label>
+            <input type="text" class="form-control" name="title" [(ngModel)]="reservation.title"
+              placeholder="e.g. Anniversary Trip, VIP Group">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Flight Date <span class="text-danger">*</span></label>
+            <input type="date" class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate"
+              required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Time Slot <span class="text-danger">*</span></label>
+            <select class="form-select p-2 height-60" name="flightTimeId" [(ngModel)]="reservation.flightTimeId"
+              required>
+              <option *ngFor="let slot of flightTimes" [value]="slot.id">{{ slot.time }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-4 mb-5 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">Booking Status <span class="text-danger">*</span></label>
+            <select class="form-select p-2 height-60" name="status" [(ngModel)]="reservation.status" required>
+              <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Booking Source</label>
+            <select class="form-select p-2 height-60" name="isAgencyBooking" [(ngModel)]="reservation.isAgencyBooking"
+              (change)="onAgencyPriceChange()">
+              <option [ngValue]="false">Direct Booking (Us)</option>
+              <option [ngValue]="true">Agency Booking</option>
+            </select>
+          </div>
+
+          <div class="col-md-3" *ngIf="reservation.isAgencyBooking">
+            <label class="form-label">Agency <span class="text-danger">*</span></label>
+            <div class="height-60">
+              <ng-select [items]="agencies" bindLabel="name" bindValue="id" name="agencyId"
+                [(ngModel)]="reservation.agencyId" [required]="reservation.isAgencyBooking" placeholder="Select Agency"
+                class="custom-ng-select">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-3" *ngIf="reservation.isAgencyBooking">
+            <label class="form-label">Agency Net Price (Total)</label>
+            <div class="input-group height-60">
+              <span class="input-group-text bg-light border-end-0 h-100"><i class="bi bi-currency-dollar"></i></span>
+              <input type="number" class="form-control p-2 height-60 border-start-0" name="agencyPrice"
+                [(ngModel)]="reservation.agencyPrice" (input)="onAgencyPriceChange()" placeholder="0.00">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Deposit Given (USD)</label>
+            <div class="input-group height-60">
+              <span class="input-group-text bg-light border-end-0 h-100 text-success"><i class="bi bi-cash-stack"></i></span>
+              <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold text-success" name="deposit"
+                [(ngModel)]="reservation.deposit" placeholder="0.00">
+            </div>
+          </div>
+
+          <div class="col-md-3 text-md-end ms-auto">
+            <div class="p-2 bg-light rounded-4 border d-flex flex-column justify-content-center"
+              style="height: 60px;">
+              <label class="small mb-0 text-muted line-height-1">Rest to Pay</label>
+              <div class="h4 mb-0 text-danger fw-bold">
+                {{ ((reservation.isAgencyBooking ? (reservation.agencyPrice || 0) : (reservation.totalAmount || 0)) - (reservation.deposit || 0)) |
+                currency:'USD' }}
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="row mb-3">
-              <label for="pilotId" class="col-sm-3 col-form-label">Pilot <span class="text-danger">*</span></label>
-              <div class="col-sm-9">
-                <ng-select [items]="pilots" bindLabel="fullName" bindValue="id" [(ngModel)]="reservation.pilotId" name="pilotId" required placeholder="Select a Pilot">
-                </ng-select>
-              </div>
+        <!-- Passengers Section -->
+        <div class="section-title mt-2">
+          <i class="bi bi-people-fill"></i> Passenger Information
+        </div>
+
+        <div *ngFor="let detail of reservation.details; let i = index" class="passenger-card">
+          <div class="passenger-header">
+            <div class="d-flex align-items-center">
+              <span class="passenger-number">{{ i + 1 }}</span>
+              <span class="fw-bold text-dark">Passenger Details</span>
             </div>
+            <button type="button" class="btn btn-sm btn-link text-danger text-decoration-none fw-bold"
+              (click)="removeDetail(i)" *ngIf="reservation.details.length > 1">
+              <i class="bi bi-person-dash me-1"></i> Remove
+            </button>
+          </div>
 
-            <div class="row mb-3">
-              <label for="flightPackageId" class="col-sm-3 col-form-label">Flight Package <span class="text-danger">*</span></label>
-              <div class="col-sm-9">
-                <ng-select [items]="flightPackages" bindLabel="title" bindValue="id" [(ngModel)]="reservation.flightPackageId" name="flightPackageId" required placeholder="Select a Package">
-                </ng-select>
+          <div class="passenger-body">
+            <div class="row g-4">
+              <!-- Customer Column -->
+              <div class="col-lg-6 border-end-lg">
+                <div class="mb-4">
+                  <label class="form-label">Search Existing Customer</label>
+                  <ng-select [items]="customers" bindLabel="fullName" bindValue="id" [(ngModel)]="detail.customerId"
+                    [name]="'customerId_' + i" (change)="onCustomerSelect(i)" placeholder="Start typing name...">
+                  </ng-select>
+                </div>
+
+                <div *ngIf="detail.customer" class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" [name]="'custName_' + i"
+                      [(ngModel)]="detail.customer.fullName" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" [name]="'custPhone_' + i"
+                      [(ngModel)]="detail.customer.phoneNumber" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" [name]="'custDob_' + i"
+                      [(ngModel)]="detail.customer.dateOfBirth" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" [name]="'custEmail_' + i"
+                      [(ngModel)]="detail.customer.email">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Nationality</label>
+                    <ng-select [items]="countries" bindLabel="name" bindValue="name"
+                      [(ngModel)]="detail.customer.country" [name]="'custCountry_' + i" placeholder="Select Country">
+                    </ng-select>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div class="row mb-3">
-              <label for="flightDate" class="col-sm-3 col-form-label">Flight Date & Time <span class="text-danger">*</span></label>
-              <div class="col-sm-9">
-                <input type="datetime-local" class="form-control" id="flightDate" name="flightDate" [(ngModel)]="reservation.flightDate" required>
-              </div>
-            </div>
+              <!-- Logistics Column -->
+              <div class="col-lg-6">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="p-3 bg-light rounded-4 mb-3 border border-dashed border-2">
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <label class="form-label">Pilot Group</label>
+                          <ng-select [items]="pilotGroups" bindLabel="name" bindValue="id"
+                            [(ngModel)]="selectedGroupIds[i]" [name]="'pilotGroupId_' + i" placeholder="Filter by Group"
+                            (change)="onPilotGroupChange(i)">
+                          </ng-select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Assigned Pilot</label>
+                          <ng-select [items]="filteredPilots[i] || pilots" bindLabel="fullName" bindValue="id"
+                            [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i" placeholder="Select Pilot">
+                          </ng-select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-            <div class="row mb-3">
-              <label for="transportGroupId" class="col-sm-3 col-form-label">Transport Group</label>
-              <div class="col-sm-9">
-                <ng-select [items]="transportGroups" bindLabel="driverName" bindValue="id" [(ngModel)]="reservation.transportGroupId" name="transportGroupId" placeholder="Select Transport (Optional)">
-                </ng-select>
-              </div>
-            </div>
+                  <div class="col-12">
+                    <label class="form-label">Flight Package <span class="text-danger">*</span></label>
+                    <ng-select [items]="flightPackages" bindLabel="title" bindValue="id"
+                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i" required
+                      placeholder="Choose Package">
+                    </ng-select>
+                  </div>
 
-            <div class="row mb-3">
-              <label for="extraServiceIds" class="col-sm-3 col-form-label">Extra Services</label>
-              <div class="col-sm-9">
-                <ng-select [items]="extraServices" bindLabel="name" bindValue="id" [multiple]="true" [(ngModel)]="reservation.extraServiceIds" name="extraServiceIds" placeholder="Select Extra Services">
-                </ng-select>
-              </div>
-            </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Transport</label>
+                    <ng-select [items]="transportGroups" bindLabel="driverName" bindValue="id"
+                      [(ngModel)]="detail.transportGroupId" [name]="'transportGroupId_' + i"
+                      placeholder="Select Service">
+                    </ng-select>
+                  </div>
 
-            <div class="row mb-3">
-              <label for="status" class="col-sm-3 col-form-label">Status <span class="text-danger">*</span></label>
-              <div class="col-sm-9">
-                <select class="form-select" id="status" name="status" [(ngModel)]="reservation.status" required>
-                  <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
-                </select>
-              </div>
-            </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Extra Services</label>
+                    <ng-select [items]="extraServices" bindLabel="name" bindValue="id" [multiple]="true"
+                      [(ngModel)]="detail.extraServiceIds" [name]="'extraServiceIds_' + i" placeholder="Select Extras">
+                    </ng-select>
+                  </div>
 
-            <div class="row mb-3">
-              <label class="col-sm-3 col-form-label">Weight Limit Status</label>
-              <div class="col-sm-9">
-                <div class="form-check form-switch mt-2">
-                  <input class="form-check-input" type="checkbox" id="weightLimitStatus" name="weightLimitStatus" [(ngModel)]="reservation.weightLimitStatus">
-                  <label class="form-check-label" for="weightLimitStatus">Checked and Valid</label>
+                  <div class="col-12 mt-4">
+                    <div class="form-check form-switch custom-switch p-3 bg-white rounded-3 shadow-sm border">
+                      <input class="form-check-input ms-0 me-3" type="checkbox" [id]="'weightLimitStatus_' + i"
+                        [name]="'weightLimitStatus_' + i" [(ngModel)]="detail.weightLimitStatus">
+                      <label class="form-check-label fw-bold text-dark" [for]="'weightLimitStatus_' + i">Passenger
+                        Weight Limit Verified</label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="row mt-4">
-              <div class="col-sm-12 text-end">
-                <button type="button" class="btn btn-secondary me-2" (click)="cancel()">Cancel</button>
-                <button type="submit" class="btn btn-primary" [disabled]="!reservationForm.form.valid">Save Reservation</button>
-              </div>
+        <div class="text-center mb-5">
+          <button type="button" class="add-passenger-btn" (click)="addDetail()">
+            <i class="bi bi-person-plus-fill me-2"></i> Add Another Passenger to this Reservation
+          </button>
+        </div>
+
+        <!-- Pickup Section -->
+        <div class="section-title">
+          <i class="bi bi-geo-alt-fill"></i> Pickup & Logistics
+        </div>
+
+        <div class="row g-4 mb-4">
+          <div class="col-md-4">
+            <label class="form-label">Pickup Service</label>
+            <select class="form-select p-2 height-60" name="pickupStatus" [(ngModel)]="reservation.pickupStatus"
+              (change)="onPickupStatusChange()">
+              <option *ngFor="let opt of pickupStatusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
+          <div class="col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired">
+            <label class="form-label">Pickup Location / Hotel Name</label>
+            <div class="input-group input-group-premium height-60">
+              <input type="text" class="form-control p-2 height-60" name="pickupLocation"
+                [(ngModel)]="reservation.pickupLocation" placeholder="Enter hotel or location name"
+                (keyup.enter)="searchLocation()">
+              <button class="btn btn-primary" type="button" (click)="searchLocation()">
+                <i class="bi bi-search me-1"></i> Search
+              </button>
             </div>
+          </div>
+          <div class="col-12" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired">
+            <div class="map-container">
+              <div id="pickupMap" style="height: 350px; width: 100%; z-index: 1;"></div>
+            </div>
+          </div>
+        </div>
 
-          </form>
+        <!-- Notes Section -->
+        <div class="section-title mt-5">
+          <i class="bi bi-pencil-square"></i> Additional Information
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Special Requests or Notes</label>
+          <textarea class="form-control" name="notes" style="height: 120px; border-radius: 18px;"
+            [(ngModel)]="reservation.notes"
+            placeholder="Any dietary requirements, health issues, or special occasions?"></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-5 pt-4 border-top">
+          <div class="col-12 d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-secondary-premium" (click)="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary-premium" [disabled]="!reservationForm.form.valid">
+              <i class="bi bi-save me-2"></i> {{ isEditing ? 'Update Reservation' : 'Complete Booking' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </form>
+</div>

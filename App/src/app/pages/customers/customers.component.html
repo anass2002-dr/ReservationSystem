@@ -38,7 +38,7 @@
                   <td>{{c.dateOfBirth | date:'shortDate'}}</td>
                   <td>{{c.phoneNumber}}</td>
                   <td>{{c.email}}</td>
-                  <td>{{getCountryName(c.countryId)}}</td>
+                  <td>{{ getCountryName(c.country) }}</td>
                   <td>
                     <button class="btn btn-sm btn-info me-2" (click)="editCustomer(c)"><i class="bi bi-pencil"></i></button>
                     <button class="btn btn-sm btn-danger" (click)="deleteCustomer(c.id!)"><i class="bi bi-trash"></i></button>
@@ -83,11 +83,9 @@
             <input type="email" class="form-control" id="email" name="email" [(ngModel)]="currentCustomer.email">
           </div>
           <div class="mb-3">
-            <label for="countryId" class="form-label">Country</label>
-            <select class="form-select" id="countryId" name="countryId" [(ngModel)]="currentCustomer.countryId">
-              <option [ngValue]="undefined" disabled>Select a country</option>
-              <option *ngFor="let country of countries" [ngValue]="country.id">{{ country.name }}</option>
-            </select>
+              <label class="form-label">Country</label>
+              <ng-select [items]="countries" bindLabel="name" bindValue="name" [(ngModel)]="currentCustomer.country" name="country" placeholder="Search Country...">
+              </ng-select>
           </div>
         </div>
         <div class="modal-footer">

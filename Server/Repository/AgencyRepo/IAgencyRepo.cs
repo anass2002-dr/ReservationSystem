@@ -1,0 +1,14 @@
+using System.Collections.Generic;
+using ReservationSystem_backend.Models;
+
+namespace ReservationSystem_backend.Repository.AgencyRepo
+{
+    public interface IAgencyRepo
+    {
+        List<Agency> GetAgencies();
+        Agency GetAgencyById(int id);
+        Agency AddAgency(Agency entity);
+        Agency UpdateAgency(int id, Agency entity);
+        bool DeleteAgency(int id);
+    }
+}

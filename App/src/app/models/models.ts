@@ -4,7 +4,13 @@ export interface Customer {
   dateOfBirth: string | Date;
   phoneNumber: string;
   email?: string;
-  countryId?: number;
+  country?: string;
+}
+
+export interface PilotGroup {
+  id?: number;
+  name: string;
+  pilots?: Pilot[];
 }
 
 export interface Pilot {
@@ -12,6 +18,7 @@ export interface Pilot {
   fullName: string;
   licenseNumber: string;
   status: PilotStatus;
+  pilotGroupId?: number;
 }
 
 export enum PilotStatus {
@@ -31,6 +38,7 @@ export interface FlightPackage {
   id?: number;
   title: string;
   price: number;
+  details?: string;
 }
 
 export interface ExtraService {
@@ -39,16 +47,61 @@ export interface ExtraService {
   price: number;
 }
 
-export interface Reservation {
+export interface ReservationDetail {
   id?: number;
-  flightDate: string | Date;
-  weightLimitStatus: boolean;
-  status: ReservationStatus;
+  reservationId?: number;
   customerId: number;
-  pilotId: number;
+  pilotId?: number;
   flightPackageId: number;
   transportGroupId?: number;
-  extraServiceIds?: number[];
+  weightLimitStatus: boolean;
+  extraServiceIds: number[];
+  customer?: Customer;
+}
+
+export interface FlightTime {
+  id?: number;
+  time: string;
+  isActive: boolean;
+}
+
+export interface Agency {
+  id?: number;
+  name: string;
+  contactPerson?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: string;
+}
+
+export interface Reservation {
+  id?: number;
+  flightDate: string;
+  title?: string;
+  flightTimeId: number;
+  flightTime?: string;
+  totalAmount?: number;
+  status: ReservationStatus;
+  notes?: string;
+  pickupStatus?: PickupStatus;
+  pickupLocation?: string;
+  isAgencyBooking: boolean;
+  agencyId?: number;
+  agencyName?: string;
+  agencyPrice?: number;
+  deposit?: number;
+  details: ReservationDetail[];
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export enum PickupStatus {
+  NotRequired = 0,
+  Pending = 1,
+  PickedUp = 2,
+  NoShow = 3
 }
 
 export enum ReservationStatus {
@@ -63,13 +116,15 @@ export interface Payment {
   currency: PaymentCurrency;
   method: PaymentMethod;
   paymentDate: string | Date;
+  notes?: string;
   reservationId: number;
 }
 
 export enum PaymentCurrency {
   TL = 0,
   USD = 1,
-  EUR = 2
+  EUR = 2,
+  GBP = 3
 }
 
 export enum PaymentMethod {
@@ -78,7 +133,6 @@ export enum PaymentMethod {
 }
 
 export interface Country {
-  id?: number;
   name: string;
-  code?: string;
+  code: string;
 }

@@ -18,10 +18,10 @@ namespace ReservationSystem_backend.Models
         [MaxLength(150)]
         public string? Email { get; set; }
 
-        public int? CountryId { get; set; }
-        public Country? Country { get; set; }
+        [MaxLength(100)]
+        public string? Country { get; set; }
 
         // Navigation property
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
     }
 }

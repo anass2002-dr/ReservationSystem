@@ -10,6 +10,7 @@ namespace ReservationSystem_backend.DTOs
         public PaymentCurrency Currency { get; set; }
         public PaymentMethod Method { get; set; }
         public DateTime PaymentDate { get; set; }
+        public string? Notes { get; set; }
         public int ReservationId { get; set; }
 
         public PaymentDtos() { }
@@ -21,6 +22,7 @@ namespace ReservationSystem_backend.DTOs
             Currency = model.Currency;
             Method = model.Method;
             PaymentDate = model.PaymentDate;
+            Notes = model.Notes;
             ReservationId = model.ReservationId;
         }
     }

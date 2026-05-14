@@ -39,12 +39,12 @@ import { PagesBlankComponent } from './pages/pages-blank/pages-blank.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTable, MatTableModule } from '@angular/material/table'
-import { MatTab, MatTabGroup } from '@angular/material/tabs'
+import { MatTabsModule } from '@angular/material/tabs'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
-import { CountriesComponent } from './pages/countries/countries.component';
+
 import { CustomersComponent } from './pages/customers/customers.component';
 import { PilotsComponent } from './pages/pilots/pilots.component';
 import { TransportGroupsComponent } from './pages/transport-groups/transport-groups.component';
@@ -53,12 +53,19 @@ import { ExtraServicesComponent } from './pages/extra-services/extra-services.co
 import { ReservationsComponent } from './pages/reservations/reservations.component';
 import { ReservationFormComponent } from './pages/reservation-form/reservation-form.component';
 import { PaymentsComponent } from './pages/payments/payments.component';
+import { FlightTimesComponent } from './pages/flight-times/flight-times.component';
+import { ExchangeRatesComponent } from './pages/exchange-rates/exchange-rates.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LoginComponent } from './pages/login/login.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
+
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -66,6 +73,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { SafePipe } from './pipes/safe.pipe';
 @NgModule({
@@ -104,7 +112,7 @@ import { SafePipe } from './pipes/safe.pipe';
         PagesContactComponent,
         PagesError404Component,
         PagesBlankComponent,
-        CountriesComponent,
+
         CustomersComponent,
         PilotsComponent,
         TransportGroupsComponent,
@@ -113,6 +121,11 @@ import { SafePipe } from './pipes/safe.pipe';
         ReservationsComponent,
         ReservationFormComponent,
         PaymentsComponent,
+        FlightTimesComponent,
+        ExchangeRatesComponent,
+        LoginComponent,
+        ProfileComponent,
+        UserManagementComponent,
         SafePipe
     ],
     bootstrap: [AppComponent] // This is correct
@@ -131,14 +144,19 @@ import { SafePipe } from './pipes/safe.pipe';
         MatProgressSpinnerModule,
         MatGridListModule,
         MatButtonModule,
-        MatTab, MatTabGroup, // Note: This should ideally be MatTabsModule, but leaving as is to avoid side effects if it was working
+        MatTabsModule,
         FormsModule,
         MatMenuModule,
         MatButtonModule,
         MatIconModule,
         MatDividerModule,
         MatDialogModule,
-        NgSelectModule], providers: [provideHttpClient(withInterceptorsFromDi())]
+        NgSelectModule,
+        DragDropModule
+    ], providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    ]
 })
 export class AppModule { }
 // Updated to include PurchaseDetailsDialogComponent

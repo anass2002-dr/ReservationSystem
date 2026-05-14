@@ -39,7 +39,7 @@ h6 {
   # Main
   --------------------------------------------------------------*/
 .main {
-  margin-top: 20px;
+  margin-top: 5%;
   padding: 20px 30px;
   transition: all 0.3s;
   /* height: 100vh; */
@@ -621,7 +621,7 @@ h6 {
   scrollbar-color: #aab7cf transparent;
   box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
   background-color: #fff;
-  z-index: 999999;
+  z-index: 996;
   -webkit-transition-duration: 1s;
 }
 
@@ -669,7 +669,7 @@ h6 {
 
 .main,
 #footer {
-  margin-left: 150px;
+  margin-left: 10%;
 }
 
 .toggle-sidebar .main,
@@ -780,9 +780,9 @@ h6 {
 }
 
 .main_toggele {
-  margin-left: 0;
+  margin-left: 23%;
 
-  -webkit-transition-duration: 1s;
+  -webkit-transition-dusration: 1s;
 }
 
 .sidebar-nav .nav-content a {

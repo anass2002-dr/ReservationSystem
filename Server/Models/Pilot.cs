@@ -14,7 +14,10 @@ namespace ReservationSystem_backend.Models
 
         public PilotStatus Status { get; set; } = PilotStatus.Active;
 
+        public int? PilotGroupId { get; set; }
+        public PilotGroup? PilotGroup { get; set; }
+
         // Navigation property
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
     }
 }

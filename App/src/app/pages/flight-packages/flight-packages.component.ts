@@ -26,12 +26,41 @@ export class FlightPackagesComponent implements OnInit {
     });
   }
 
+  currentPackage: Partial<FlightPackage> = { title: '', price: 0 };
+  isEditing = false;
+
   addFlightPackage(): void {
-    // Navigate or open modal
+    this.isEditing = false;
+    this.currentPackage = { title: '', price: 0 };
   }
 
   editFlightPackage(fp: FlightPackage): void {
-    // Navigate or open modal
+    this.isEditing = true;
+    this.currentPackage = { ...fp };
+  }
+
+  saveFlightPackage(): void {
+    if (this.currentPackage.title && this.currentPackage.price !== undefined) {
+      if (this.isEditing && this.currentPackage.id) {
+        this.flightPackageService.updateFlightPackage(this.currentPackage.id, this.currentPackage as FlightPackage).subscribe(() => {
+          this.loadFlightPackages();
+          this.closeModal();
+        });
+      } else {
+        this.flightPackageService.addFlightPackage(this.currentPackage as FlightPackage).subscribe(() => {
+          this.loadFlightPackages();
+          this.closeModal();
+        });
+      }
+    }
+  }
+
+  closeModal(): void {
+    const modalElement = document.getElementById('flightPackageModal');
+    if (modalElement) {
+      const closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+      if (closeBtn) closeBtn.click();
+    }
   }
 
   deleteFlightPackage(id: number): void {

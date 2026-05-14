@@ -14,11 +14,20 @@ namespace ReservationSystem_backend.Models
         Cancelled
     }
 
+    public enum PickupStatus
+    {
+        NotRequired,
+        Pending,
+        PickedUp,
+        NoShow
+    }
+
     public enum PaymentCurrency
     {
         TL,
         USD,
-        EUR
+        EUR,
+        GBP
     }
 
     public enum PaymentMethod

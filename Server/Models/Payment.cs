@@ -12,6 +12,8 @@ namespace ReservationSystem_backend.Models
 
         public DateTime PaymentDate { get; set; } = DateTime.Now;
 
+        public string? Notes { get; set; }
+
         // Foreign Keys
         public int ReservationId { get; set; }
         public Reservation Reservation { get; set; } = null!;

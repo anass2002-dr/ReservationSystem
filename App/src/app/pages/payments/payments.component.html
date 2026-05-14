@@ -1,63 +1,175 @@
-<div class="pagetitle">
-  <h1>Payments Management</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Reservations</li>
-      <li class="breadcrumb-item active">Payments</li>
-    </ol>
-  </nav>
+<div class="pagetitle d-flex justify-content-between align-items-center">
+  <div>
+    <h1>Payments Dashboard</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item">Reservations</li>
+        <li class="breadcrumb-item active">Payments</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="d-flex align-items-center bg-white rounded-pill px-4 py-2 shadow-sm border">
+    <label class="fw-bold me-3 text-muted small text-uppercase">Select Date:</label>
+    <input type="date" class="form-control border-0 fw-bold text-primary p-0 bg-transparent" [(ngModel)]="selectedDate" style="outline: none; box-shadow: none;">
+  </div>
 </div>
 
-<section class="section dashboard">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Payments List
-            <button class="btn btn-primary btn-sm float-end" (click)="addPayment()"><i class="bi bi-plus-lg"></i> Add Payment</button>
-          </h5>
-          
-          <table class="table table-striped table-hover datatable">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Reservation ID</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Currency</th>
-                <th scope="col">Method</th>
-                <th scope="col">Date</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (p of payments; track p.id) {
-              <tr>
-                <th scope="row">{{p.id}}</th>
-                <td>{{p.reservationId}}</td>
-                <td>{{p.amount}}</td>
-                <td>
-                  {{ p.currency === 0 ? 'TL' : p.currency === 1 ? 'USD' : 'EUR' }}
-                </td>
-                <td>
-                  {{ p.method === 0 ? 'Cash' : 'Card' }}
-                </td>
-                <td>{{p.paymentDate | date:'shortDate'}}</td>
-                <td>
-                  <button class="btn btn-sm btn-info me-2" (click)="editPayment(p)"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-sm btn-danger" (click)="deletePayment(p.id!)"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
-              }
-              @empty {
-              <tr>
-                <td colspan="7" class="text-center">No payments found.</td>
-              </tr>
-              }
-            </tbody>
-          </table>
+<section class="section">
+  <!-- Flight Time Groups -->
+  <div class="row g-4">
+    <div class="col-md-6 col-xl-4" *ngFor="let group of groupedReservations; let i = index">
+      <div class="card h-100 shadow-sm border-0" style="border-top: 4px solid var(--bs-primary) !important;">
+        <!-- Group Header -->
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title text-dark mb-0 fw-bold">
+              <i class="bi bi-clock me-2 text-primary"></i>{{ group.flightTime.time }}
+            </h5>
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
+              {{ group.reservations.length }} Reservations
+            </span>
+          </div>
+        </div>
+        
+        <!-- Group Body (Reservations) -->
+        <div class="card-body pt-3">
+          <div class="d-flex flex-column gap-3">
+            <div *ngIf="group.reservations.length === 0" class="text-center py-4 text-muted small bg-light rounded border border-dashed">
+              No flights scheduled for this slot.
+            </div>
+            
+            <div *ngFor="let res of group.reservations" 
+                 class="p-3 rounded border bg-white shadow-sm position-relative payment-card cursor-pointer transition-all"
+                 (click)="openPaymentModal(res)"
+                 style="cursor: pointer;">
+                 
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="fw-bold mb-0 text-dark">{{ res.title || 'Untitled Reservation' }}</h6>
+                <span class="badge bg-secondary">#{{ res.id }}</span>
+              </div>
+              
+              <div class="d-flex justify-content-between align-items-center small text-muted">
+                <div><i class="bi bi-people-fill me-1"></i> {{ getPassengersCount(res) }} Passengers</div>
+                <div class="fw-bold text-primary">{{ res.totalAmount | currency: 'USD' }}</div>
+              </div>
+              
+              <div class="mt-2 text-end">
+                <span *ngIf="isFullyPaid(res)" class="badge bg-success text-white border border-success py-1 px-2">
+                  <i class="bi bi-check-circle-fill me-1"></i> Paid
+                </span>
+                <span *ngIf="!isFullyPaid(res)" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-1 px-2">
+                  <i class="bi bi-wallet2 me-1"></i> Make Payment
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" *ngIf="selectedReservation">
+      <div class="modal-header bg-primary text-white border-0">
+        <h5 class="modal-title">
+          Payment for #{{ selectedReservation.id }} - {{ selectedReservation.title || 'Untitled' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form (ngSubmit)="savePayment()" #paymentForm="ngForm">
+        <div class="modal-body p-4 bg-light">
+          
+          <!-- Balance Summary -->
+          <div class="row text-center mb-4 g-2">
+            <div class="col-3">
+              <div class="bg-white p-2 rounded shadow-sm border">
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Total</div>
+                <div class="fw-bold text-dark fs-6">{{ totalAmountDue | currency: 'USD' }}</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="bg-white p-2 rounded shadow-sm border">
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Deposit</div>
+                <div class="fw-bold text-info fs-6">{{ selectedReservation.deposit || 0 | currency: 'USD' }}</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="bg-white p-2 rounded shadow-sm border">
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Paid</div>
+                <div class="fw-bold text-success fs-6">{{ amountPaid | currency: 'USD' }}</div>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="bg-white p-2 rounded shadow-sm border">
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Rest</div>
+                <div class="fw-bold text-danger fs-6">{{ remainingBalance | currency: 'USD' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Form -->
+          <div class="bg-white p-3 rounded shadow-sm border">
+            <div class="row">
+              <div class="col-md-7 mb-3">
+                <label class="form-label fw-bold d-flex justify-content-between">
+                  <span>Amount (USD) <span class="text-danger">*</span></span>
+                  <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">Pay All</a>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                  <input type="number" class="form-control" [(ngModel)]="currentPayment.amount" name="amount" required>
+                </div>
+              </div>
+              <div class="col-md-5 mb-3">
+                <label class="form-label fw-bold">Pay in Currency</label>
+                <select class="form-select" [(ngModel)]="currentPayment.currency" name="currency">
+                  <option *ngFor="let opt of currencyOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3" *ngIf="currentPayment.currency !== PaymentCurrency.USD">
+              <div class="col-12">
+                <div class="p-3 rounded border bg-light text-center">
+                  <div class="small text-muted text-uppercase fw-bold mb-1">Equivalent in {{ getCurrencyCode(currentPayment.currency) }}</div>
+                  <div class="fs-4 fw-bold text-primary">{{ getConvertedAmount() | number:'1.2-2' }} {{ getCurrencyCode(currentPayment.currency) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Method</label>
+                <select class="form-select" [(ngModel)]="currentPayment.method" name="method">
+                  <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Date</label>
+                <input type="date" class="form-control" [(ngModel)]="currentPayment.paymentDate" name="paymentDate" required>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label fw-bold">Notes</label>
+              <textarea class="form-control" [(ngModel)]="currentPayment.notes" name="notes" rows="2" placeholder="Add any extra payment details..."></textarea>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer border-0 p-4 pt-0 bg-light">
+          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4 shadow-sm" [disabled]="!paymentForm.form.valid || currentPayment.amount <= 0">
+            Confirm Payment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

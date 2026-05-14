@@ -1,3 +1,22 @@
+.stat-card {
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-card h6 {
+  letter-spacing: 1.2px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.stat-card h3 {
+  letter-spacing: -0.5px;
+}
+
 .module-card {
   transition: all 0.3s ease-in-out;
   border: none;

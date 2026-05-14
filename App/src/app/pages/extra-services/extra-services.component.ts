@@ -26,12 +26,41 @@ export class ExtraServicesComponent implements OnInit {
     });
   }
 
+  currentService: Partial<ExtraService> = { name: '', price: 0 };
+  isEditing = false;
+
   addExtraService(): void {
-    // Navigate or open modal
+    this.isEditing = false;
+    this.currentService = { name: '', price: 0 };
   }
 
   editExtraService(es: ExtraService): void {
-    // Navigate or open modal
+    this.isEditing = true;
+    this.currentService = { ...es };
+  }
+
+  saveExtraService(): void {
+    if (this.currentService.name && this.currentService.price !== undefined) {
+      if (this.isEditing && this.currentService.id) {
+        this.extraServiceService.updateExtraService(this.currentService.id, this.currentService as ExtraService).subscribe(() => {
+          this.loadExtraServices();
+          this.closeModal();
+        });
+      } else {
+        this.extraServiceService.addExtraService(this.currentService as ExtraService).subscribe(() => {
+          this.loadExtraServices();
+          this.closeModal();
+        });
+      }
+    }
+  }
+
+  closeModal(): void {
+    const modalElement = document.getElementById('extraServiceModal');
+    if (modalElement) {
+      const closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
+      if (closeBtn) closeBtn.click();
+    }
   }
 
   deleteExtraService(id: number): void {

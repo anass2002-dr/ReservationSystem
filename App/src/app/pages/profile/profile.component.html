@@ -1,0 +1,78 @@
+<div class="pagetitle">
+  <h1>User Profile</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item active">Profile</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section profile">
+  <div class="row">
+    <div class="col-xl-4">
+      <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+          <div class="position-relative">
+            <img [src]="user?.profileImageUrl || 'assets/img/me.jpg'" alt="Profile"
+              class="rounded-circle mb-3 shadow-sm"
+              style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;">
+            <button class="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0 mb-3"
+              style="width: 32px; height: 32px; padding: 0;" (click)="fileInput.click()" title="Upload Image">
+              <i class="bi bi-camera"></i>
+            </button>
+            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="d-none">
+          </div>
+          <h2 class="h4 fw-bold mb-1">{{ user?.fullName || user?.username }}</h2>
+          <div class="badge bg-primary rounded-pill px-3 py-2 mb-3">{{ user?.roles?.join(', ') }}</div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-8">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body pt-3">
+          <ul class="nav nav-tabs nav-tabs-bordered">
+            <li class="nav-item">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+            </li>
+          </ul>
+
+          <div class="tab-content pt-4">
+            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+              <h5 class="card-title fw-bold mb-4">Profile Details</h5>
+
+              <div class="row mb-3">
+                <div class="col-lg-3 col-md-4 label text-muted fw-bold small text-uppercase">Full Name</div>
+                <div class="col-lg-9 col-md-8 fw-bold">{{ user?.fullName || 'Not Provided' }}</div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-lg-3 col-md-4 label text-muted fw-bold small text-uppercase">Username</div>
+                <div class="col-lg-9 col-md-8">{{ user?.username }}</div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-lg-3 col-md-4 label text-muted fw-bold small text-uppercase">Email</div>
+                <div class="col-lg-9 col-md-8">{{ user?.email }}</div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-lg-3 col-md-4 label text-muted fw-bold small text-uppercase">Account Type</div>
+                <div class="col-lg-9 col-md-8">
+                  <span class="badge bg-light text-dark border">{{ user?.roles?.join(', ') }}</span>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-lg-3 col-md-4 label text-muted fw-bold small text-uppercase">Member Since</div>
+                <div class="col-lg-9 col-md-8">May 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

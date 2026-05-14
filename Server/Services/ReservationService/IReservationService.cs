@@ -6,10 +6,10 @@ namespace ReservationSystem_backend.Services.ReservationService
 {
     public interface IReservationService
     {
-        List<Reservation> GetReservations();
-        Reservation GetReservationById(int id);
-        Reservation AddReservation(ReservationDtos dto);
-        Reservation UpdateReservation(int id, ReservationDtos dto);
+        List<ReservationDtos> GetReservations();
+        ReservationDtos GetReservationById(int id);
+        ReservationDtos AddReservation(ReservationDtos dto);
+        ReservationDtos UpdateReservation(int id, ReservationDtos dto);
         bool DeleteReservation(int id);
     }
 }

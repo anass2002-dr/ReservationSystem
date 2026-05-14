@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using ReservationSystem_backend.Models;
 
 namespace ReservationSystem_backend.DTOs
@@ -7,12 +9,27 @@ namespace ReservationSystem_backend.DTOs
     {
         public int Id { get; set; }
         public DateTime FlightDate { get; set; }
-        public bool WeightLimitStatus { get; set; }
+        public string? Title { get; set; }
+        public decimal TotalAmount { get; set; }
+        public decimal Deposit { get; set; }
+        public int FlightTimeId { get; set; }
+        public string? FlightTime { get; set; }
         public ReservationStatus Status { get; set; }
-        public int CustomerId { get; set; }
-        public int PilotId { get; set; }
-        public int FlightPackageId { get; set; }
-        public int? TransportGroupId { get; set; }
+        public string? Notes { get; set; }
+        public PickupStatus PickupStatus { get; set; }
+        public string? PickupLocation { get; set; }
+        
+        public bool IsAgencyBooking { get; set; }
+        public int? AgencyId { get; set; }
+        public string? AgencyName { get; set; }
+        public decimal? AgencyPrice { get; set; }
+        
+        public List<ReservationDetailDto> Details { get; set; } = new List<ReservationDetailDto>();
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
 
         public ReservationDtos() { }
 
@@ -20,12 +37,32 @@ namespace ReservationSystem_backend.DTOs
         {
             Id = model.Id;
             FlightDate = model.FlightDate;
-            WeightLimitStatus = model.WeightLimitStatus;
+            Title = model.Title;
+            TotalAmount = model.TotalAmount;
+            Deposit = model.Deposit;
+            FlightTimeId = model.FlightTimeId;
+            FlightTime = model.FlightTime?.Time;
             Status = model.Status;
-            CustomerId = model.CustomerId;
-            PilotId = model.PilotId;
-            FlightPackageId = model.FlightPackageId;
-            TransportGroupId = model.TransportGroupId;
+            Notes = model.Notes;
+            PickupStatus = model.PickupStatus;
+            PickupLocation = model.PickupLocation;
+            IsAgencyBooking = model.IsAgencyBooking;
+            AgencyId = model.AgencyId;
+            AgencyName = model.Agency?.Name;
+            AgencyPrice = model.AgencyPrice;
+
+            CreatedAt = model.CreatedAt;
+            UpdatedAt = model.UpdatedAt;
+            CreatedBy = model.CreatedBy;
+            UpdatedBy = model.UpdatedBy;
+
+            if (model.ReservationDetails != null)
+            {
+                foreach (var detail in model.ReservationDetails)
+                {
+                    Details.Add(new ReservationDetailDto(detail));
+                }
+            }
         }
     }
 }

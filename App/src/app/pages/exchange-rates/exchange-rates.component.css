@@ -1,0 +1,94 @@
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.info-card h6 {
+  font-size: 28px;
+  color: #012970;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 0;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.calculator-wrapper {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.calc-input-group {
+  position: relative;
+}
+
+.calc-input-group .form-control, .calc-input-group .form-select {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-weight: 600;
+  height: 55px;
+  transition: all 0.2s ease;
+}
+
+.calc-input-group .form-control:focus, .calc-input-group .form-select:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.1);
+}
+
+.exchange-icon-wrapper {
+  background: #e9f5ee;
+  color: #198754;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.exchange-icon-wrapper:hover {
+  background: #198754;
+  color: white;
+  transform: rotate(180deg);
+}
+
+.result-box {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  border: 2px solid #e9ecef;
+  text-align: center;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #198754;
+}
+

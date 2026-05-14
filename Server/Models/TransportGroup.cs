@@ -15,6 +15,6 @@ namespace ReservationSystem_backend.Models
         public string DriverName { get; set; } = string.Empty;
 
         // Navigation property
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
     }
 }

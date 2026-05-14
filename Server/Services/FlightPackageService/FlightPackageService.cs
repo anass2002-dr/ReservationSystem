@@ -30,6 +30,7 @@ namespace ReservationSystem_backend.Services.FlightPackageService
             {
                 Title = dto.Title,
                 Price = dto.Price,
+                Details = dto.Details
             };
             return _repo.AddFlightPackage(entity);
         }
@@ -41,6 +42,7 @@ namespace ReservationSystem_backend.Services.FlightPackageService
             {
                 existingEntity.Title = string.IsNullOrEmpty(dto.Title) ? existingEntity.Title : dto.Title;
                 existingEntity.Price = dto.Price;
+                existingEntity.Details = dto.Details ?? existingEntity.Details;
             }
             return _repo.UpdateFlightPackage(id, existingEntity);
         }

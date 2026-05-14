@@ -1,0 +1,74 @@
+<div class="pagetitle">
+  <h1>User Management</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+      <li class="breadcrumb-item active">Admin</li>
+      <li class="breadcrumb-item active">Users</li>
+    </ol>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body pt-3">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title fw-bold mb-0">System Users</h5>
+            <button class="btn btn-primary rounded-pill px-4" (click)="openRegisterModal()">
+              <i class="bi bi-person-plus me-2"></i>Add New User
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="bg-light">
+                <tr>
+                  <th class="border-0 rounded-start">User</th>
+                  <th class="border-0">Email</th>
+                  <th class="border-0">Roles</th>
+                  <th class="border-0 text-center">Status</th>
+                  <th class="border-0 rounded-end text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let u of users">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle me-3">{{ (u.username?.substring(0,1) || 'U').toUpperCase() }}</div>
+                      <div>
+                        <div class="fw-bold">{{ u.fullName || u.username }}</div>
+                        <small class="text-muted">{{ '@' + u.username }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ u.email }}</td>
+                  <td>
+                    <span *ngFor="let role of u.roles" class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 me-1">
+                      {{ role }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge bg-success rounded-pill px-3">Active</span>
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-outline-warning btn-sm rounded-circle me-2" (click)="resetPassword(u)" title="Reset Password">
+                      <i class="bi bi-key"></i>
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm rounded-circle me-2" (click)="editUser(u)" title="Edit">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm rounded-circle" (click)="deleteUser(u)" title="Delete">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

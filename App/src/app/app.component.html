@@ -1,6 +1,6 @@
-<app-header></app-header>
-<app-sidebar></app-sidebar>
-<main id="main" class="main">
+<app-header *ngIf="isLoggedIn"></app-header>
+<app-sidebar *ngIf="isLoggedIn"></app-sidebar>
+<main id="main" [class.main]="isLoggedIn" [class.login-mode]="!isLoggedIn">
   <router-outlet></router-outlet>
 </main>
-<app-footer></app-footer>
+<app-footer *ngIf="isLoggedIn"></app-footer>

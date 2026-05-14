@@ -18,13 +18,13 @@ namespace ReservationSystem_backend.Controllers
         }
 
         [HttpGet("GetReservations")]
-        public ActionResult<IEnumerable<Reservation>> GetReservations()
+        public ActionResult<IEnumerable<ReservationDtos>> GetReservations()
         {
             return Ok(_service.GetReservations());
         }
-
+ 
         [HttpGet("GetReservationById/{id}")]
-        public ActionResult<Reservation> GetReservationById(int id)
+        public ActionResult<ReservationDtos> GetReservationById(int id)
         {
             var entity = _service.GetReservationById(id);
             if (entity == null)
@@ -33,15 +33,15 @@ namespace ReservationSystem_backend.Controllers
             }
             return Ok(entity);
         }
-
+ 
         [HttpPost("AddReservation")]
-        public ActionResult<Reservation> AddReservation(ReservationDtos dto)
+        public ActionResult<ReservationDtos> AddReservation(ReservationDtos dto)
         {
             return Ok(_service.AddReservation(dto));
         }
-
+ 
         [HttpPut("UpdateReservation/{id}")]
-        public ActionResult<Reservation> UpdateReservation(int id, ReservationDtos dto)
+        public ActionResult<ReservationDtos> UpdateReservation(int id, ReservationDtos dto)
         {
             var updatedEntity = _service.UpdateReservation(id, dto);
             if (updatedEntity == null)

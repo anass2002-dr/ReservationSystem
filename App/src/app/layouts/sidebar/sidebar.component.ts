@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as arb from '../../../assets/js/Translate/ar.json'
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -8,7 +10,7 @@ import * as arb from '../../../assets/js/Translate/ar.json'
 })
 export class SidebarComponent implements OnInit {
   ar: any = arb
-  constructor() { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit(): void {
     // console.log(this.ar);

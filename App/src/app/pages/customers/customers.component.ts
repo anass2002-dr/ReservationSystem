@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Customer, Country } from '../../models/models';
 import { CustomerService } from '../../services/customer.service';
-import { CountryService } from '../../services/country.service';
+import { HttpClient } from '@angular/common/http';
 
 declare var bootstrap: any;
 
@@ -14,13 +14,13 @@ declare var bootstrap: any;
 export class CustomersComponent implements OnInit {
   customers: Customer[] = [];
   countries: Country[] = [];
-  currentCustomer: Customer = { id: 0, fullName: '', dateOfBirth: '', phoneNumber: '', email: '', countryId: undefined };
+  currentCustomer: Customer = { id: 0, fullName: '', dateOfBirth: '', phoneNumber: '', email: '', country: undefined };
   isEditing = false;
   private modalInstance: any;
 
   constructor(
     private customerService: CustomerService,
-    private countryService: CountryService
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -36,16 +36,14 @@ export class CustomersComponent implements OnInit {
   }
 
   loadCountries(): void {
-    this.countryService.getCountries().subscribe({
+    this.http.get<Country[]>('/assets/js/Countries/countries.json').subscribe({
       next: (data) => this.countries = data,
       error: (err) => console.error('Error fetching countries', err)
     });
   }
 
-  getCountryName(countryId?: number): string {
-    if (!countryId) return '-';
-    const country = this.countries.find(c => c.id === countryId);
-    return country ? country.name : '-';
+  getCountryName(country?: string): string {
+    return country || '-';
   }
 
   openModal(): void {
@@ -114,6 +112,6 @@ export class CustomersComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.currentCustomer = { id: 0, fullName: '', dateOfBirth: '', phoneNumber: '', email: '', countryId: undefined };
+    this.currentCustomer = { id: 0, fullName: '', dateOfBirth: '', phoneNumber: '', email: '', country: undefined };
   }
 }
