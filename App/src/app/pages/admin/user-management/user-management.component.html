@@ -36,7 +36,7 @@
                 <tr *ngFor="let u of users">
                   <td>
                     <div class="d-flex align-items-center">
-                      <div class="avatar-circle me-3">{{ (u.username?.substring(0,1) || 'U').toUpperCase() }}</div>
+                      <div class="avatar-circle me-3">{{ (u.username.substring(0,1) || 'U').toUpperCase() }}</div>
                       <div>
                         <div class="fw-bold">{{ u.fullName || u.username }}</div>
                         <small class="text-muted">{{ '@' + u.username }}</small>

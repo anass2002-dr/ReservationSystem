@@ -106,18 +106,20 @@ export class ReservationsComponent implements OnInit {
 
   isFullyPaid(res: Reservation): boolean {
     const totalDue = res.totalAmount || 0;
+    const deposit = res.deposit || 0;
     const paid = this.payments
       .filter(p => p.reservationId === res.id)
       .reduce((sum, p) => sum + Number(p.amount), 0);
-    return paid >= totalDue && totalDue > 0;
+    return (paid + Number(deposit)) >= totalDue && totalDue > 0;
   }
 
   getRemainingBalance(res: Reservation): number {
     const totalDue = res.totalAmount || 0;
+    const deposit = res.deposit || 0;
     const paid = this.payments
       .filter(p => p.reservationId === res.id)
       .reduce((sum, p) => sum + Number(p.amount), 0);
-    return Math.max(0, totalDue - paid);
+    return Math.max(0, totalDue - (paid + Number(deposit)));
   }
 
   getCustomersDisplay(r: Reservation): string {
@@ -148,6 +150,16 @@ export class ReservationsComponent implements OnInit {
     }
   }
 
+  getCurrencyLabel(currency: number): string {
+    switch (currency) {
+      case 0: return 'TL';
+      case 1: return 'USD';
+      case 2: return 'EUR';
+      case 3: return 'GBP';
+      default: return 'USD';
+    }
+  }
+
   getStatusBadgeClass(status: ReservationStatus): string {
     switch (status) {
       case ReservationStatus.Pending: return 'bg-warning text-dark';
@@ -172,6 +184,200 @@ export class ReservationsComponent implements OnInit {
 
   editReservation(r: Reservation): void {
     this.router.navigate(['/reservations/edit', r.id]);
+  }
+
+  printReservation(r: Reservation): void {
+    this.reservationService.getReservation(r.id!).subscribe(fullRes => {
+      this.showPrintModal(fullRes);
+    });
+  }
+
+  showPrintModal(res: Reservation): void {
+    const modalHtml = `
+      <div id="printModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; font-family: 'Segoe UI', sans-serif;">
+        <div style="background: white; padding: 30px; border-radius: 20px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;">
+          <h3 style="margin-bottom: 10px; color: #333;">Print Options</h3>
+          <p style="color: #666; margin-bottom: 25px;">Choose your preferred document format</p>
+          
+          <div style="display: grid; gap: 15px;">
+            <button id="printA5" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+              <i class="bi bi-file-earmark-text" style="margin-right: 8px;"></i> A5 Professional Voucher
+            </button>
+            <button id="printThermal" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+              <i class="bi bi-printer" style="margin-right: 8px;"></i> Sewoo Thermal Receipt (80mm)
+            </button>
+            <button id="closePrintModal" style="background: #f8f9fa; color: #333; border: 1px solid #ddd; padding: 12px; border-radius: 12px; cursor: pointer; margin-top: 10px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = modalHtml;
+    document.body.appendChild(wrapper);
+
+    document.getElementById('printA5')?.addEventListener('click', () => {
+      this.executePrint(res, 'A5');
+      document.body.removeChild(wrapper);
+    });
+
+    document.getElementById('printThermal')?.addEventListener('click', () => {
+      this.executePrint(res, 'Thermal');
+      document.body.removeChild(wrapper);
+    });
+
+    document.getElementById('closePrintModal')?.addEventListener('click', () => {
+      document.body.removeChild(wrapper);
+    });
+  }
+
+  executePrint(fullRes: Reservation, mode: 'A5' | 'Thermal'): void {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const flightTimeLabel = this.flightTimes.find(f => f.id === fullRes.flightTimeId)?.time || 'N/A';
+    const statusLabel = this.getStatusLabel(fullRes.status);
+    const totalAmount = fullRes.isAgencyBooking ? (fullRes.agencyPrice || 0) : (fullRes.totalAmount || 0);
+    const deposit = fullRes.deposit || 0;
+    
+    const paidFromPayments = this.payments
+      .filter(p => p.reservationId === fullRes.id)
+      .reduce((sum, p) => sum + Number(p.amount), 0);
+    const totalPaid = Number(paidFromPayments) + Number(deposit);
+    const restToPay = Math.max(0, totalAmount - totalPaid);
+
+    // Get payment details from the first payment record
+    const firstPayment = this.payments.find(p => p.reservationId === fullRes.id);
+    const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : 'CASH') : 'CASH';
+    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : 'USD';
+
+    if (mode === 'A5') {
+      const passengersHtml = fullRes.details.map((d, i) => `
+        <div class="passenger-item">
+          <div class="p-header">Passenger ${i + 1}: ${d.customer?.fullName || 'N/A'}</div>
+          <div class="p-grid">
+            <div><strong>Phone:</strong> ${d.customer?.phoneNumber || 'N/A'}</div>
+            <div><strong>Country:</strong> ${d.customer?.country || 'N/A'}</div>
+            <div><strong>Pilot:</strong> ${this.pilots.find(p => p.id === d.pilotId)?.fullName || 'Pending'}</div>
+            <div><strong>Package:</strong> ${this.flightTimes.find(ft => ft.id === fullRes.flightTimeId) ? 'Standard' : 'N/A'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Reservation #${fullRes.id}</title>
+            <style>
+              @page { size: A5 landscape; margin: 0; }
+              body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; color: #333; font-size: 12px; }
+              .ticket { border: 2px solid #0d6efd; border-radius: 15px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+              .header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+              .header h1 { margin: 0; font-size: 18px; text-transform: uppercase; }
+              .content { padding: 15px; flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+              .section-title { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 10px; font-weight: bold; color: #0d6efd; text-transform: uppercase; font-size: 10px; }
+              .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+              .info-item strong { color: #666; font-size: 9px; display: block; }
+              .passengers { grid-column: span 2; }
+              .passenger-item { background: #f8f9fa; border-radius: 8px; padding: 8px; margin-bottom: 8px; border-left: 3px solid #0d6efd; }
+              .p-header { font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid #dee2e6; }
+              .p-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; font-size: 10px; }
+              .footer { background: #f1f3f5; padding: 10px 20px; display: flex; justify-content: space-between; border-top: 1px solid #dee2e6; }
+              .price-val { font-weight: bold; color: #0d6efd; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <div class="ticket">
+              <div class="header">
+                <div><h1>Flight Voucher</h1><div style="font-size: 10px;">#${fullRes.id} | ${new Date().toLocaleDateString()}</div></div>
+                <div style="text-align: right"><strong>${fullRes.title || 'Paragliding'}</strong><div>Status: ${statusLabel}</div></div>
+              </div>
+              <div class="content">
+                <div><div class="section-title">Flight Details</div><div class="info-grid">
+                  <div class="info-item"><strong>Date</strong>${new Date(fullRes.flightDate).toLocaleDateString()}</div>
+                  <div class="info-item"><strong>Time</strong>${flightTimeLabel}</div>
+                  <div class="info-item"><strong>Pickup</strong>${fullRes.pickupLocation || 'No Pickup'}</div>
+                  <div class="info-item"><strong>Booking</strong>${fullRes.isAgencyBooking ? 'Agency: ' + (fullRes.agencyName || 'N/A') : 'Direct'}</div>
+                </div></div>
+                <div><div class="section-title">Payment (${payCurrency})</div><div class="info-grid">
+                  <div class="info-item"><strong>Total</strong>${totalAmount.toFixed(2)} ${payCurrency}</div>
+                  <div class="info-item"><strong>Paid</strong>${totalPaid.toFixed(2)} ${payCurrency}</div>
+                  <div class="info-item"><strong>Rest</strong>${restToPay.toFixed(2)} ${payCurrency}</div>
+                  <div class="info-item" style="color: ${restToPay <= 0 ? 'green' : 'red'}; font-weight: bold;">
+                    <strong>Method: ${payMethod}</strong>${restToPay <= 0 ? ' PAID' : ' DUE'}
+                  </div>
+                </div></div>
+                <div class="passengers"><div class="section-title">Passengers</div>${passengersHtml}</div>
+              </div>
+              <div class="footer">
+                <div style="font-size: 9px;">Gravity Paragliding | Fethiye, Turkey</div>
+                <div style="text-align: right"><div>Rest to Pay</div><div class="price-val">$${restToPay.toFixed(2)}</div></div>
+              </div>
+            </div>
+            <script>window.onload = function() { window.print(); };</script>
+          </body>
+        </html>
+      `);
+    } else {
+      // Thermal Sewoo SLK-TL322 Mode (80mm width)
+      const passengersList = fullRes.details.map((d, i) => `
+        <div style="border-bottom: 1px dashed #000; padding: 5px 0;">
+          P${i+1}: ${d.customer?.fullName || 'N/A'}<br>
+          <small>Pilot: ${this.pilots.find(p => p.id === d.pilotId)?.fullName || 'Pending'}</small>
+        </div>
+      `).join('');
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Ticket #${fullRes.id}</title>
+            <style>
+              @page { size: 80mm 200mm; margin: 0; }
+              body { font-family: 'Courier New', Courier, monospace; margin: 0; padding: 10px; width: 72mm; color: #000; }
+              .center { text-align: center; }
+              .bold { font-weight: bold; }
+              .sep { border-bottom: 1px solid #000; margin: 5px 0; }
+              .row { display: flex; justify-content: space-between; }
+              h2 { margin: 5px 0; font-size: 16px; }
+            </style>
+          </head>
+          <body>
+            <div class="center">
+              <h2>GRAVITY PARAGLIDING</h2>
+              <div style="font-size: 10px;">FETHIYE / OLUDENIZ</div>
+              <div class="sep"></div>
+              <div class="bold">BOOKING VOUCHER</div>
+              <div>#${fullRes.id}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="row"><span>DATE:</span><span>${new Date(fullRes.flightDate).toLocaleDateString()}</span></div>
+            <div class="row"><span>TIME:</span><span>${flightTimeLabel}</span></div>
+            <div class="row"><span>PICKUP:</span><span>${fullRes.pickupLocation || 'None'}</span></div>
+            <div class="sep"></div>
+            <div class="bold">PASSENGERS:</div>
+            ${passengersList}
+            <div class="sep"></div>
+            <div class="row bold"><span>TOTAL:</span><span>$${totalAmount.toFixed(2)}</span></div>
+            <div class="row"><span>PAID:</span><span>$${totalPaid.toFixed(2)}</span></div>
+            <div class="row bold" style="font-size: 14px;"><span>REST:</span><span>$${restToPay.toFixed(2)}</span></div>
+            <div class="sep"></div>
+            <div class="center bold" style="font-size: 12px; margin-top: 5px;">
+              ${restToPay <= 0 ? '*** PAID ***' : '*** BALANCE DUE ***'}
+            </div>
+            <div class="sep"></div>
+            <div class="center" style="font-size: 9px; margin-top: 10px;">
+              Please be ready 15 mins early.<br>
+              Contact: +90 5XX XXX XX XX<br>
+              Enjoy your flight!
+            </div>
+            <script>window.onload = function() { window.print(); };</script>
+          </body>
+        </html>
+      `);
+    }
+    printWindow.document.close();
   }
 
   onDrop(event: CdkDragDrop<Reservation[]>, targetFlightTimeId: number) {

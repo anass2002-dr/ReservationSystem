@@ -95,13 +95,17 @@
                     <i class="bi bi-wallet2 me-1"></i> {{ (res.totalAmount || 0) - (res.deposit || 0) | currency:'USD' }} To Pay
                   </div>
                   <div class="btn-group d-block">
-                  <button class="btn btn-outline-info btn-sm border-0" (click)="editReservation(res)" title="Edit">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm border-0" (click)="deleteReservation(res.id!)"
-                    title="Delete">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                    <button class="btn btn-outline-primary btn-sm border-0" (click)="printReservation(res)" title="Print Voucher">
+                      <i class="bi bi-printer"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm border-0" (click)="editReservation(res)" title="Edit">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm border-0" (click)="deleteReservation(res.id!)"
+                      title="Delete">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
 

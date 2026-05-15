@@ -281,6 +281,9 @@
         <!-- Action Buttons -->
         <div class="row mt-5 pt-4 border-top">
           <div class="col-12 d-flex justify-content-end gap-3">
+            <button type="button" class="btn btn-info-premium" (click)="printReservation()" *ngIf="isEditing">
+              <i class="bi bi-printer me-2"></i> Print Voucher
+            </button>
             <button type="button" class="btn btn-secondary-premium" (click)="cancel()">Cancel</button>
             <button type="submit" class="btn btn-primary-premium" [disabled]="!reservationForm.form.valid">
               <i class="bi bi-save me-2"></i> {{ isEditing ? 'Update Reservation' : 'Complete Booking' }}

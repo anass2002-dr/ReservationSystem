@@ -198,6 +198,16 @@ export class ReservationFormComponent implements OnInit {
     });
   }
 
+  getCurrencyLabel(currency: number): string {
+    switch (currency) {
+      case 0: return 'TL';
+      case 1: return 'USD';
+      case 2: return 'EUR';
+      case 3: return 'GBP';
+      default: return 'USD';
+    }
+  }
+
   calculateBalances(): void {
     if (this.reservation.isAgencyBooking && this.reservation.agencyPrice !== undefined) {
       this.reservation.totalAmount = this.reservation.agencyPrice;
@@ -293,6 +303,215 @@ export class ReservationFormComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/reservations']);
+  }
+
+  printReservation(): void {
+    this.showPrintModal(this.reservation);
+  }
+
+  showPrintModal(res: Reservation): void {
+    const modalHtml = `
+      <div id="formPrintModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; font-family: 'Segoe UI', sans-serif;">
+        <div style="background: white; padding: 30px; border-radius: 20px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;">
+          <h3 style="margin-bottom: 10px; color: #333;">Print Options</h3>
+          <p style="color: #666; margin-bottom: 25px;">Choose your preferred document format</p>
+          
+          <div style="display: grid; gap: 15px;">
+            <button id="formPrintA5" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+              <i class="bi bi-file-earmark-text" style="margin-right: 8px;"></i> A5 Professional Voucher
+            </button>
+            <button id="formPrintThermal" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: all 0.2s;">
+              <i class="bi bi-printer" style="margin-right: 8px;"></i> Sewoo Thermal Receipt (80mm)
+            </button>
+            <button id="formClosePrintModal" style="background: #f8f9fa; color: #333; border: 1px solid #ddd; padding: 12px; border-radius: 12px; cursor: pointer; margin-top: 10px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = modalHtml;
+    document.body.appendChild(wrapper);
+
+    document.getElementById('formPrintA5')?.addEventListener('click', () => {
+      this.executePrint(res, 'A5');
+      document.body.removeChild(wrapper);
+    });
+
+    document.getElementById('formPrintThermal')?.addEventListener('click', () => {
+      this.executePrint(res, 'Thermal');
+      document.body.removeChild(wrapper);
+    });
+
+    document.getElementById('formClosePrintModal')?.addEventListener('click', () => {
+      document.body.removeChild(wrapper);
+    });
+  }
+
+  executePrint(res: Reservation, mode: 'A5' | 'Thermal'): void {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const flightTimeLabel = this.flightTimes.find(f => f.id === res.flightTimeId)?.time || 'N/A';
+    const statusLabel = this.statusOptions.find(o => o.value === res.status)?.label || 'Pending';
+    const totalAmount = res.isAgencyBooking ? (res.agencyPrice || 0) : (res.totalAmount || 0);
+    const deposit = res.deposit || 0;
+    
+    // Calculate total paid including payments and deposit
+    const paidFromPayments = this.payments.reduce((sum, p) => sum + Number(p.amount), 0);
+    const totalPaid = Number(paidFromPayments) + Number(deposit);
+    const restToPay = Math.max(0, totalAmount - totalPaid);
+    
+    const agencyName = res.isAgencyBooking ? (this.agencies.find(a => a.id === res.agencyId)?.name || 'Agency') : '';
+
+    // Get payment details from the first payment record
+    const firstPayment = this.payments[0];
+    const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : 'CASH') : 'CASH';
+    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : 'USD';
+
+    if (mode === 'A5') {
+      const passengersHtml = res.details.map((d, i) => `
+        <div class="passenger-item">
+          <div class="p-header">Passenger ${i + 1}: ${d.customer?.fullName || 'N/A'}</div>
+          <div class="p-grid">
+            <div><strong>Phone:</strong> ${d.customer?.phoneNumber || 'N/A'}</div>
+            <div><strong>Country:</strong> ${d.customer?.country || 'N/A'}</div>
+            <div><strong>Pilot:</strong> ${this.pilots.find(p => p.id === d.pilotId)?.fullName || 'Pending'}</div>
+            <div><strong>Package:</strong> ${this.flightPackages.find(p => p.id === d.flightPackageId)?.title || 'N/A'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Reservation #${res.id}</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+            <style>
+              @page { size: A5 landscape; margin: 0; }
+              body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; color: #333; background: #fff; font-size: 12px; }
+              .ticket { border: 2px solid #0d6efd; border-radius: 15px; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
+              .header { background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+              .header h1 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+              .content { padding: 15px; flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+              .section-title { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 10px; font-weight: bold; color: #0d6efd; text-transform: uppercase; font-size: 10px; }
+              .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+              .info-item { margin-bottom: 3px; }
+              .info-item strong { color: #666; font-size: 9px; display: block; }
+              .passengers { grid-column: span 2; }
+              .passenger-item { background: #f8f9fa; border-radius: 8px; padding: 8px; margin-bottom: 8px; border-left: 3px solid #0d6efd; }
+              .p-header { font-weight: bold; margin-bottom: 5px; color: #333; border-bottom: 1px solid #dee2e6; padding-bottom: 3px; }
+              .p-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 5px; font-size: 10px; }
+              .footer { background: #f1f3f5; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; }
+              .price-box { text-align: right; }
+              .price-val { font-weight: bold; color: #0d6efd; font-size: 14px; }
+              .price-label { color: #666; font-size: 10px; }
+              .notes { grid-column: span 2; font-style: italic; color: #666; font-size: 10px; margin-top: 5px; }
+            </style>
+          </head>
+          <body>
+            <div class="ticket">
+              <div class="header">
+                <div><h1>Flight Reservation</h1><div style="font-size: 10px; opacity: 0.8;">Voucher #${res.id} | ${new Date().toLocaleDateString()}</div></div>
+                <div style="text-align: right"><div style="font-weight: bold;">${res.title || 'Paragliding Experience'}</div><div style="font-size: 10px;">Status: ${statusLabel}</div></div>
+              </div>
+              <div class="content">
+                <div class="flight-info">
+                  <div class="section-title">Flight Details</div>
+                  <div class="info-grid">
+                    <div class="info-item"><strong>Date</strong>${res.flightDate}</div>
+                    <div class="info-item"><strong>Time</strong>${flightTimeLabel}</div>
+                    <div class="info-item"><strong>Pickup</strong>${res.pickupLocation || 'No Pickup'}</div>
+                    <div class="info-item"><strong>Source</strong>${res.isAgencyBooking ? 'Agency: ' + agencyName : 'Direct'}</div>
+                  </div>
+                </div>
+                <div class="payment-info">
+                  <div class="section-title">Payment Summary (${payCurrency})</div>
+                  <div class="info-grid">
+                    <div class="info-item"><strong>Total Amount</strong>${totalAmount.toFixed(2)} ${payCurrency}</div>
+                    <div class="info-item"><strong>Paid Amount</strong>${totalPaid.toFixed(2)} ${payCurrency}</div>
+                    <div class="info-item"><strong>Rest to Pay</strong>${restToPay.toFixed(2)} ${payCurrency}</div>
+                    <div class="info-item" style="color: ${restToPay <= 0 ? 'green' : 'red'}; font-weight: bold;">
+                      <strong>Method: ${payMethod}</strong>${restToPay <= 0 ? ' PAID' : ' DUE'}
+                    </div>
+                  </div>
+                </div>
+                <div class="passengers">
+                  <div class="section-title">Passenger Details</div>
+                  ${passengersHtml}
+                </div>
+                ${res.notes ? `<div class="notes"><strong>Notes:</strong> ${res.notes}</div>` : ''}
+              </div>
+              <div class="footer">
+                <div style="font-size: 9px; color: #999;">Enjoy your flight! Contact: +90 5XX XXX XX XX</div>
+                <div class="price-box"><div class="price-label">Rest to Pay</div><div class="price-val">${restToPay.toFixed(2)} ${payCurrency}</div></div>
+              </div>
+            </div>
+            <script>window.onload = function() { window.print(); };</script>
+          </body>
+        </html>
+      `);
+    } else {
+      // Thermal Sewoo Mode (80mm)
+      const passengersList = res.details.map((d, i) => `
+        <div style="border-bottom: 1px dashed #000; padding: 5px 0;">
+          P${i+1}: ${d.customer?.fullName || 'N/A'}<br>
+          <small>Pilot: ${this.pilots.find(p => p.id === d.pilotId)?.fullName || 'Pending'}</small>
+        </div>
+      `).join('');
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Ticket #${res.id}</title>
+            <style>
+              @page { size: 80mm 200mm; margin: 0; }
+              body { font-family: 'Courier New', Courier, monospace; margin: 0; padding: 10px; width: 72mm; color: #000; }
+              .center { text-align: center; }
+              .bold { font-weight: bold; }
+              .sep { border-bottom: 1px solid #000; margin: 5px 0; }
+              .row { display: flex; justify-content: space-between; }
+              h2 { margin: 5px 0; font-size: 16px; }
+            </style>
+          </head>
+          <body>
+            <div class="center">
+              <h2>GRAVITY PARAGLIDING</h2>
+              <div style="font-size: 10px;">FETHIYE / OLUDENIZ</div>
+              <div class="sep"></div>
+              <div class="bold">BOOKING VOUCHER</div>
+              <div>#${res.id}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="row"><span>DATE:</span><span>${res.flightDate}</span></div>
+            <div class="row"><span>TIME:</span><span>${flightTimeLabel}</span></div>
+            <div class="row"><span>PICKUP:</span><span>${res.pickupLocation || 'None'}</span></div>
+            <div class="sep"></div>
+            <div class="bold">PASSENGERS:</div>
+            ${passengersList}
+            <div class="sep"></div>
+            <div class="row"><span>METHOD:</span><span class="bold">${payMethod}</span></div>
+            <div class="row bold"><span>TOTAL:</span><span>${totalAmount.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row"><span>PAID:</span><span>${totalPaid.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row bold" style="font-size: 14px;"><span>REST:</span><span>${restToPay.toFixed(2)} ${payCurrency}</span></div>
+            <div class="sep"></div>
+            <div class="center bold" style="font-size: 12px; margin-top: 5px;">
+              ${restToPay <= 0 ? '*** PAID ***' : '*** BALANCE DUE ***'}
+            </div>
+            <div class="sep"></div>
+            <div class="center" style="font-size: 9px; margin-top: 10px;">
+              Please be ready 15 mins early.<br>
+              Contact: +90 5XX XXX XX XX<br>
+              Enjoy your flight!
+            </div>
+            <script>window.onload = function() { window.print(); };</script>
+          </body>
+        </html>
+      `);
+    }
+    printWindow.document.close();
   }
 
   // --- Map and Geocoding Logic ---

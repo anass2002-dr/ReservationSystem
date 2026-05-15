@@ -18,6 +18,7 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
         {
             return _context.Reservations
                 .Include(r => r.FlightTime)
+                .Include(r => r.Agency)
                 .Include(r => r.ReservationDetails)
                     .ThenInclude(rd => rd.ReservationExtras)
                 .Include(r => r.ReservationDetails)
@@ -29,6 +30,7 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
         {
             return _context.Reservations
                 .Include(r => r.FlightTime)
+                .Include(r => r.Agency)
                 .Include(r => r.ReservationDetails)
                     .ThenInclude(rd => rd.ReservationExtras)
                 .Include(r => r.ReservationDetails)
