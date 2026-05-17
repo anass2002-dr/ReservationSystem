@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import {
   Reservation, ReservationStatus, Customer, Pilot, PilotGroup, Agency,
-  FlightPackage, TransportGroup, ExtraService, Country, FlightTime, PickupStatus, Payment
+  FlightPackage, TransportGroup, ExtraService, Country, FlightTime, PickupStatus, Payment, PaymentCurrency, PaymentMethod
 } from '../../models/models';
 import { PaymentService } from '../../services/payment.service';
 import { ReservationService } from '../../services/reservation.service';
@@ -46,6 +46,19 @@ export class ReservationFormComponent implements OnInit {
     { value: PickupStatus.NoShow, label: 'No Show' }
   ];
 
+  currencyOptions = [
+    { value: PaymentCurrency.USD, label: 'USD ($)' },
+    { value: PaymentCurrency.EUR, label: 'EUR (€)' },
+    { value: PaymentCurrency.TL, label: 'TRY (₺)' },
+    { value: PaymentCurrency.GBP, label: 'GBP (£)' }
+  ];
+
+  methodOptions = [
+    { value: PaymentMethod.Cash, label: 'Cash' },
+    { value: PaymentMethod.Card, label: 'Card' },
+    { value: PaymentMethod.Transfer, label: 'Transfer/IBAN' }
+  ];
+
   reservation: Reservation = {
     flightDate: '',
     flightTimeId: 1, // Default to first slot
@@ -53,6 +66,8 @@ export class ReservationFormComponent implements OnInit {
     pickupStatus: PickupStatus.NotRequired,
     pickupLocation: '',
     isAgencyBooking: false,
+    preferredCurrency: PaymentCurrency.USD,
+    depositMethod: PaymentMethod.Cash,
     details: [
       {
         customerId: 0,
@@ -169,6 +184,10 @@ export class ReservationFormComponent implements OnInit {
         this.reservation.flightDate = `${year}-${month}-${day}`;
       }
       
+      if (this.reservation.preferredCurrency === undefined) {
+        this.reservation.preferredCurrency = PaymentCurrency.USD;
+      }
+
       if (!this.reservation.details || this.reservation.details.length === 0) {
         this.reservation.details = [this.createEmptyDetail()];
       } else {
@@ -211,6 +230,25 @@ export class ReservationFormComponent implements OnInit {
   calculateBalances(): void {
     if (this.reservation.isAgencyBooking && this.reservation.agencyPrice !== undefined) {
       this.reservation.totalAmount = this.reservation.agencyPrice;
+    } else if (this.isEditing && this.reservation.totalAmount !== undefined && this.reservation.totalAmount > 0) {
+      // If editing and we already have a saved total amount, don't overwrite it automatically
+      // unless specifically triggered by a package change (which happens in the HTML event)
+    } else {
+      // Re-calculate total amount from package prices if not agency booking
+      let total = 0;
+      this.reservation.details.forEach(d => {
+        const pkg = this.flightPackages.find(p => p.id === d.flightPackageId);
+        if (pkg) total += pkg.price;
+        
+        // Add extra services
+        if (d.extraServiceIds) {
+          d.extraServiceIds.forEach(eid => {
+            const extra = this.extraServices.find(e => e.id === eid);
+            if (extra) total += extra.price;
+          });
+        }
+      });
+      this.reservation.totalAmount = total;
     }
     const totalDue = this.reservation.totalAmount || 0;
     const deposit = this.reservation.deposit || 0;
@@ -222,16 +260,27 @@ export class ReservationFormComponent implements OnInit {
     this.calculateBalances();
   }
 
+  onManualTotalChange(): void {
+    const totalDue = this.reservation.totalAmount || 0;
+    const deposit = this.reservation.deposit || 0;
+    this.totalPaid = this.payments.reduce((sum, p) => sum + Number(p.amount), 0) + Number(deposit);
+    this.remainingBalance = Math.max(0, totalDue - this.totalPaid);
+  }
+
   isFullyPaid(): boolean {
     const totalDue = this.reservation.totalAmount || 0;
     return this.totalPaid >= totalDue && totalDue > 0;
+  }
+
+  isAnyPackageSelected(): boolean {
+    return this.reservation.details && this.reservation.details.some(d => d.flightPackageId && d.flightPackageId > 0);
   }
 
   createEmptyDetail(): any {
     return {
       customerId: 0,
       pilotId: 0,
-      flightPackageId: 0,
+      flightPackageId: undefined,
       transportGroupId: undefined,
       weightLimitStatus: false,
       extraServiceIds: [],
@@ -269,6 +318,9 @@ export class ReservationFormComponent implements OnInit {
   save(): void {
     this.reservation.status = Number(this.reservation.status);
     this.reservation.flightTimeId = Number(this.reservation.flightTimeId);
+    this.reservation.preferredCurrency = Number(this.reservation.preferredCurrency || PaymentCurrency.USD);
+    this.reservation.depositMethod = this.reservation.depositMethod !== undefined ? Number(this.reservation.depositMethod) : undefined;
+    this.reservation.totalAmount = Number(this.reservation.totalAmount || 0);
     
     // Ensure all numeric values are properly casted
     this.reservation.details.forEach(detail => {
@@ -278,7 +330,11 @@ export class ReservationFormComponent implements OnInit {
       } else {
         detail.pilotId = undefined;
       }
-      detail.flightPackageId = Number(detail.flightPackageId);
+      if (detail.flightPackageId) {
+        detail.flightPackageId = Number(detail.flightPackageId);
+      } else {
+        detail.flightPackageId = undefined;
+      }
       if (detail.transportGroupId) {
         detail.transportGroupId = Number(detail.transportGroupId);
       }
@@ -366,10 +422,10 @@ export class ReservationFormComponent implements OnInit {
     
     const agencyName = res.isAgencyBooking ? (this.agencies.find(a => a.id === res.agencyId)?.name || 'Agency') : '';
 
-    // Get payment details from the first payment record
+    // Get payment details from the first payment record, or fallback to reservation preference
     const firstPayment = this.payments[0];
     const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : 'CASH') : 'CASH';
-    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : 'USD';
+    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : this.getCurrencyLabel(res.preferredCurrency || 0);
 
     if (mode === 'A5') {
       const passengersHtml = res.details.map((d, i) => `
@@ -425,6 +481,7 @@ export class ReservationFormComponent implements OnInit {
                     <div class="info-item"><strong>Time</strong>${flightTimeLabel}</div>
                     <div class="info-item"><strong>Pickup</strong>${res.pickupLocation || 'No Pickup'}</div>
                     <div class="info-item"><strong>Source</strong>${res.isAgencyBooking ? 'Agency: ' + agencyName : 'Direct'}</div>
+                    <div class="info-item"><strong>Created By</strong>${res.createdBy || 'System'}</div>
                   </div>
                 </div>
                 <div class="payment-info">
@@ -496,6 +553,7 @@ export class ReservationFormComponent implements OnInit {
             <div class="row bold"><span>TOTAL:</span><span>${totalAmount.toFixed(2)} ${payCurrency}</span></div>
             <div class="row"><span>PAID:</span><span>${totalPaid.toFixed(2)} ${payCurrency}</span></div>
             <div class="row bold" style="font-size: 14px;"><span>REST:</span><span>${restToPay.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row"><span>CREATED BY:</span><span>${res.createdBy || 'System'}</span></div>
             <div class="sep"></div>
             <div class="center bold" style="font-size: 12px; margin-top: 5px;">
               ${restToPay <= 0 ? '*** PAID ***' : '*** BALANCE DUE ***'}

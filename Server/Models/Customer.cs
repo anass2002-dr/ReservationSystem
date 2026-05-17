@@ -10,9 +10,8 @@ namespace ReservationSystem_backend.Models
 
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
         [MaxLength(20)]
-        public string PhoneNumber { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; }
 
         [EmailAddress]
         [MaxLength(150)]

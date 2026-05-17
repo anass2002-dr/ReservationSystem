@@ -7,7 +7,9 @@ namespace ReservationSystem_backend.Models
         public DateTime FlightDate { get; set; }
         public string? Title { get; set; }
         public decimal TotalAmount { get; set; }
+        public PaymentCurrency PreferredCurrency { get; set; } = PaymentCurrency.USD;
         public decimal Deposit { get; set; }
+        public PaymentMethod? DepositMethod { get; set; }
 
         public int FlightTimeId { get; set; }
         public FlightTime FlightTime { get; set; } = null!;

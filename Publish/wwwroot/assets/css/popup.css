@@ -1,0 +1,263 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+  transition: opacity 200ms;
+  overflow: auto;
+  z-index: 1111;
+}
+
+.overlay.light {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.overlay .cancel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+}
+
+.popups {
+  margin: 75px auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #666;
+  width: 900px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+#popup2 .popups {
+  margin: 75px auto;
+  width: 80%;
+}
+
+.light .popups {
+  border-color: #aaa;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.popups h2 {
+  margin-top: 0;
+  color: #666;
+  font-family: "Trebuchet MS", Tahoma, Arial, sans-serif;
+}
+
+.popups .close {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 20px;
+  right: 20px;
+  opacity: 0.8;
+  transition: all 200ms;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.popups .close:hover {
+  opacity: 1;
+}
+
+.popups .content {
+  max-height: 600px;
+  overflow: auto;
+}
+
+.popups p {
+  margin: 0 0 1em;
+}
+
+.popups p:last-child {
+  margin: 0;
+}
+
+.containers {
+  position: relative;
+  max-width: 800px;
+  width: 100%;
+  border-radius: 6px;
+  padding: 30px;
+  margin: 0 15px;
+  background-color: #fff;
+  /* box-shadow: 0 5px 10px rgba(0,0,0,0.1); */
+}
+
+.header-popup {
+  display: inline;
+  position: relative;
+  font-size: 20px;
+  font-weight: 600;
+  background-color: transparent;
+  color: #333;
+}
+
+.header-popup::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 3px;
+  width: 60px;
+  border-radius: 8px;
+  background-color: #256d85;
+}
+
+.containers form {
+  position: relative;
+  margin-top: 10px;
+  background-color: #fff;
+  overflow-y: auto;
+}
+.containers form .form {
+  position: absolute;
+  background-color: #fff;
+  transition: 0.3s ease;
+}
+
+.containers form .form.second {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+}
+
+form.secActive .form.second {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+form.secActive .form.first {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-100%);
+}
+
+.containers form .title {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 6px 0;
+  color: #333;
+}
+
+.containers form .fields {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+form .fields .input-field {
+  display: flex;
+  width: calc(100% / 3 - 15px);
+  flex-direction: column;
+  margin: 4px 0;
+}
+
+.input-field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #2e2e2e;
+}
+
+.input-field input,
+select {
+  outline: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  padding: 0 15px;
+  height: 42px;
+  margin: 8px 0;
+}
+
+.input-field input :focus,
+.input-field select:focus {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.13);
+}
+
+.input-field select,
+.input-field input[type="date"] {
+  color: #707070;
+}
+
+.input-field input[type="date"]:valid {
+  color: #333;
+}
+
+.button,
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 45px;
+  max-width: 200px;
+  width: 100%;
+  border: none;
+  outline: none;
+  color: #fff;
+  border-radius: 5px;
+  margin: 25px 0;
+  background-color: #256d85;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.containers .btnText {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+form button:hover {
+  background-color: #3698b9;
+}
+
+form button i,
+form .backBtn i {
+  margin: 0 6px;
+}
+
+form .backBtn i {
+  transform: rotate(180deg);
+}
+
+form .buttons {
+  display: flex;
+  align-items: center;
+}
+
+form .buttons button,
+.backBtn {
+  margin-right: 14px;
+}
+
+@media (max-width: 750px) {
+  .containers form {
+    overflow-y: scroll;
+  }
+
+  .containers form::-webkit-scrollbar {
+    display: none;
+  }
+
+  form .fields .input-field {
+    width: calc(100% / 2 - 15px);
+  }
+}
+
+@media (max-width: 550px) {
+  form .fields .input-field {
+    width: 100%;
+  }
+}

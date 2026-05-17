@@ -59,7 +59,10 @@ namespace ReservationSystem_backend.Services.ReservationService
                 IsAgencyBooking = dto.IsAgencyBooking,
                 AgencyId = dto.AgencyId,
                 AgencyPrice = dto.AgencyPrice,
+                PreferredCurrency = dto.PreferredCurrency,
                 Deposit = dto.Deposit,
+                DepositMethod = dto.DepositMethod,
+                TotalAmount = dto.TotalAmount,
                 ReservationDetails = new List<ReservationDetail>()
             };
 
@@ -105,15 +108,18 @@ namespace ReservationSystem_backend.Services.ReservationService
                     {
                         CustomerId = customerId,
                         PilotId = detailDto.PilotId,
-                        FlightPackageId = detailDto.FlightPackageId,
+                        FlightPackageId = detailDto.FlightPackageId == 0 ? null : detailDto.FlightPackageId,
                         TransportGroupId = detailDto.TransportGroupId,
                         WeightLimitStatus = detailDto.WeightLimitStatus,
                         ReservationExtras = new List<ReservationExtra>()
                     };
 
                     // Calculate package price
-                    var pkg = _packageRepo.GetFlightPackageById(detailDto.FlightPackageId);
-                    if (pkg != null) totalAmount += pkg.Price;
+                    if (detailDto.FlightPackageId.HasValue && detailDto.FlightPackageId.Value > 0)
+                    {
+                        var pkg = _packageRepo.GetFlightPackageById(detailDto.FlightPackageId.Value);
+                        if (pkg != null) totalAmount += pkg.Price;
+                    }
 
                     // Handle extras for this detail
                     if (detailDto.ExtraServiceIds != null)
@@ -137,6 +143,11 @@ namespace ReservationSystem_backend.Services.ReservationService
             if (entity.IsAgencyBooking && entity.AgencyPrice.HasValue)
             {
                 entity.TotalAmount = entity.AgencyPrice.Value;
+            }
+            else if (dto.TotalAmount > 0)
+            {
+                // Respect manual override if provided
+                entity.TotalAmount = dto.TotalAmount;
             }
             else
             {
@@ -162,7 +173,10 @@ namespace ReservationSystem_backend.Services.ReservationService
                 existingEntity.IsAgencyBooking = dto.IsAgencyBooking;
                 existingEntity.AgencyId = dto.AgencyId;
                 existingEntity.AgencyPrice = dto.AgencyPrice;
+                existingEntity.PreferredCurrency = dto.PreferredCurrency;
                 existingEntity.Deposit = dto.Deposit;
+                existingEntity.DepositMethod = dto.DepositMethod;
+                existingEntity.TotalAmount = dto.TotalAmount;
                 
                 decimal totalAmount = 0;
 
@@ -208,15 +222,18 @@ namespace ReservationSystem_backend.Services.ReservationService
                         {
                             CustomerId = customerId,
                             PilotId = detailDto.PilotId,
-                            FlightPackageId = detailDto.FlightPackageId,
+                            FlightPackageId = detailDto.FlightPackageId == 0 ? null : detailDto.FlightPackageId,
                             TransportGroupId = detailDto.TransportGroupId,
                             WeightLimitStatus = detailDto.WeightLimitStatus,
                             ReservationExtras = new List<ReservationExtra>()
                         };
 
                         // Calculate package price
-                        var pkg = _packageRepo.GetFlightPackageById(detailDto.FlightPackageId);
-                        if (pkg != null) totalAmount += pkg.Price;
+                        if (detailDto.FlightPackageId.HasValue && detailDto.FlightPackageId.Value > 0)
+                        {
+                            var pkg = _packageRepo.GetFlightPackageById(detailDto.FlightPackageId.Value);
+                            if (pkg != null) totalAmount += pkg.Price;
+                        }
 
                         if (detailDto.ExtraServiceIds != null)
                         {
@@ -239,6 +256,11 @@ namespace ReservationSystem_backend.Services.ReservationService
                 if (existingEntity.IsAgencyBooking && existingEntity.AgencyPrice.HasValue)
                 {
                     existingEntity.TotalAmount = existingEntity.AgencyPrice.Value;
+                }
+                else if (dto.TotalAmount > 0)
+                {
+                    // Respect manual override
+                    existingEntity.TotalAmount = dto.TotalAmount;
                 }
                 else
                 {

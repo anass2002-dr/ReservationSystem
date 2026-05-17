@@ -11,7 +11,7 @@ namespace ReservationSystem_backend.DTOs
         public int ReservationId { get; set; }
         public int CustomerId { get; set; }
         public int? PilotId { get; set; }
-        public int FlightPackageId { get; set; }
+        public int? FlightPackageId { get; set; }
         public int? TransportGroupId { get; set; }
         public bool WeightLimitStatus { get; set; }
         public List<int> ExtraServiceIds { get; set; } = new List<int>();

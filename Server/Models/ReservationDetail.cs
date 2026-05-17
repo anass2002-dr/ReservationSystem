@@ -13,8 +13,8 @@ namespace ReservationSystem_backend.Models
         public int? PilotId { get; set; }
         public Pilot? Pilot { get; set; }
 
-        public int FlightPackageId { get; set; }
-        public FlightPackage FlightPackage { get; set; } = null!;
+        public int? FlightPackageId { get; set; }
+        public FlightPackage? FlightPackage { get; set; }
 
         public int? TransportGroupId { get; set; }
         public TransportGroup? TransportGroup { get; set; }

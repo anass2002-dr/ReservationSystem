@@ -300,7 +300,6 @@ namespace ReservationSystem_backend.Migrations
                         .HasColumnType("varchar(150)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -420,35 +419,35 @@ namespace ReservationSystem_backend.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 14, 12, 50, 14, 940, DateTimeKind.Utc).AddTicks(4838),
+                            CreatedAt = new DateTime(2026, 5, 17, 11, 52, 14, 679, DateTimeKind.Utc).AddTicks(251),
                             IsActive = true,
                             Time = "08:30"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 14, 12, 50, 14, 940, DateTimeKind.Utc).AddTicks(5991),
+                            CreatedAt = new DateTime(2026, 5, 17, 11, 52, 14, 679, DateTimeKind.Utc).AddTicks(1426),
                             IsActive = true,
                             Time = "10:30"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 14, 12, 50, 14, 940, DateTimeKind.Utc).AddTicks(5995),
+                            CreatedAt = new DateTime(2026, 5, 17, 11, 52, 14, 679, DateTimeKind.Utc).AddTicks(1428),
                             IsActive = true,
                             Time = "13:00"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 14, 12, 50, 14, 940, DateTimeKind.Utc).AddTicks(6040),
+                            CreatedAt = new DateTime(2026, 5, 17, 11, 52, 14, 679, DateTimeKind.Utc).AddTicks(1429),
                             IsActive = true,
                             Time = "15:00"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 5, 14, 12, 50, 14, 940, DateTimeKind.Utc).AddTicks(6041),
+                            CreatedAt = new DateTime(2026, 5, 17, 11, 52, 14, 679, DateTimeKind.Utc).AddTicks(1430),
                             IsActive = true,
                             Time = "17:00"
                         });
@@ -595,6 +594,9 @@ namespace ReservationSystem_backend.Migrations
                     b.Property<decimal>("Deposit")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("DepositMethod")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("FlightDate")
                         .HasColumnType("datetime(6)");
 
@@ -611,6 +613,9 @@ namespace ReservationSystem_backend.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<int>("PickupStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PreferredCurrency")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -654,7 +659,7 @@ namespace ReservationSystem_backend.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlightPackageId")
+                    b.Property<int?>("FlightPackageId")
                         .HasColumnType("int");
 
                     b.Property<int?>("PilotId")
@@ -844,8 +849,7 @@ namespace ReservationSystem_backend.Migrations
                     b.HasOne("ReservationSystem_backend.Models.FlightPackage", "FlightPackage")
                         .WithMany("ReservationDetails")
                         .HasForeignKey("FlightPackageId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ReservationSystem_backend.Models.Pilot", "Pilot")
                         .WithMany("ReservationDetails")

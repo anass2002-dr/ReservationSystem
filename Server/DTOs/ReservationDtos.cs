@@ -11,7 +11,9 @@ namespace ReservationSystem_backend.DTOs
         public DateTime FlightDate { get; set; }
         public string? Title { get; set; }
         public decimal TotalAmount { get; set; }
+        public PaymentCurrency PreferredCurrency { get; set; }
         public decimal Deposit { get; set; }
+        public PaymentMethod? DepositMethod { get; set; }
         public int FlightTimeId { get; set; }
         public string? FlightTime { get; set; }
         public ReservationStatus Status { get; set; }
@@ -39,7 +41,9 @@ namespace ReservationSystem_backend.DTOs
             FlightDate = model.FlightDate;
             Title = model.Title;
             TotalAmount = model.TotalAmount;
+            PreferredCurrency = model.PreferredCurrency;
             Deposit = model.Deposit;
+            DepositMethod = model.DepositMethod;
             FlightTimeId = model.FlightTimeId;
             FlightTime = model.FlightTime?.Time;
             Status = model.Status;

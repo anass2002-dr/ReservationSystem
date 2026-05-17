@@ -1,21 +1,39 @@
 <div class="pagetitle d-flex justify-content-between align-items-center">
   <div>
-    <h1>Payments Dashboard</h1>
+    <h1>Payments Management</h1>
     <nav>
-      <ol class="breadcrumb">
+      <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
         <li class="breadcrumb-item">Reservations</li>
         <li class="breadcrumb-item active">Payments</li>
       </ol>
     </nav>
   </div>
-  <div class="d-flex align-items-center bg-white rounded-pill px-4 py-2 shadow-sm border">
-    <label class="fw-bold me-3 text-muted small text-uppercase">Select Date:</label>
+  <div *ngIf="activeTab === 'collect'" class="d-flex align-items-center bg-white rounded-pill px-4 py-2 shadow-sm border">
+    <label class="fw-bold me-3 text-muted small text-uppercase mb-0">Select Date:</label>
     <input type="date" class="form-control border-0 fw-bold text-primary p-0 bg-transparent" [(ngModel)]="selectedDate" style="outline: none; box-shadow: none;">
   </div>
 </div>
 
-<section class="section">
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div class="d-flex gap-2">
+    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+      [class.btn-primary]="activeTab === 'collect'"
+      [class.btn-light]="activeTab !== 'collect'"
+      (click)="activeTab = 'collect'">
+      <i class="bi bi-wallet2 me-2"></i>Collect Payments
+    </button>
+    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+      [class.btn-primary]="activeTab === 'records'"
+      [class.btn-light]="activeTab !== 'records'"
+      (click)="activeTab = 'records'">
+      <i class="bi bi-journal-text me-2"></i>Payment Records
+    </button>
+  </div>
+</div>
+
+<!-- SECTION 1: Collect Payments View -->
+<section class="section" *ngIf="activeTab === 'collect'">
   <!-- Flight Time Groups -->
   <div class="row g-4">
     <div class="col-md-6 col-xl-4" *ngFor="let group of groupedReservations; let i = index">
@@ -51,7 +69,7 @@
               
               <div class="d-flex justify-content-between align-items-center small text-muted">
                 <div><i class="bi bi-people-fill me-1"></i> {{ getPassengersCount(res) }} Passengers</div>
-                <div class="fw-bold text-primary">{{ res.totalAmount | currency: 'USD' }}</div>
+                <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyCode(res.preferredCurrency) }}</div>
               </div>
               
               <div class="mt-2 text-end">
@@ -65,6 +83,154 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Payment Records View -->
+<section class="section" *ngIf="activeTab === 'records'">
+  <!-- Advanced Metrics Grid -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 border-start border-primary border-4 p-3 bg-white h-100">
+        <div class="text-muted small fw-bold text-uppercase">TRY Collected</div>
+        <div class="h2 fw-bold text-primary mt-2 mb-0">{{ getFilteredTotal(0) | number:'1.2-2' }} ₺</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 border-start border-success border-4 p-3 bg-white h-100">
+        <div class="text-muted small fw-bold text-uppercase">USD Collected</div>
+        <div class="h2 fw-bold text-success mt-2 mb-0">{{ getFilteredTotal(1) | number:'1.2-2' }} $</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 border-start border-warning border-4 p-3 bg-white h-100">
+        <div class="text-muted small fw-bold text-uppercase">EUR Collected</div>
+        <div class="h2 fw-bold text-warning mt-2 mb-0">{{ getFilteredTotal(2) | number:'1.2-2' }} €</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 border-start border-info border-4 p-3 bg-white h-100">
+        <div class="text-muted small fw-bold text-uppercase">GBP Collected</div>
+        <div class="h2 fw-bold text-info mt-2 mb-0">{{ getFilteredTotal(3) | number:'1.2-2' }} £</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Advanced Filters Bar -->
+  <div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small fw-bold text-muted">Start Date</label>
+          <input type="date" class="form-control" [(ngModel)]="filterStartDate">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold text-muted">End Date</label>
+          <input type="date" class="form-control" [(ngModel)]="filterEndDate">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-bold text-muted">Payment Method</label>
+          <select class="form-select" [(ngModel)]="filterMethod">
+            <option value="all">All Methods</option>
+            <option value="0">Cash</option>
+            <option value="1">Card</option>
+            <option value="2">Transfer/IBAN</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-bold text-muted">Currency</label>
+          <select class="form-select" [(ngModel)]="filterCurrency">
+            <option value="all">All Currencies</option>
+            <option value="0">TRY (₺)</option>
+            <option value="1">USD ($)</option>
+            <option value="2">EUR (€)</option>
+            <option value="3">GBP (£)</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+          <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStartDate=''; filterEndDate=''; filterMethod='all'; filterCurrency='all'; filterSearch=''">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+          </button>
+        </div>
+      </div>
+      <div class="row g-3 mt-2">
+        <div class="col-12">
+          <div class="input-group mb-0">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by Reservation ID, Title, or Passenger Name..." [(ngModel)]="filterSearch">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Records Table -->
+  <div class="card shadow-sm border-0 bg-white">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Transactions ({{ filteredPayments.length }})</h5>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border-0">
+          <thead class="table-light">
+            <tr>
+              <th class="border-0">Date</th>
+              <th class="border-0">Reservation</th>
+              <th class="border-0">Passengers</th>
+              <th class="border-0">Amount Paid</th>
+              <th class="border-0">Method</th>
+              <th class="border-0">Notes</th>
+              <th class="border-0 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="filteredPayments.length === 0">
+              <td colspan="7" class="text-center py-5 text-muted bg-light rounded border border-dashed">
+                <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                No payment records found matching your filters.
+              </td>
+            </tr>
+            <tr *ngFor="let record of filteredPayments">
+              <td class="fw-bold">{{ record.paymentDate | date:'yyyy-MM-dd' }}</td>
+              <td>
+                <div class="fw-bold text-dark">{{ getReservationTitle(record.reservationId) }}</div>
+                <span class="badge bg-secondary">#{{ record.reservationId }}</span>
+              </td>
+              <td class="text-muted small">{{ getReservationPassengers(record.reservationId) || 'N/A' }}</td>
+              <td class="fw-bold fs-6" [ngClass]="{
+                'text-success': record.currency === 1,
+                'text-warning': record.currency === 2,
+                'text-info': record.currency === 3,
+                'text-primary': record.currency === 0
+              }">
+                {{ record.amount | number:'1.2-2' }} {{ getCurrencyCode(record.currency) }}
+              </td>
+              <td>
+                <span *ngIf="record.method === 0" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
+                  💵 Cash
+                </span>
+                <span *ngIf="record.method === 1" class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
+                  💳 Card
+                </span>
+                <span *ngIf="record.method === 2" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill">
+                  🏦 Transfer
+                </span>
+              </td>
+              <td class="text-muted small" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ record.notes || '-' }}
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" (click)="deletePaymentRecord(record.id!)" title="Delete Payment">
+                  <i class="bi bi-trash fs-5"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -89,25 +255,25 @@
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
                 <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Total</div>
-                <div class="fw-bold text-dark fs-6">{{ totalAmountDue | currency: 'USD' }}</div>
+                <div class="fw-bold text-dark fs-6">{{ totalAmountDue | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
                 <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Deposit</div>
-                <div class="fw-bold text-info fs-6">{{ selectedReservation.deposit || 0 | currency: 'USD' }}</div>
+                <div class="fw-bold text-info fs-6">{{ selectedReservation.deposit || 0 | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
                 <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Paid</div>
-                <div class="fw-bold text-success fs-6">{{ amountPaid | currency: 'USD' }}</div>
+                <div class="fw-bold text-success fs-6">{{ amountPaid | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
                 <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Rest</div>
-                <div class="fw-bold text-danger fs-6">{{ remainingBalance | currency: 'USD' }}</div>
+                <div class="fw-bold text-danger fs-6">{{ remainingBalance | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
           </div>
@@ -117,11 +283,11 @@
             <div class="row">
               <div class="col-md-7 mb-3">
                 <label class="form-label fw-bold d-flex justify-content-between">
-                  <span>Amount (USD) <span class="text-danger">*</span></span>
+                  <span>Amount ({{ getCurrencyCode(currentPayment.currency) }}) <span class="text-danger">*</span></span>
                   <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">Pay All</a>
                 </label>
                 <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                  <span class="input-group-text"><i class="bi bi-wallet2"></i></span>
                   <input type="number" class="form-control" [(ngModel)]="currentPayment.amount" name="amount" required>
                 </div>
               </div>
@@ -133,11 +299,12 @@
               </div>
             </div>
 
-            <div class="row mb-3" *ngIf="currentPayment.currency !== PaymentCurrency.USD">
+            <div class="row mb-3" *ngIf="selectedReservation && currentPayment.currency !== selectedReservation.preferredCurrency">
               <div class="col-12">
                 <div class="p-3 rounded border bg-light text-center">
-                  <div class="small text-muted text-uppercase fw-bold mb-1">Equivalent in {{ getCurrencyCode(currentPayment.currency) }}</div>
-                  <div class="fs-4 fw-bold text-primary">{{ getConvertedAmount() | number:'1.2-2' }} {{ getCurrencyCode(currentPayment.currency) }}</div>
+                  <div class="small text-muted text-uppercase fw-bold mb-1">Equivalent in {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
+                  <div class="fs-4 fw-bold text-primary">{{ getConvertedAmount() | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
+                  <div class="small text-muted mt-1">(Base Reservation Currency: {{ getCurrencyCode(selectedReservation.preferredCurrency) }})</div>
                 </div>
               </div>
             </div>

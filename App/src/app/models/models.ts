@@ -52,7 +52,7 @@ export interface ReservationDetail {
   reservationId?: number;
   customerId: number;
   pilotId?: number;
-  flightPackageId: number;
+  flightPackageId?: number;
   transportGroupId?: number;
   weightLimitStatus: boolean;
   extraServiceIds: number[];
@@ -81,6 +81,7 @@ export interface Reservation {
   flightTimeId: number;
   flightTime?: string;
   totalAmount?: number;
+  preferredCurrency?: PaymentCurrency;
   status: ReservationStatus;
   notes?: string;
   pickupStatus?: PickupStatus;
@@ -90,6 +91,7 @@ export interface Reservation {
   agencyName?: string;
   agencyPrice?: number;
   deposit?: number;
+  depositMethod?: PaymentMethod;
   details: ReservationDetail[];
   createdAt?: string;
   updatedAt?: string;
@@ -129,7 +131,8 @@ export enum PaymentCurrency {
 
 export enum PaymentMethod {
   Cash = 0,
-  Card = 1
+  Card = 1,
+  Transfer = 2
 }
 
 export interface Country {

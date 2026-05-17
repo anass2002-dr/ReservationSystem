@@ -24,15 +24,16 @@ namespace ReservationSystem_backend.Models
 
     public enum PaymentCurrency
     {
-        TL,
-        USD,
-        EUR,
-        GBP
+        TL = 0,
+        USD = 1,
+        EUR = 2,
+        GBP = 3
     }
 
     public enum PaymentMethod
     {
-        Cash,
-        Card
+        Cash = 0,
+        Card = 1,
+        Transfer = 2
     }
 }

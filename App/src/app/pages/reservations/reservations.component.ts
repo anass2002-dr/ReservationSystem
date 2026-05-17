@@ -248,10 +248,10 @@ export class ReservationsComponent implements OnInit {
     const totalPaid = Number(paidFromPayments) + Number(deposit);
     const restToPay = Math.max(0, totalAmount - totalPaid);
 
-    // Get payment details from the first payment record
+    // Get payment details from the first payment record, or fallback to reservation preference
     const firstPayment = this.payments.find(p => p.reservationId === fullRes.id);
     const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : 'CASH') : 'CASH';
-    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : 'USD';
+    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : this.getCurrencyLabel(fullRes.preferredCurrency || 0);
 
     if (mode === 'A5') {
       const passengersHtml = fullRes.details.map((d, i) => `
@@ -300,6 +300,7 @@ export class ReservationsComponent implements OnInit {
                   <div class="info-item"><strong>Time</strong>${flightTimeLabel}</div>
                   <div class="info-item"><strong>Pickup</strong>${fullRes.pickupLocation || 'No Pickup'}</div>
                   <div class="info-item"><strong>Booking</strong>${fullRes.isAgencyBooking ? 'Agency: ' + (fullRes.agencyName || 'N/A') : 'Direct'}</div>
+                  <div class="info-item"><strong>Created By</strong>${fullRes.createdBy || 'System'}</div>
                 </div></div>
                 <div><div class="section-title">Payment (${payCurrency})</div><div class="info-grid">
                   <div class="info-item"><strong>Total</strong>${totalAmount.toFixed(2)} ${payCurrency}</div>
@@ -313,7 +314,7 @@ export class ReservationsComponent implements OnInit {
               </div>
               <div class="footer">
                 <div style="font-size: 9px;">Gravity Paragliding | Fethiye, Turkey</div>
-                <div style="text-align: right"><div>Rest to Pay</div><div class="price-val">$${restToPay.toFixed(2)}</div></div>
+                <div style="text-align: right"><div>Rest to Pay</div><div class="price-val">${restToPay.toFixed(2)} ${payCurrency}</div></div>
               </div>
             </div>
             <script>window.onload = function() { window.print(); };</script>
@@ -359,9 +360,11 @@ export class ReservationsComponent implements OnInit {
             <div class="bold">PASSENGERS:</div>
             ${passengersList}
             <div class="sep"></div>
-            <div class="row bold"><span>TOTAL:</span><span>$${totalAmount.toFixed(2)}</span></div>
-            <div class="row"><span>PAID:</span><span>$${totalPaid.toFixed(2)}</span></div>
-            <div class="row bold" style="font-size: 14px;"><span>REST:</span><span>$${restToPay.toFixed(2)}</span></div>
+            <div class="row bold"><span>TOTAL:</span><span>${totalAmount.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row"><span>PAID:</span><span>${totalPaid.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row bold" style="font-size: 14px;"><span>REST:</span><span>${restToPay.toFixed(2)} ${payCurrency}</span></div>
+            <div class="row"><span>METHOD:</span><span>${payMethod}</span></div>
+            <div class="row"><span>CREATED BY:</span><span>${fullRes.createdBy || 'System'}</span></div>
             <div class="sep"></div>
             <div class="center bold" style="font-size: 12px; margin-top: 5px;">
               ${restToPay <= 0 ? '*** PAID ***' : '*** BALANCE DUE ***'}

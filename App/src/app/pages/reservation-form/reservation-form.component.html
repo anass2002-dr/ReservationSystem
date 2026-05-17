@@ -82,31 +82,46 @@
             </div>
           </div>
 
-          <div class="col-md-3" *ngIf="reservation.isAgencyBooking">
-            <label class="form-label">Agency Net Price (Total)</label>
-            <div class="input-group height-60">
-              <span class="input-group-text bg-light border-end-0 h-100"><i class="bi bi-currency-dollar"></i></span>
-              <input type="number" class="form-control p-2 height-60 border-start-0" name="agencyPrice"
-                [(ngModel)]="reservation.agencyPrice" (input)="onAgencyPriceChange()" placeholder="0.00">
-            </div>
+          <div class="col-md-3">
+            <label class="form-label">Preferred Currency</label>
+            <select class="form-select p-2 height-60" name="preferredCurrency"
+              [(ngModel)]="reservation.preferredCurrency">
+              <option *ngFor="let opt of currencyOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+            </select>
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">Deposit Given (USD)</label>
+            <label class="form-label">
+              Total Amount ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})
+              <span class="text-danger" *ngIf="!isAnyPackageSelected()">*</span>
+            </label>
             <div class="input-group height-60">
-              <span class="input-group-text bg-light border-end-0 h-100 text-success"><i class="bi bi-cash-stack"></i></span>
-              <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold text-success" name="deposit"
-                [(ngModel)]="reservation.deposit" placeholder="0.00">
+              <span class="input-group-text bg-light border-end-0 h-100"><i class="bi bi-wallet2"></i></span>
+              <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold" name="totalAmount"
+                [(ngModel)]="reservation.totalAmount" (input)="onManualTotalChange()" 
+                [required]="!isAnyPackageSelected()" placeholder="0.00">
             </div>
           </div>
 
-          <div class="col-md-3 text-md-end ms-auto">
-            <div class="p-2 bg-light rounded-4 border d-flex flex-column justify-content-center"
-              style="height: 60px;">
+          <div class="col-md-6">
+            <label class="form-label">Deposit ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})</label>
+            <div class="input-group height-60">
+              <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
+                  class="bi bi-cash-stack"></i></span>
+              <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold text-success" name="deposit"
+                [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="calculateBalances()">
+              <select class="form-select p-2 w-50 height-60" name="depositMethod"
+                [(ngModel)]="reservation.depositMethod">
+                <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4 text-md-end ms-auto">
+            <div class="p-2 bg-light rounded-4 border d-flex flex-column justify-content-center" style="height: 60px;">
               <label class="small mb-0 text-muted line-height-1">Rest to Pay</label>
               <div class="h4 mb-0 text-danger fw-bold">
-                {{ ((reservation.isAgencyBooking ? (reservation.agencyPrice || 0) : (reservation.totalAmount || 0)) - (reservation.deposit || 0)) |
-                currency:'USD' }}
+                {{ remainingBalance | number:'1.2-2' }} {{ getCurrencyLabel(reservation.preferredCurrency || 0) }}
               </div>
             </div>
           </div>
@@ -147,9 +162,9 @@
                       [(ngModel)]="detail.customer.fullName" required>
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                    <label class="form-label">Phone Number</label>
                     <input type="text" class="form-control" [name]="'custPhone_' + i"
-                      [(ngModel)]="detail.customer.phoneNumber" required>
+                      [(ngModel)]="detail.customer.phoneNumber">
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
@@ -194,10 +209,10 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Flight Package <span class="text-danger">*</span></label>
+                    <label class="form-label">Flight Package</label>
                     <ng-select [items]="flightPackages" bindLabel="title" bindValue="id"
-                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i" required
-                      placeholder="Choose Package">
+                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i"
+                      placeholder="Choose Package" (change)="calculateBalances()">
                     </ng-select>
                   </div>
 
@@ -212,7 +227,8 @@
                   <div class="col-md-6">
                     <label class="form-label">Extra Services</label>
                     <ng-select [items]="extraServices" bindLabel="name" bindValue="id" [multiple]="true"
-                      [(ngModel)]="detail.extraServiceIds" [name]="'extraServiceIds_' + i" placeholder="Select Extras">
+                      [(ngModel)]="detail.extraServiceIds" [name]="'extraServiceIds_' + i" placeholder="Select Extras"
+                      (change)="calculateBalances()">
                     </ng-select>
                   </div>
 
