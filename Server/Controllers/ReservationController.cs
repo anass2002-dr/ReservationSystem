@@ -8,6 +8,7 @@ namespace ReservationSystem_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class ReservationController : ControllerBase
     {
         private readonly IReservationService _service;
@@ -61,5 +62,19 @@ namespace ReservationSystem_backend.Controllers
             }
             return NoContent();
         }
+
+        [HttpPut("UpdatePilotAttendance/{detailId}")]
+        public ActionResult UpdatePilotAttendance(int detailId, [FromBody] PilotAttendanceDto dto)
+        {
+            var result = _service.UpdatePilotAttendance(detailId, dto.Status, dto.Note);
+            if (!result) return NotFound();
+            return Ok();
+        }
+    }
+
+    public class PilotAttendanceDto
+    {
+        public PilotAttendanceStatus Status { get; set; }
+        public string? Note { get; set; }
     }
 }

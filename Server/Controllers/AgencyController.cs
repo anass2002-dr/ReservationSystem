@@ -7,6 +7,7 @@ namespace ReservationSystem_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class AgencyController : ControllerBase
     {
         private readonly IAgencyService _service;

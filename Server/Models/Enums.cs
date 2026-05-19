@@ -36,4 +36,11 @@ namespace ReservationSystem_backend.Models
         Card = 1,
         Transfer = 2
     }
+
+    public enum PilotAttendanceStatus
+    {
+        Pending = 0,
+        Confirmed = 1,
+        NoShow = 2
+    }
 }

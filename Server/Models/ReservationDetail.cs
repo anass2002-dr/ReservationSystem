@@ -21,6 +21,9 @@ namespace ReservationSystem_backend.Models
 
         public bool WeightLimitStatus { get; set; }
 
+        public PilotAttendanceStatus PilotAttendance { get; set; } = PilotAttendanceStatus.Pending;
+        public string? PilotNote { get; set; }
+
         // Navigation property
         public ICollection<ReservationExtra> ReservationExtras { get; set; } = new List<ReservationExtra>();
     }

@@ -9,6 +9,7 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
         Reservation GetReservationById(int id);
         Reservation AddReservation(Reservation entity);
         Reservation UpdateReservation(int id, Reservation entity);
+        bool UpdatePilotAttendance(int detailId, PilotAttendanceStatus status, string? note);
         bool DeleteReservation(int id);
     }
 }

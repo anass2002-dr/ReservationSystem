@@ -55,6 +55,7 @@ export class PaymentsComponent implements OnInit {
   currentPayment: Payment = this.createEmptyPayment();
   
   isEditing = false;
+  isRefundMode = false;
   
   totalAmountDue = 0;
   amountPaid = 0;
@@ -197,13 +198,39 @@ export class PaymentsComponent implements OnInit {
     return res.details ? res.details.length : 0;
   }
 
+  previousCurrency: PaymentCurrency = PaymentCurrency.USD;
+
   isFullyPaid(res: Reservation): boolean {
     const totalDue = res.totalAmount || 0;
     const deposit = res.deposit || 0;
+    const prefCurrency = res.preferredCurrency || PaymentCurrency.USD;
     const paid = this.payments
       .filter(p => p.reservationId === res.id)
-      .reduce((sum, p) => sum + Number(p.amount), 0);
+      .reduce((sum, p) => {
+        const fromCode = this.getCurrencyCode(p.currency);
+        const toCode = this.getCurrencyCode(prefCurrency);
+        const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+        return sum + converted;
+      }, 0);
     return (paid + deposit) >= totalDue && totalDue > 0;
+  }
+
+  getAmountPaidForRes(res: Reservation): number {
+    const deposit = res.deposit || 0;
+    const prefCurrency = res.preferredCurrency || PaymentCurrency.USD;
+    const paid = this.payments
+      .filter(p => p.reservationId === res.id)
+      .reduce((sum, p) => {
+        const fromCode = this.getCurrencyCode(p.currency);
+        const toCode = this.getCurrencyCode(prefCurrency);
+        const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+        return sum + converted;
+      }, 0);
+    return paid + deposit;
+  }
+
+  hasRefund(res: Reservation): boolean {
+    return this.payments && this.payments.some(p => p.reservationId === res.id && Number(p.amount) < 0);
   }
 
   openPaymentModal(reservation: Reservation): void {
@@ -216,8 +243,10 @@ export class PaymentsComponent implements OnInit {
     if (reservation.preferredCurrency !== undefined) {
       this.currentPayment.currency = reservation.preferredCurrency;
     }
+    this.previousCurrency = this.currentPayment.currency;
     
     this.calculateBalances();
+    this.isRefundMode = (reservation.status === 2 && this.amountPaid > 0);
     
     this.showModal();
   }
@@ -228,15 +257,42 @@ export class PaymentsComponent implements OnInit {
     this.totalAmountDue = this.selectedReservation.totalAmount || 0;
     const deposit = this.selectedReservation.deposit || 0;
     
-    // Sum payments for this reservation
+    // Sum payments for this reservation, converting each to reservation's preferred currency
     const relatedPayments = this.payments.filter(p => p.reservationId === this.selectedReservation!.id);
-    this.amountPaid = relatedPayments.reduce((sum, p) => sum + Number(p.amount), 0) + deposit;
+    const prefCurrency = this.selectedReservation.preferredCurrency || PaymentCurrency.USD;
+    
+    this.amountPaid = relatedPayments.reduce((sum, p) => {
+      const fromCode = this.getCurrencyCode(p.currency);
+      const toCode = this.getCurrencyCode(prefCurrency);
+      const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+      return sum + converted;
+    }, 0) + deposit;
     
     this.remainingBalance = Math.max(0, this.totalAmountDue - this.amountPaid);
   }
 
   setPayAll(): void {
-    this.currentPayment.amount = this.remainingBalance;
+    if (!this.selectedReservation) return;
+    
+    const prefCurrency = this.selectedReservation.preferredCurrency || PaymentCurrency.USD;
+    const payCurrency = this.currentPayment.currency;
+    
+    const fromCode = this.getCurrencyCode(prefCurrency);
+    const toCode = this.getCurrencyCode(payCurrency);
+    
+    const rawAmount = this.isRefundMode ? this.amountPaid : this.remainingBalance;
+    
+    // Convert from reservation currency to payment currency
+    this.currentPayment.amount = Number(this.currencyService.convert(rawAmount, fromCode, toCode).toFixed(2));
+  }
+
+  onCurrencyChange(newCurrency: any): void {
+    if (this.currentPayment.amount && this.previousCurrency !== undefined) {
+      const fromCode = this.getCurrencyCode(this.previousCurrency);
+      const toCode = this.getCurrencyCode(newCurrency);
+      this.currentPayment.amount = Number(this.currencyService.convert(this.currentPayment.amount, fromCode, toCode).toFixed(2));
+    }
+    this.previousCurrency = Number(newCurrency);
   }
 
   getConvertedAmount(): number {
@@ -272,6 +328,15 @@ export class PaymentsComponent implements OnInit {
 
   savePayment(): void {
     this.currentPayment.amount = Number(this.currentPayment.amount);
+    
+    if (this.isRefundMode) {
+      // Save amount as negative decimal
+      this.currentPayment.amount = -Math.abs(this.currentPayment.amount);
+      if (!this.currentPayment.notes || !this.currentPayment.notes.includes('[Refund]')) {
+        this.currentPayment.notes = `[Refund] ${this.currentPayment.notes || ''}`.trim();
+      }
+    }
+
     this.currentPayment.currency = Number(this.currentPayment.currency);
     this.currentPayment.method = Number(this.currentPayment.method);
     this.currentPayment.reservationId = Number(this.currentPayment.reservationId);

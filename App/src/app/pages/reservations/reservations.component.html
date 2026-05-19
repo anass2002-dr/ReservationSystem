@@ -9,10 +9,18 @@
     </nav>
   </div>
   <div class="d-flex gap-3 align-items-center">
-    <div class="d-flex align-items-center bg-white rounded-pill px-4 py-2 shadow-sm border">
-      <label class="fw-bold me-3 text-muted small text-uppercase">Select Date:</label>
-      <input type="date" class="form-control border-0 fw-bold text-primary p-0 bg-transparent"
-        [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none;">
+    <div class="d-flex align-items-center bg-white rounded-pill px-2 py-2 shadow-sm border">
+      <button class="btn btn-sm btn-light rounded-circle" (click)="previousDay()" title="Previous Day">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="d-flex align-items-center mx-3">
+        <label class="fw-bold me-2 text-muted small text-uppercase mb-0">Date:</label>
+        <input type="date" class="form-control border-0 fw-bold text-primary p-0 bg-transparent"
+          [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none;">
+      </div>
+      <button class="btn btn-sm btn-light rounded-circle" (click)="nextDay()" title="Next Day">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
     <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="addReservation()">
       <i class="bi bi-plus-lg me-2"></i>New Reservation
@@ -20,7 +28,24 @@
   </div>
 </div>
 
-<section class="section">
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div class="d-flex gap-2">
+    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+      [class.btn-primary]="activeTab === 'schedule'"
+      [class.btn-light]="activeTab !== 'schedule'"
+      (click)="activeTab = 'schedule'">
+      <i class="bi bi-kanban me-2"></i>Schedule View
+    </button>
+    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+      [class.btn-primary]="activeTab === 'list'"
+      [class.btn-light]="activeTab !== 'list'"
+      (click)="activeTab = 'list'">
+      <i class="bi bi-list-task me-2"></i>List View
+    </button>
+  </div>
+</div>
+
+<section class="section" *ngIf="activeTab === 'schedule'">
   <!-- Flight Time Groups -->
   <div class="row g-4" cdkDropListGroup>
     <div class="col-md-6 col-xl-4" *ngFor="let group of groupedReservations; let i = index">
@@ -68,10 +93,13 @@
                   <span class="badge rounded-pill me-1" [ngClass]="getStatusBadgeClass(res.status)">
                     {{ getStatusLabel(res.status) }}
                   </span>
-                  <span *ngIf="isFullyPaid(res)" class="badge rounded-pill bg-success text-white border border-success">
+                  <span *ngIf="hasRefund(res)" class="badge rounded-pill bg-danger text-white border border-danger">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Refund
+                  </span>
+                  <span *ngIf="!hasRefund(res) && isFullyPaid(res)" class="badge rounded-pill bg-success text-white border border-success">
                     <i class="bi bi-check-circle-fill me-1"></i> Paid
                   </span>
-                  <span *ngIf="!isFullyPaid(res)"
+                  <span *ngIf="!hasRefund(res) && !isFullyPaid(res)"
                     class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
                     <i class="bi bi-exclamation-circle me-1"></i> {{ getRemainingBalance(res) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} Due
                   </span>
@@ -123,6 +151,121 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- List View Section -->
+<section class="section" *ngIf="activeTab === 'list'">
+  <!-- Advanced Filters Bar -->
+  <div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small fw-bold text-muted">Status</label>
+          <select class="form-select" [(ngModel)]="filterStatus">
+            <option value="all">All Statuses</option>
+            <option value="0">Pending</option>
+            <option value="1">Confirmed</option>
+            <option value="2">Cancelled</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-bold text-muted">Flight Time</label>
+          <select class="form-select" [(ngModel)]="filterFlightTimeId">
+            <option value="all">All Times</option>
+            <option *ngFor="let ft of flightTimes" [value]="ft.id">{{ ft.time }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small fw-bold text-muted">Search</label>
+          <div class="input-group mb-0">
+            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by ID, Title, or Passenger Name..." [(ngModel)]="filterSearch">
+          </div>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+          <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reservations Table -->
+  <div class="card shadow-sm border-0 bg-white">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Reservations ({{ filteredListReservations.length }})</h5>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table table-hover align-middle border-0">
+          <thead class="table-light">
+            <tr>
+              <th class="border-0">ID</th>
+              <th class="border-0">Time</th>
+              <th class="border-0">Title / Type</th>
+              <th class="border-0">Passengers</th>
+              <th class="border-0">Amount / Paid</th>
+              <th class="border-0 text-center">Status</th>
+              <th class="border-0 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="filteredListReservations.length === 0">
+              <td colspan="7" class="text-center py-5 text-muted bg-light rounded border border-dashed">
+                <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
+                No reservations found matching your criteria.
+              </td>
+            </tr>
+            <tr *ngFor="let res of filteredListReservations">
+              <td>
+                <span class="badge bg-secondary">#{{ res.id }}</span>
+              </td>
+              <td class="fw-bold text-dark">
+                <ng-container *ngFor="let ft of flightTimes">
+                  <span *ngIf="ft.id === res.flightTimeId"><i class="bi bi-clock me-1 text-primary"></i>{{ ft.time }}</span>
+                </ng-container>
+              </td>
+              <td>
+                <div class="fw-bold">{{ res.title || 'Untitled Reservation' }}</div>
+                <div *ngIf="res.isAgencyBooking" class="small text-purple mt-1"><i class="bi bi-building me-1"></i>{{ res.agencyName }}</div>
+              </td>
+              <td>
+                <div class="small"><i class="bi bi-people-fill me-1"></i>{{ getCustomersDisplay(res) }}</div>
+                <div class="small text-muted"><i class="bi bi-person-badge-fill me-1"></i>{{ getPilotsDisplay(res) }}</div>
+              </td>
+              <td>
+                 <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}</div>
+                 <div *ngIf="hasRefund(res)" class="badge bg-danger text-white mt-1"><i class="bi bi-arrow-counterclockwise me-1"></i>Refund</div>
+                 <div *ngIf="!hasRefund(res) && isFullyPaid(res)" class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>Paid</div>
+                 <div *ngIf="!hasRefund(res) && !isFullyPaid(res)" class="small text-danger"><i class="bi bi-exclamation-circle me-1"></i>{{ getRemainingBalance(res) | number:'1.2-2' }} Due</div>
+              </td>
+              <td class="text-center">
+                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(res.status)">
+                  {{ getStatusLabel(res.status) }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-primary border-0" (click)="printReservation(res)" title="Print">
+                    <i class="bi bi-printer"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-info border-0" (click)="editReservation(res)" title="Edit">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger border-0" (click)="deleteReservation(res.id!)" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

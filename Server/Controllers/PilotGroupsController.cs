@@ -6,6 +6,7 @@ namespace ReservationSystem_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class PilotGroupsController : ControllerBase
     {
         private readonly IPilotGroupService _pilotGroupService;

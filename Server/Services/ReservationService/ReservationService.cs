@@ -111,6 +111,8 @@ namespace ReservationSystem_backend.Services.ReservationService
                         FlightPackageId = detailDto.FlightPackageId == 0 ? null : detailDto.FlightPackageId,
                         TransportGroupId = detailDto.TransportGroupId,
                         WeightLimitStatus = detailDto.WeightLimitStatus,
+                        PilotAttendance = detailDto.PilotAttendance,
+                        PilotNote = detailDto.PilotNote,
                         ReservationExtras = new List<ReservationExtra>()
                     };
 
@@ -225,6 +227,8 @@ namespace ReservationSystem_backend.Services.ReservationService
                             FlightPackageId = detailDto.FlightPackageId == 0 ? null : detailDto.FlightPackageId,
                             TransportGroupId = detailDto.TransportGroupId,
                             WeightLimitStatus = detailDto.WeightLimitStatus,
+                            PilotAttendance = detailDto.PilotAttendance,
+                            PilotNote = detailDto.PilotNote,
                             ReservationExtras = new List<ReservationExtra>()
                         };
 
@@ -271,6 +275,11 @@ namespace ReservationSystem_backend.Services.ReservationService
                 return new ReservationDtos(updatedEntity);
             }
             return null;
+        }
+
+        public bool UpdatePilotAttendance(int detailId, PilotAttendanceStatus status, string? note)
+        {
+            return _repo.UpdatePilotAttendance(detailId, status, note);
         }
 
         public bool DeleteReservation(int id)

@@ -31,4 +31,8 @@ export class ReservationService {
   deleteReservation(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/DeleteReservation/${id}`);
   }
+
+  updatePilotAttendance(detailId: number, status: number, note?: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/UpdatePilotAttendance/${detailId}`, { status, note });
+  }
 }

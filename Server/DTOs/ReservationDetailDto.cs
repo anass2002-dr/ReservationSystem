@@ -14,6 +14,8 @@ namespace ReservationSystem_backend.DTOs
         public int? FlightPackageId { get; set; }
         public int? TransportGroupId { get; set; }
         public bool WeightLimitStatus { get; set; }
+        public PilotAttendanceStatus PilotAttendance { get; set; }
+        public string? PilotNote { get; set; }
         public List<int> ExtraServiceIds { get; set; } = new List<int>();
         public CustomerDtos? Customer { get; set; }
 
@@ -28,6 +30,8 @@ namespace ReservationSystem_backend.DTOs
             FlightPackageId = model.FlightPackageId;
             TransportGroupId = model.TransportGroupId;
             WeightLimitStatus = model.WeightLimitStatus;
+            PilotAttendance = model.PilotAttendance;
+            PilotNote = model.PilotNote;
             
             if (model.ReservationExtras != null)
             {

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Reservation, ReservationStatus, Customer, Pilot, FlightTime, Payment } from '../../models/models';
+import { Reservation, ReservationStatus, Customer, Pilot, FlightTime, Payment, PaymentCurrency } from '../../models/models';
 import { ReservationService } from '../../services/reservation.service';
 import { CustomerService } from '../../services/customer.service';
 import { PilotService } from '../../services/pilot.service';
 import { FlightTimeService } from '../../services/flight-time.service';
 import { PaymentService } from '../../services/payment.service';
+import { CurrencyService } from '../../services/currency.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import Swal from 'sweetalert2';
 
@@ -30,12 +31,18 @@ export class ReservationsComponent implements OnInit {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   })();
 
+  activeTab: 'schedule' | 'list' = 'schedule';
+  filterStatus: string = 'all';
+  filterFlightTimeId: string = 'all';
+  filterSearch: string = '';
+
   constructor(
     private reservationService: ReservationService,
     private customerService: CustomerService,
     private pilotService: PilotService,
     private flightTimeService: FlightTimeService,
     private paymentService: PaymentService,
+    private currencyService: CurrencyService,
     private router: Router
   ) { }
 
@@ -100,25 +107,100 @@ export class ReservationsComponent implements OnInit {
     this.groupedReservations = groups;
   }
 
+  previousDay(): void {
+    const d = new Date(this.selectedDate);
+    d.setDate(d.getDate() - 1);
+    this.selectedDate = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    this.groupReservations();
+  }
+
+  nextDay(): void {
+    const d = new Date(this.selectedDate);
+    d.setDate(d.getDate() + 1);
+    this.selectedDate = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    this.groupReservations();
+  }
+
+  get filteredListReservations(): Reservation[] {
+    const currentDayFiltered = this.reservations.filter(r => {
+      const rDateStr = typeof r.flightDate === 'string' 
+        ? r.flightDate.split('T')[0] 
+        : new Date(r.flightDate).toISOString().split('T')[0];
+      return rDateStr === this.selectedDate;
+    });
+
+    return currentDayFiltered.filter(r => {
+      // Status filter
+      if (this.filterStatus !== 'all') {
+        if (r.status.toString() !== this.filterStatus) return false;
+      }
+      
+      // Flight Time filter
+      if (this.filterFlightTimeId !== 'all') {
+        if (r.flightTimeId?.toString() !== this.filterFlightTimeId) return false;
+      }
+
+      // Search filter
+      if (this.filterSearch) {
+        const query = this.filterSearch.toLowerCase();
+        const resTitle = r.title?.toLowerCase() || '';
+        const resId = r.id?.toString() || '';
+        const passengers = this.getCustomersDisplay(r).toLowerCase();
+        
+        if (!resTitle.includes(query) && !resId.includes(query) && !passengers.includes(query)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
+  hasRefund(res: Reservation): boolean {
+    return this.payments && this.payments.some(p => p.reservationId === res.id && Number(p.amount) < 0);
+  }
+
   getPassengersCount(res: Reservation): number {
     return res.details ? res.details.length : 0;
+  }
+
+  getCurrencyCode(enumVal: any): string {
+    switch(Number(enumVal)) {
+      case PaymentCurrency.TL: return 'TRY';
+      case PaymentCurrency.USD: return 'USD';
+      case PaymentCurrency.EUR: return 'EUR';
+      case PaymentCurrency.GBP: return 'GBP';
+      default: return 'USD';
+    }
   }
 
   isFullyPaid(res: Reservation): boolean {
     const totalDue = res.totalAmount || 0;
     const deposit = res.deposit || 0;
+    const prefCurrency = res.preferredCurrency || PaymentCurrency.USD;
     const paid = this.payments
       .filter(p => p.reservationId === res.id)
-      .reduce((sum, p) => sum + Number(p.amount), 0);
+      .reduce((sum, p) => {
+        const fromCode = this.getCurrencyCode(p.currency);
+        const toCode = this.getCurrencyCode(prefCurrency);
+        const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+        return sum + converted;
+      }, 0);
     return (paid + Number(deposit)) >= totalDue && totalDue > 0;
   }
 
   getRemainingBalance(res: Reservation): number {
     const totalDue = res.totalAmount || 0;
     const deposit = res.deposit || 0;
+    const prefCurrency = res.preferredCurrency || PaymentCurrency.USD;
     const paid = this.payments
       .filter(p => p.reservationId === res.id)
-      .reduce((sum, p) => sum + Number(p.amount), 0);
+      .reduce((sum, p) => {
+        const fromCode = this.getCurrencyCode(p.currency);
+        const toCode = this.getCurrencyCode(prefCurrency);
+        const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+        return sum + converted;
+      }, 0);
     return Math.max(0, totalDue - (paid + Number(deposit)));
   }
 

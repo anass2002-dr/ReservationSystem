@@ -10,6 +10,8 @@ namespace ReservationSystem_backend.DTOs
         public string LicenseNumber { get; set; }
         public PilotStatus Status { get; set; }
         public int? PilotGroupId { get; set; }
+        public int FlightsAssigned { get; set; }
+        public int FlightsFlown { get; set; }
 
         public PilotDtos() { }
 
@@ -20,6 +22,8 @@ namespace ReservationSystem_backend.DTOs
             LicenseNumber = model.LicenseNumber;
             Status = model.Status;
             PilotGroupId = model.PilotGroupId;
+            FlightsAssigned = model.FlightsAssigned;
+            FlightsFlown = model.FlightsFlown;
         }
     }
 }

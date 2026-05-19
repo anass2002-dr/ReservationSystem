@@ -17,6 +17,9 @@ namespace ReservationSystem_backend.Models
         public int? PilotGroupId { get; set; }
         public PilotGroup? PilotGroup { get; set; }
 
+        public int FlightsAssigned { get; set; } = 0;
+        public int FlightsFlown { get; set; } = 0;
+
         // Navigation property
         public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
     }

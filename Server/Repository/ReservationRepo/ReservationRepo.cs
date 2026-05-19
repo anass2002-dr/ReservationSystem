@@ -52,6 +52,36 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
             return entity;
         }
 
+        public bool UpdatePilotAttendance(int detailId, PilotAttendanceStatus status, string? note)
+        {
+            var detail = _context.ReservationDetails
+                .Include(d => d.Pilot)
+                .FirstOrDefault(d => d.Id == detailId);
+
+            if (detail == null || detail.PilotId == null) return false;
+
+            // Only update metrics if transitioning from Pending
+            if (detail.PilotAttendance == PilotAttendanceStatus.Pending && status != PilotAttendanceStatus.Pending)
+            {
+                if (status == PilotAttendanceStatus.Confirmed)
+                {
+                    detail.Pilot.FlightsAssigned++;
+                    detail.Pilot.FlightsFlown++;
+                }
+                else if (status == PilotAttendanceStatus.NoShow)
+                {
+                    detail.Pilot.FlightsAssigned++;
+                    // Flown remains unchanged
+                }
+            }
+
+            detail.PilotAttendance = status;
+            detail.PilotNote = note;
+
+            _context.SaveChanges();
+            return true;
+        }
+
         public bool DeleteReservation(int id)
         {
             var entity = GetReservationById(id);

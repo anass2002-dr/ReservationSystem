@@ -10,6 +10,7 @@ namespace ReservationSystem_backend.Services.ReservationService
         ReservationDtos GetReservationById(int id);
         ReservationDtos AddReservation(ReservationDtos dto);
         ReservationDtos UpdateReservation(int id, ReservationDtos dto);
+        bool UpdatePilotAttendance(int detailId, PilotAttendanceStatus status, string? note);
         bool DeleteReservation(int id);
     }
 }

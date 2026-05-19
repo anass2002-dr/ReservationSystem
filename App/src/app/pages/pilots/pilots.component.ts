@@ -1,9 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { Pilot, PilotStatus, PilotGroup } from '../../models/models';
+import { Pilot, PilotStatus, PilotGroup, Reservation, ReservationDetail, PilotAttendanceStatus } from '../../models/models';
 import { PilotService } from '../../services/pilot.service';
 import { PilotGroupService } from '../../services/pilot-group.service';
+import { ReservationService } from '../../services/reservation.service';
+import Swal from 'sweetalert2';
 
 declare var bootstrap: any;
+
+export interface RosterItem {
+  detailId: number;
+  reservationId: number;
+  reservationTitle: string;
+  flightDate: string;
+  pilotId: number;
+  pilotName: string;
+  attendance: PilotAttendanceStatus;
+  note?: string;
+}
 
 @Component({
   selector: 'app-pilots',
@@ -13,9 +26,11 @@ declare var bootstrap: any;
 })
 export class PilotsComponent implements OnInit {
   pilots: Pilot[] = [];
-  currentPilot: Pilot = { id: 0, fullName: '', licenseNumber: '', status: PilotStatus.Active };
+  currentPilot: Pilot = { id: 0, fullName: '', licenseNumber: '', status: PilotStatus.Active, flightsAssigned: 0, flightsFlown: 0 };
   isEditing = false;
   private modalInstance: any;
+
+  activeTab: 'directory' | 'roster' = 'directory';
 
   PilotStatus = PilotStatus;
   statusOptions = [
@@ -29,33 +44,159 @@ export class PilotsComponent implements OnInit {
   isEditingGroup = false;
   currentGroup: PilotGroup = { name: '' };
 
+  reservations: Reservation[] = [];
+  rosterItems: RosterItem[] = [];
+
+  constructor(
+    private pilotService: PilotService,
+    private pilotGroupService: PilotGroupService,
+    private reservationService: ReservationService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadPilots();
+    this.loadPilotGroups();
+    this.loadReservations();
+  }
+
   getGroupName(groupId?: number): string {
     if (!groupId) return '-';
     const group = this.pilotGroups.find(g => g.id === groupId);
     return group ? group.name : '-';
   }
 
-  constructor(
-    private pilotService: PilotService,
-    private pilotGroupService: PilotGroupService
-  ) { }
-
-  ngOnInit(): void {
-    this.loadPilots();
-    this.loadPilotGroups();
-  }
-
   loadPilotGroups(): void {
-    this.pilotGroupService.getPilotGroups().subscribe((groups: PilotGroup[]) => this.pilotGroups = groups);
+    this.pilotGroupService.getPilotGroups().subscribe((groups: PilotGroup[]) => {
+      this.pilotGroups = groups;
+      this.sortPilots();
+    });
   }
 
   loadPilots(): void {
     this.pilotService.getPilots().subscribe({
-      next: (data) => this.pilots = data,
+      next: (data) => {
+        this.pilots = data;
+        this.sortPilots();
+        this.buildRoster();
+      },
       error: (err) => console.error('Error fetching pilots', err)
     });
   }
 
+  sortPilots(): void {
+    if (!this.pilots.length) return;
+    this.pilots = [...this.pilots].sort((a, b) => {
+      // 1. Group comparison (by group name)
+      const groupA = this.getGroupName(a.pilotGroupId);
+      const groupB = this.getGroupName(b.pilotGroupId);
+      if (groupA !== groupB) {
+        // Keep 'No Group' (which returns '-') at the bottom
+        if (groupA === '-') return 1;
+        if (groupB === '-') return -1;
+        return groupA.localeCompare(groupB);
+      }
+      // 2. Flights Assigned (Min to Max)
+      const assignedA = a.flightsAssigned || 0;
+      const assignedB = b.flightsAssigned || 0;
+      if (assignedA !== assignedB) {
+        return assignedA - assignedB;
+      }
+      // 3. Flights Flown (Min to Max)
+      const flownA = a.flightsFlown || 0;
+      const flownB = b.flightsFlown || 0;
+      return flownA - flownB;
+    });
+  }
+
+  loadReservations(): void {
+    this.reservationService.getReservations().subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.buildRoster();
+      },
+      error: (err) => console.error('Error fetching reservations', err)
+    });
+  }
+
+  buildRoster(): void {
+    this.rosterItems = [];
+    for (const res of this.reservations) {
+      if (res.details) {
+        for (const det of res.details) {
+          if (det.pilotId) {
+            const pilot = this.pilots.find(p => p.id === det.pilotId);
+            this.rosterItems.push({
+              detailId: det.id!,
+              reservationId: res.id!,
+              reservationTitle: res.title || 'Untitled Reservation',
+              flightDate: res.flightDate,
+              pilotId: det.pilotId,
+              pilotName: pilot ? pilot.fullName : 'Unknown Pilot',
+              attendance: det.pilotAttendance || PilotAttendanceStatus.Pending,
+              note: det.pilotNote
+            });
+          }
+        }
+      }
+    }
+    // Sort so Pending is at top
+    this.rosterItems.sort((a, b) => {
+      if (a.attendance === PilotAttendanceStatus.Pending && b.attendance !== PilotAttendanceStatus.Pending) return -1;
+      if (a.attendance !== PilotAttendanceStatus.Pending && b.attendance === PilotAttendanceStatus.Pending) return 1;
+      return new Date(b.flightDate).getTime() - new Date(a.flightDate).getTime();
+    });
+  }
+
+  setActiveTab(tab: 'directory' | 'roster'): void {
+    this.activeTab = tab;
+  }
+
+  confirmFlight(item: RosterItem): void {
+    Swal.fire({
+      title: 'Confirm Flight',
+      text: `Are you sure ${item.pilotName} completed this flight?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Confirmed',
+      confirmButtonColor: '#198754'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reservationService.updatePilotAttendance(item.detailId, PilotAttendanceStatus.Confirmed).subscribe(() => {
+          Swal.fire('Confirmed!', 'The flight has been recorded and pilot stats updated.', 'success');
+          this.loadPilots();
+          this.loadReservations();
+        });
+      }
+    });
+  }
+
+  markNoShow(item: RosterItem): void {
+    Swal.fire({
+      title: 'Pilot Did Not Come',
+      input: 'textarea',
+      inputLabel: 'Reason / Note',
+      inputPlaceholder: 'Why did the pilot miss this flight?',
+      showCancelButton: true,
+      confirmButtonText: 'Submit No-Show',
+      confirmButtonColor: '#dc3545',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to write a note!';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        this.reservationService.updatePilotAttendance(item.detailId, PilotAttendanceStatus.NoShow, result.value).subscribe(() => {
+          Swal.fire('Recorded!', 'The no-show has been logged and pilot stats updated.', 'success');
+          this.loadPilots();
+          this.loadReservations();
+        });
+      }
+    });
+  }
+
+  // Directory UI Methods
   getStatusLabel(status: PilotStatus): string {
     const found = this.statusOptions.find(o => o.value === status);
     return found ? found.label : 'Unknown';
@@ -95,6 +236,8 @@ export class PilotsComponent implements OnInit {
   editPilot(p: Pilot): void {
     this.isEditing = true;
     this.currentPilot = { ...p };
+    if (this.currentPilot.flightsAssigned === undefined) this.currentPilot.flightsAssigned = 0;
+    if (this.currentPilot.flightsFlown === undefined) this.currentPilot.flightsFlown = 0;
     this.openModal();
   }
 
@@ -111,6 +254,7 @@ export class PilotsComponent implements OnInit {
         next: () => {
           this.loadPilots();
           this.closeModal();
+          this.buildRoster(); // to refresh names if changed
         },
         error: (err) => console.error('Error updating pilot', err)
       });
@@ -128,16 +272,28 @@ export class PilotsComponent implements OnInit {
   }
 
   deletePilot(id: number): void {
-    if (confirm('Are you sure you want to delete this pilot?')) {
-      this.pilotService.deletePilot(id).subscribe({
-        next: () => this.loadPilots(),
-        error: (err) => console.error('Error deleting pilot', err)
-      });
-    }
+    Swal.fire({
+      title: 'Delete Pilot?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pilotService.deletePilot(id).subscribe({
+          next: () => {
+            this.loadPilots();
+            Swal.fire('Deleted!', 'Pilot has been deleted.', 'success');
+          },
+          error: (err) => console.error('Error deleting pilot', err)
+        });
+      }
+    });
   }
 
   resetForm(): void {
-    this.currentPilot = { id: 0, fullName: '', licenseNumber: '', status: PilotStatus.Active };
+    this.currentPilot = { id: 0, fullName: '', licenseNumber: '', status: PilotStatus.Active, flightsAssigned: 0, flightsFlown: 0 };
   }
 
   // Group Management
@@ -171,8 +327,21 @@ export class PilotsComponent implements OnInit {
   }
 
   deleteGroup(id: number): void {
-    if (confirm('Are you sure you want to delete this group?')) {
-      this.pilotGroupService.deletePilotGroup(id).subscribe(() => this.loadPilotGroups());
-    }
+    Swal.fire({
+      title: 'Delete Group?',
+      text: "Are you sure?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pilotGroupService.deletePilotGroup(id).subscribe(() => this.loadPilotGroups());
+      }
+    });
+  }
+
+  getTotalFlightsFlown(): number {
+    return this.pilots.reduce((sum, p) => sum + (p.flightsFlown || 0), 0);
   }
 }

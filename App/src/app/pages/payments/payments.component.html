@@ -59,6 +59,7 @@
             
             <div *ngFor="let res of group.reservations" 
                  class="p-3 rounded border bg-white shadow-sm position-relative payment-card cursor-pointer transition-all"
+                 [ngClass]="{'border-danger bg-danger bg-opacity-10': res.status === 2}"
                  (click)="openPaymentModal(res)"
                  style="cursor: pointer;">
                  
@@ -72,13 +73,23 @@
                 <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyCode(res.preferredCurrency) }}</div>
               </div>
               
-              <div class="mt-2 text-end">
-                <span *ngIf="isFullyPaid(res)" class="badge bg-success text-white border border-success py-1 px-2">
-                  <i class="bi bi-check-circle-fill me-1"></i> Paid
-                </span>
-                <span *ngIf="!isFullyPaid(res)" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-1 px-2">
-                  <i class="bi bi-wallet2 me-1"></i> Make Payment
-                </span>
+              <div class="mt-2 d-flex justify-content-between align-items-center">
+                <div>
+                  <span *ngIf="res.status === 2" class="badge bg-danger text-white">
+                    <i class="bi bi-x-circle-fill me-1"></i> Cancelled
+                  </span>
+                </div>
+                <div>
+                  <span *ngIf="res.status !== 2 && isFullyPaid(res)" class="badge bg-success text-white border border-success py-1 px-2">
+                    <i class="bi bi-check-circle-fill me-1"></i> Paid
+                  </span>
+                  <span *ngIf="res.status !== 2 && !isFullyPaid(res)" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-1 px-2">
+                    <i class="bi bi-wallet2 me-1"></i> Make Payment
+                  </span>
+                  <span *ngIf="res.status === 2 && getAmountPaidForRes(res) > 0" class="badge bg-warning text-dark py-1 px-2">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Issue Refund
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -202,12 +213,14 @@
               </td>
               <td class="text-muted small">{{ getReservationPassengers(record.reservationId) || 'N/A' }}</td>
               <td class="fw-bold fs-6" [ngClass]="{
-                'text-success': record.currency === 1,
-                'text-warning': record.currency === 2,
-                'text-info': record.currency === 3,
-                'text-primary': record.currency === 0
+                'text-danger': record.amount < 0,
+                'text-success': record.amount >= 0 && record.currency === 1,
+                'text-warning': record.amount >= 0 && record.currency === 2,
+                'text-info': record.amount >= 0 && record.currency === 3,
+                'text-primary': record.amount >= 0 && record.currency === 0
               }">
-                {{ record.amount | number:'1.2-2' }} {{ getCurrencyCode(record.currency) }}
+                <span *ngIf="record.amount < 0">-</span>{{ (record.amount < 0 ? -record.amount : record.amount) | number:'1.2-2' }} {{ getCurrencyCode(record.currency) }}
+                <span *ngIf="record.amount < 0" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small ms-1">Refund</span>
               </td>
               <td>
                 <span *ngIf="record.method === 0" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
@@ -240,15 +253,22 @@
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" *ngIf="selectedReservation">
-      <div class="modal-header bg-primary text-white border-0">
+      <div class="modal-header text-white border-0" [ngClass]="{'bg-danger': isRefundMode, 'bg-primary': !isRefundMode}">
         <h5 class="modal-title">
-          Payment for #{{ selectedReservation.id }} - {{ selectedReservation.title || 'Untitled' }}
+          {{ isRefundMode ? 'Issue Refund' : 'Payment' }} for #{{ selectedReservation.id }} - {{ selectedReservation.title || 'Untitled' }}
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       
       <form (ngSubmit)="savePayment()" #paymentForm="ngForm">
         <div class="modal-body p-4 bg-light">
+          <!-- Refund Warning Alert -->
+          <div *ngIf="isRefundMode" class="alert alert-danger d-flex align-items-center mb-3">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <div>
+              This reservation is <strong>CANCELLED</strong>. You can issue a refund for up to <strong>{{ amountPaid | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</strong>.
+            </div>
+          </div>
           
           <!-- Balance Summary -->
           <div class="row text-center mb-4 g-2">
@@ -283,17 +303,17 @@
             <div class="row">
               <div class="col-md-7 mb-3">
                 <label class="form-label fw-bold d-flex justify-content-between">
-                  <span>Amount ({{ getCurrencyCode(currentPayment.currency) }}) <span class="text-danger">*</span></span>
-                  <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">Pay All</a>
+                  <span>{{ isRefundMode ? 'Refund Amount' : 'Amount' }} ({{ getCurrencyCode(currentPayment.currency) }}) <span class="text-danger">*</span></span>
+                  <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">{{ isRefundMode ? 'Refund All' : 'Pay All' }}</a>
                 </label>
                 <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-wallet2"></i></span>
+                  <span class="input-group-text"><i class="bi" [ngClass]="{'bi-arrow-counterclockwise text-danger': isRefundMode, 'bi-wallet2': !isRefundMode}"></i></span>
                   <input type="number" class="form-control" [(ngModel)]="currentPayment.amount" name="amount" required>
                 </div>
               </div>
               <div class="col-md-5 mb-3">
                 <label class="form-label fw-bold">Pay in Currency</label>
-                <select class="form-select" [(ngModel)]="currentPayment.currency" name="currency">
+                <select class="form-select" [(ngModel)]="currentPayment.currency" name="currency" (ngModelChange)="onCurrencyChange($event)">
                   <option *ngFor="let opt of currencyOptions" [ngValue]="opt.value">{{ opt.label }}</option>
                 </select>
               </div>
@@ -331,8 +351,8 @@
         </div>
         <div class="modal-footer border-0 p-4 pt-0 bg-light">
           <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4 shadow-sm" [disabled]="!paymentForm.form.valid || currentPayment.amount <= 0">
-            Confirm Payment
+          <button type="submit" class="btn px-4 shadow-sm" [ngClass]="{'btn-danger': isRefundMode, 'btn-primary': !isRefundMode}" [disabled]="!paymentForm.form.valid || currentPayment.amount <= 0 || (isRefundMode && currentPayment.amount > amountPaid)">
+            {{ isRefundMode ? 'Confirm Refund' : 'Confirm Payment' }}
           </button>
         </div>
       </form>

@@ -9,93 +9,260 @@
   </nav>
 </div>
 
-<section class="section dashboard">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Pilots List
-            <div class="float-end">
-              <button class="btn btn-outline-primary btn-sm me-2" (click)="openGroupModal()">
-                <i class="bi bi-people"></i> Manage Groups
-              </button>
-              <button class="btn btn-primary btn-sm" (click)="addPilot()">
-                <i class="bi bi-plus-lg"></i> Add Pilot
-              </button>
-            </div>
-          </h5>
+<!-- KPI Cards -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card info-card bg-primary text-white h-100 mb-0 shadow-sm border-0">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+          <i class="bi bi-people-fill fs-3"></i>
+        </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Total Pilots</h6>
+          <h2 class="mb-0 fw-bold">{{ pilots.length }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card info-card bg-success text-white h-100 mb-0 shadow-sm border-0">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+          <i class="bi bi-diagram-3-fill fs-3"></i>
+        </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Pilot Groups</h6>
+          <h2 class="mb-0 fw-bold">{{ pilotGroups.length }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card info-card bg-info text-white h-100 mb-0 shadow-sm border-0">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+          <i class="bi bi-airplane-fill fs-3"></i>
+        </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Total Flights Flown</h6>
+          <h2 class="mb-0 fw-bold">{{ getTotalFlightsFlown() }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <div class="table-responsive">
-            <table class="table table-striped table-hover datatable">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Full Name</th>
-                  <th scope="col">Group</th>
-                  <th scope="col">License Number</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let p of pilots">
-                  <th scope="row">{{p.id}}</th>
-                  <td>{{p.fullName}}</td>
-                  <td>{{getGroupName(p.pilotGroupId)}}</td>
-                  <td>{{p.licenseNumber}}</td>
-                  <td><span class="badge {{getStatusBadgeClass(p.status)}}">{{getStatusLabel(p.status)}}</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-info me-2" (click)="editPilot(p)"><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-sm btn-danger" (click)="deletePilot(p.id!)"><i class="bi bi-trash"></i></button>
+<section class="section dashboard">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <ul class="nav nav-tabs nav-tabs-bordered border-0" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link fs-6" [class.active]="activeTab === 'directory'" (click)="setActiveTab('directory')">
+              <i class="bi bi-person-lines-fill me-2"></i> Pilots Directory
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link fs-6" [class.active]="activeTab === 'roster'" (click)="setActiveTab('roster')">
+              <i class="bi bi-list-check me-2"></i> Flight Roster
+            </button>
+          </li>
+        </ul>
+        <div *ngIf="activeTab === 'directory'">
+          <button class="btn btn-outline-primary btn-sm me-2 shadow-sm rounded-pill px-3" (click)="openGroupModal()">
+            <i class="bi bi-people"></i> Manage Groups
+          </button>
+          <button class="btn btn-primary btn-sm shadow-sm rounded-pill px-3" (click)="addPilot()">
+            <i class="bi bi-plus-lg"></i> Add Pilot
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <!-- Directory Tab -->
+      <div *ngIf="activeTab === 'directory'" class="p-4">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Full Name</th>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Group</th>
+                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">Flights Assigned</th>
+                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">Flights Flown</th>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Status</th>
+                <th scope="col" class="text-muted text-uppercase text-end" style="font-size: 0.75rem;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let p of pilots; let idx = index">
+                <!-- Group Header Row -->
+                <tr *ngIf="idx === 0 || getGroupName(p.pilotGroupId) !== getGroupName(pilots[idx - 1].pilotGroupId)" class="table-group-header bg-light">
+                  <td colspan="6" class="fw-bold text-primary py-2 ps-3" style="font-size: 0.9rem; background-color: #f1f5f9;">
+                    <i class="bi bi-diagram-3-fill me-2"></i> {{ getGroupName(p.pilotGroupId) === '-' ? 'No Group / Independent' : getGroupName(p.pilotGroupId) }}
                   </td>
                 </tr>
-                <tr *ngIf="pilots.length === 0">
-                  <td colspan="6" class="text-center">No pilots found.</td>
+                <tr class="transition-all">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px;">
+                        {{ p.fullName.charAt(0) }}
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark">{{ p.fullName }}</div>
+                        <div class="small text-muted"><i class="bi bi-card-text me-1"></i> {{ p.licenseNumber }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border"><i class="bi bi-diagram-3 me-1"></i> {{ getGroupName(p.pilotGroupId) }}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="fs-5 fw-bold text-secondary">{{ p.flightsAssigned || 0 }}</span>
+                  </td>
+                  <td class="text-center">
+                    <span class="fs-5 fw-bold text-success">{{ p.flightsFlown || 0 }}</span>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-2 {{getStatusBadgeClass(p.status)}}">
+                      {{getStatusLabel(p.status)}}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-light border text-primary" (click)="editPilot(p)" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+                      <button class="btn btn-sm btn-light border text-danger" (click)="deletePilot(p.id!)" title="Delete"><i class="bi bi-trash-fill"></i></button>
+                    </div>
+                  </td>
                 </tr>
-              </tbody>
-            </table>
+              </ng-container>
+              <tr *ngIf="pilots.length === 0">
+                <td colspan="6" class="text-center py-5 text-muted">
+                  <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                  No pilots found. Click "Add Pilot" to create one.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Flight Roster Tab -->
+      <div *ngIf="activeTab === 'roster'" class="p-4 bg-light bg-opacity-50">
+        
+        <div class="row g-3">
+          <div class="col-12" *ngIf="rosterItems.length === 0">
+            <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
+              <i class="bi bi-clipboard-check fs-1 d-block mb-2"></i>
+              No pilot flight assignments found. Add pilots to reservations to see them here!
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-lg-4" *ngFor="let item of rosterItems">
+            <div class="card h-100 border-0 shadow-sm" [ngClass]="{
+              'border-start border-4 border-warning': item.attendance === 0,
+              'border-start border-4 border-success': item.attendance === 1,
+              'border-start border-4 border-danger': item.attendance === 2
+            }">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <span class="badge" [ngClass]="{
+                    'bg-warning text-dark': item.attendance === 0,
+                    'bg-success': item.attendance === 1,
+                    'bg-danger': item.attendance === 2
+                  }">
+                    <i class="bi" [ngClass]="{
+                      'bi-hourglass-split': item.attendance === 0,
+                      'bi-check-circle-fill': item.attendance === 1,
+                      'bi-x-circle-fill': item.attendance === 2
+                    }"></i>
+                    {{ item.attendance === 0 ? 'Pending' : (item.attendance === 1 ? 'Confirmed' : 'No-Show') }}
+                  </span>
+                  <span class="small text-muted"><i class="bi bi-calendar me-1"></i> {{ item.flightDate | date:'mediumDate' }}</span>
+                </div>
+                
+                <h5 class="fw-bold mb-1"><i class="bi bi-person-badge text-primary me-2"></i>{{ item.pilotName }}</h5>
+                <div class="small text-muted mb-3"><i class="bi bi-journal-text me-1"></i> Res #{{ item.reservationId }}: {{ item.reservationTitle }}</div>
+                
+                <div *ngIf="item.attendance === 2 && item.note" class="alert alert-danger bg-danger bg-opacity-10 border-0 small p-2 mb-3">
+                  <strong>Note:</strong> {{ item.note }}
+                </div>
+                
+                <div *ngIf="item.attendance === 0" class="d-flex gap-2 mt-auto">
+                  <button class="btn btn-sm btn-success flex-grow-1 shadow-sm fw-bold" (click)="confirmFlight(item)">
+                    <i class="bi bi-check2-all me-1"></i> Confirmed
+                  </button>
+                  <button class="btn btn-sm btn-danger flex-grow-1 shadow-sm fw-bold" (click)="markNoShow(item)">
+                    <i class="bi bi-x-lg me-1"></i> Did Not Come
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </section>
 
-<!-- Pilot Modal -->
+<!-- Pilot Modal (Modified for Manual Metrics) -->
 <div class="modal fade" id="pilotModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ isEditing ? 'Edit Pilot' : 'Add Pilot' }}</h5>
-        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-primary text-white border-0">
+        <h5 class="modal-title"><i class="bi bi-person-badge me-2"></i>{{ isEditing ? 'Edit Pilot' : 'Add Pilot' }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
       <form (ngSubmit)="savePilot()">
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="fullName" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="currentPilot.fullName" required>
+        <div class="modal-body p-4 bg-light">
+          <div class="bg-white p-3 rounded border shadow-sm mb-3">
+            <div class="mb-3">
+              <label for="fullName" class="form-label fw-bold">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="currentPilot.fullName" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="licenseNumber" class="form-label fw-bold">License Number <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" [(ngModel)]="currentPilot.licenseNumber" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="status" class="form-label fw-bold">Status <span class="text-danger">*</span></label>
+                <select class="form-select" id="status" name="status" [(ngModel)]="currentPilot.status" required>
+                  <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="pilotGroupId" class="form-label fw-bold">Pilot Group</label>
+              <select class="form-select" id="pilotGroupId" name="pilotGroupId" [(ngModel)]="currentPilot.pilotGroupId">
+                <option [ngValue]="undefined">No Group</option>
+                <option *ngFor="let group of pilotGroups" [ngValue]="group.id">{{ group.name }}</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="pilotGroupId" class="form-label">Pilot Group</label>
-            <select class="form-select" id="pilotGroupId" name="pilotGroupId" [(ngModel)]="currentPilot.pilotGroupId">
-              <option [ngValue]="undefined">No Group</option>
-              <option *ngFor="let group of pilotGroups" [ngValue]="group.id">{{ group.name }}</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="licenseNumber" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" [(ngModel)]="currentPilot.licenseNumber" required>
-          </div>
-          <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select class="form-select" id="status" name="status" [(ngModel)]="currentPilot.status" required>
-              <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
-            </select>
+
+          <div class="bg-white p-3 rounded border shadow-sm">
+            <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-bar-chart-fill me-2"></i>Flight Metrics Override</h6>
+            <div class="alert alert-info py-2 small d-flex align-items-center">
+              <i class="bi bi-info-circle-fill fs-4 me-2"></i>
+              These numbers automatically increment via the Flight Roster. You can manually adjust them here if needed.
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Flights Assigned</label>
+                <input type="number" class="form-control text-center fw-bold fs-5" name="flightsAssigned" [(ngModel)]="currentPilot.flightsAssigned">
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Flights Flown</label>
+                <input type="number" class="form-control text-center fw-bold fs-5 text-success" name="flightsFlown" [(ngModel)]="currentPilot.flightsFlown">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+        <div class="modal-footer border-0 p-3 bg-light">
+          <button type="button" class="btn btn-secondary px-4" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4 shadow-sm">Save Pilot</button>
         </div>
       </form>
     </div>
@@ -105,43 +272,49 @@
 <!-- Group Management Modal -->
 <div class="modal fade show" [class.d-block]="showGroupModal" *ngIf="showGroupModal" style="background: rgba(0,0,0,0.5)">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Pilot Groups Management</h5>
-        <button type="button" class="btn-close" (click)="closeGroupModal()"></button>
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-dark text-white border-0">
+        <h5 class="modal-title"><i class="bi bi-diagram-3 me-2"></i>Pilot Groups Management</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeGroupModal()"></button>
       </div>
-      <div class="modal-body">
-        <div class="row mb-4">
-          <div class="col">
-            <h6>{{ isEditingGroup ? 'Edit Group' : 'Create New Group' }}</h6>
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Group Name" [(ngModel)]="currentGroup.name">
-              <button class="btn btn-success" (click)="saveGroup()">
-                {{ isEditingGroup ? 'Update' : 'Create' }}
-              </button>
-              <button class="btn btn-secondary" *ngIf="isEditingGroup" (click)="openGroupModal()">Cancel</button>
-            </div>
+      <div class="modal-body p-4 bg-light">
+        <div class="bg-white p-4 rounded shadow-sm border mb-4">
+          <h6 class="fw-bold mb-3 text-primary">{{ isEditingGroup ? 'Edit Group' : 'Create New Group' }}</h6>
+          <div class="input-group shadow-sm">
+            <span class="input-group-text bg-light"><i class="bi bi-bookmark-fill text-muted"></i></span>
+            <input type="text" class="form-control" placeholder="Enter group name..." [(ngModel)]="currentGroup.name">
+            <button class="btn btn-primary px-4" (click)="saveGroup()">
+              {{ isEditingGroup ? 'Update Group' : 'Create Group' }}
+            </button>
+            <button class="btn btn-outline-secondary px-3" *ngIf="isEditingGroup" (click)="openGroupModal()">Cancel</button>
           </div>
         </div>
 
-        <h6>Existing Groups</h6>
-        <div class="table-responsive">
-          <table class="table table-sm align-middle">
-            <thead>
+        <h6 class="fw-bold text-dark mb-3">Existing Groups</h6>
+        <div class="table-responsive bg-white rounded shadow-sm border">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
               <tr>
-                <th>Name</th>
-                <th>Pilots</th>
-                <th class="text-end">Actions</th>
+                <th class="ps-4">Group Name</th>
+                <th class="text-center">Active Pilots</th>
+                <th class="text-end pe-4">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let g of pilotGroups">
-                <td>{{ g.name }}</td>
-                <td>{{ g.pilots?.length || 0 }} pilots</td>
-                <td class="text-end">
-                  <button class="btn btn-link btn-sm p-0 me-2" (click)="openGroupModal(g)">Edit</button>
-                  <button class="btn btn-link btn-sm p-0 text-danger" (click)="deleteGroup(g.id!)">Delete</button>
+                <td class="ps-4 fw-bold text-dark">{{ g.name }}</td>
+                <td class="text-center">
+                  <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1">
+                    <i class="bi bi-people me-1"></i> {{ g.pilots?.length || 0 }}
+                  </span>
                 </td>
+                <td class="text-end pe-4">
+                  <button class="btn btn-sm btn-light border text-primary me-2" (click)="openGroupModal(g)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="btn btn-sm btn-light border text-danger" (click)="deleteGroup(g.id!)"><i class="bi bi-trash-fill"></i></button>
+                </td>
+              </tr>
+              <tr *ngIf="pilotGroups.length === 0">
+                <td colspan="3" class="text-center py-4 text-muted">No pilot groups created yet.</td>
               </tr>
             </tbody>
           </table>

@@ -16,6 +16,7 @@ import { FlightPackageService } from '../../services/flight-package.service';
 import { TransportGroupService } from '../../services/transport-group.service';
 import { ExtraServiceService } from '../../services/extra-service.service';
 import { FlightTimeService } from '../../services/flight-time.service';
+import { CurrencyService } from '../../services/currency.service';
 
 @Component({
   selector: 'app-reservation-form',
@@ -111,6 +112,7 @@ export class ReservationFormComponent implements OnInit {
     private extraServiceService: ExtraServiceService,
     private flightTimeService: FlightTimeService,
     private paymentService: PaymentService,
+    private currencyService: CurrencyService,
     private http: HttpClient
   ) { }
 
@@ -141,10 +143,15 @@ export class ReservationFormComponent implements OnInit {
     this.customerService.getCustomers().subscribe(data => this.customers = data);
     this.pilotService.getPilots().subscribe(data => {
       this.pilots = data;
+      this.mapAndSortPilots();
       // Initialize filtered pilots for all existing details
       this.reservation.details.forEach((_, i) => this.updateFilteredPilots(i));
     });
-    this.pilotGroupService.getPilotGroups().subscribe((data: PilotGroup[]) => this.pilotGroups = data);
+    this.pilotGroupService.getPilotGroups().subscribe((data: PilotGroup[]) => {
+      this.pilotGroups = data;
+      this.mapAndSortPilots();
+      this.reservation.details.forEach((_, i) => this.updateFilteredPilots(i));
+    });
     this.flightPackageService.getFlightPackages().subscribe(data => this.flightPackages = data);
     this.transportGroupService.getTransportGroups().subscribe(data => this.transportGroups = data);
     this.extraServiceService.getExtraServices().subscribe(data => this.extraServices = data);
@@ -157,10 +164,39 @@ export class ReservationFormComponent implements OnInit {
     });
   }
 
+  mapAndSortPilots(): void {
+    if (!this.pilots.length || !this.pilotGroups.length) return;
+    
+    this.pilots.forEach(p => {
+      p.groupName = p.pilotGroupId ? (this.pilotGroups.find(g => g.id === p.pilotGroupId)?.name || 'No Group') : 'No Group';
+    });
+
+    this.pilots = [...this.pilots].sort((a, b) => {
+      // 1. Group comparison
+      const groupA = a.groupName || 'No Group';
+      const groupB = b.groupName || 'No Group';
+      if (groupA !== groupB) {
+        if (groupA === 'No Group') return 1;
+        if (groupB === 'No Group') return -1;
+        return groupA.localeCompare(groupB);
+      }
+      // 2. Flights Assigned (Min to Max)
+      const assignedA = a.flightsAssigned || 0;
+      const assignedB = b.flightsAssigned || 0;
+      if (assignedA !== assignedB) {
+        return assignedA - assignedB;
+      }
+      // 3. Flights Flown (Min to Max)
+      const flownA = a.flightsFlown || 0;
+      const flownB = b.flightsFlown || 0;
+      return flownA - flownB;
+    });
+  }
+
   updateFilteredPilots(index: number): void {
     const groupId = this.selectedGroupIds[index];
     if (!groupId) {
-      this.filteredPilots[index] = this.pilots;
+      this.filteredPilots[index] = [...this.pilots];
     } else {
       this.filteredPilots[index] = this.pilots.filter(p => p.pilotGroupId === Number(groupId));
     }
@@ -252,8 +288,26 @@ export class ReservationFormComponent implements OnInit {
     }
     const totalDue = this.reservation.totalAmount || 0;
     const deposit = this.reservation.deposit || 0;
-    this.totalPaid = this.payments.reduce((sum, p) => sum + Number(p.amount), 0) + Number(deposit);
+    const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
+    
+    this.totalPaid = this.payments.reduce((sum, p) => {
+      const fromCode = this.getCurrencyCode(p.currency);
+      const toCode = this.getCurrencyCode(prefCurrency);
+      const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+      return sum + converted;
+    }, 0) + Number(deposit);
+    
     this.remainingBalance = Math.max(0, totalDue - this.totalPaid);
+  }
+
+  getCurrencyCode(enumVal: any): string {
+    switch(Number(enumVal)) {
+      case PaymentCurrency.TL: return 'TRY';
+      case PaymentCurrency.USD: return 'USD';
+      case PaymentCurrency.EUR: return 'EUR';
+      case PaymentCurrency.GBP: return 'GBP';
+      default: return 'USD';
+    }
   }
 
   onAgencyPriceChange(): void {
@@ -263,7 +317,15 @@ export class ReservationFormComponent implements OnInit {
   onManualTotalChange(): void {
     const totalDue = this.reservation.totalAmount || 0;
     const deposit = this.reservation.deposit || 0;
-    this.totalPaid = this.payments.reduce((sum, p) => sum + Number(p.amount), 0) + Number(deposit);
+    const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
+    
+    this.totalPaid = this.payments.reduce((sum, p) => {
+      const fromCode = this.getCurrencyCode(p.currency);
+      const toCode = this.getCurrencyCode(prefCurrency);
+      const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+      return sum + converted;
+    }, 0) + Number(deposit);
+    
     this.remainingBalance = Math.max(0, totalDue - this.totalPaid);
   }
 

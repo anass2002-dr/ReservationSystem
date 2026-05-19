@@ -201,7 +201,13 @@
                         <div class="col-md-6">
                           <label class="form-label">Assigned Pilot</label>
                           <ng-select [items]="filteredPilots[i] || pilots" bindLabel="fullName" bindValue="id"
-                            [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i" placeholder="Select Pilot">
+                            groupBy="groupName" [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i" placeholder="Select Pilot">
+                            <ng-template ng-option-tmp let-item="item">
+                              {{ item.fullName }} 
+                              <span class="text-muted small ms-1" style="font-size: 0.75rem;">
+                                (Assigned: {{ item.flightsAssigned || 0 }}, Flown: {{ item.flightsFlown || 0 }})
+                              </span>
+                            </ng-template>
                           </ng-select>
                         </div>
                       </div>

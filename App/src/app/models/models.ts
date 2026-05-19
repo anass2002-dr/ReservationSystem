@@ -19,12 +19,21 @@ export interface Pilot {
   licenseNumber: string;
   status: PilotStatus;
   pilotGroupId?: number;
+  flightsAssigned?: number;
+  flightsFlown?: number;
+  groupName?: string;
 }
 
 export enum PilotStatus {
   Active = 0,
   InFlight = 1,
   OffDuty = 2
+}
+
+export enum PilotAttendanceStatus {
+  Pending = 0,
+  Confirmed = 1,
+  NoShow = 2
 }
 
 export interface TransportGroup {
@@ -55,6 +64,8 @@ export interface ReservationDetail {
   flightPackageId?: number;
   transportGroupId?: number;
   weightLimitStatus: boolean;
+  pilotAttendance?: PilotAttendanceStatus;
+  pilotNote?: string;
   extraServiceIds: number[];
   customer?: Customer;
 }

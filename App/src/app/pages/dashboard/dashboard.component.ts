@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Reservation, Customer, Payment, FlightTime } from '../../models/models';
+import { Reservation, Customer, Payment, FlightTime, PaymentCurrency } from '../../models/models';
 import { ReservationService } from '../../services/reservation.service';
 import { CustomerService } from '../../services/customer.service';
 import { PaymentService } from '../../services/payment.service';
 import { FlightTimeService } from '../../services/flight-time.service';
+import { CurrencyService } from '../../services/currency.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,7 +33,8 @@ export class DashboardComponent implements OnInit {
     private reservationService: ReservationService,
     private customerService: CustomerService,
     private paymentService: PaymentService,
-    private flightTimeService: FlightTimeService
+    private flightTimeService: FlightTimeService,
+    private currencyService: CurrencyService
   ) { }
 
   ngOnInit(): void {
@@ -63,8 +65,22 @@ export class DashboardComponent implements OnInit {
     });
     
     this.stats.todayFlights = this.todayReservations.length;
-    this.stats.totalRevenue = this.payments.reduce((sum, p) => sum + Number(p.amount), 0);
+    this.stats.totalRevenue = this.payments.reduce((sum, p) => {
+      const fromCode = this.getCurrencyCode(p.currency);
+      const converted = this.currencyService.convert(Number(p.amount), fromCode, 'USD');
+      return sum + converted;
+    }, 0);
     this.stats.activeCustomers = this.customers.length;
+  }
+
+  getCurrencyCode(enumVal: any): string {
+    switch(Number(enumVal)) {
+      case PaymentCurrency.TL: return 'TRY';
+      case PaymentCurrency.USD: return 'USD';
+      case PaymentCurrency.EUR: return 'EUR';
+      case PaymentCurrency.GBP: return 'GBP';
+      default: return 'USD';
+    }
   }
 
   getFlightTimeLabel(id: number): string {

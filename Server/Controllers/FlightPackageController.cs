@@ -8,6 +8,7 @@ namespace ReservationSystem_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class FlightPackageController : ControllerBase
     {
         private readonly IFlightPackageService _service;

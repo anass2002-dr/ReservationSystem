@@ -6,6 +6,7 @@ namespace ReservationSystem_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class FlightTimeController : ControllerBase
     {
         private readonly IFlightTimeService _service;
