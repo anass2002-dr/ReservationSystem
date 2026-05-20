@@ -290,14 +290,15 @@ export class ReservationFormComponent implements OnInit {
     const deposit = this.reservation.deposit || 0;
     const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
     
-    this.totalPaid = this.payments.reduce((sum, p) => {
+    const rawPaid = this.payments.reduce((sum, p) => {
       const fromCode = this.getCurrencyCode(p.currency);
       const toCode = this.getCurrencyCode(prefCurrency);
       const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
       return sum + converted;
     }, 0) + Number(deposit);
     
-    this.remainingBalance = Math.max(0, totalDue - this.totalPaid);
+    this.totalPaid = Number(rawPaid.toFixed(2));
+    this.remainingBalance = Math.max(0, Number((totalDue - this.totalPaid).toFixed(2)));
   }
 
   getCurrencyCode(enumVal: any): string {
@@ -319,14 +320,15 @@ export class ReservationFormComponent implements OnInit {
     const deposit = this.reservation.deposit || 0;
     const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
     
-    this.totalPaid = this.payments.reduce((sum, p) => {
+    const rawPaid = this.payments.reduce((sum, p) => {
       const fromCode = this.getCurrencyCode(p.currency);
       const toCode = this.getCurrencyCode(prefCurrency);
       const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
       return sum + converted;
     }, 0) + Number(deposit);
     
-    this.remainingBalance = Math.max(0, totalDue - this.totalPaid);
+    this.totalPaid = Number(rawPaid.toFixed(2));
+    this.remainingBalance = Math.max(0, Number((totalDue - this.totalPaid).toFixed(2)));
   }
 
   isFullyPaid(): boolean {

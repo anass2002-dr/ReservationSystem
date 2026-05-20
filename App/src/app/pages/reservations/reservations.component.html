@@ -200,6 +200,10 @@
     <div class="card-body p-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Reservations ({{ filteredListReservations.length }})</h5>
+        <button class="btn btn-success rounded-pill px-3 shadow-sm btn-sm fw-bold d-flex align-items-center gap-2" (click)="exportToExcel()" [disabled]="filteredListReservations.length === 0">
+          <i class="bi bi-file-earmark-excel-fill text-white fs-6"></i>
+          <span>Export Excel</span>
+        </button>
       </div>
       
       <div class="table-responsive">

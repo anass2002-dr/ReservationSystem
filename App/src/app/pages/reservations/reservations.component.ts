@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Reservation, ReservationStatus, Customer, Pilot, FlightTime, Payment, PaymentCurrency } from '../../models/models';
+import { Reservation, ReservationStatus, Customer, Pilot, FlightTime, Payment, PaymentCurrency, FlightPackage, ExtraService, TransportGroup, Agency } from '../../models/models';
 import { ReservationService } from '../../services/reservation.service';
 import { CustomerService } from '../../services/customer.service';
 import { PilotService } from '../../services/pilot.service';
 import { FlightTimeService } from '../../services/flight-time.service';
 import { PaymentService } from '../../services/payment.service';
 import { CurrencyService } from '../../services/currency.service';
+import { FlightPackageService } from '../../services/flight-package.service';
+import { ExtraServiceService } from '../../services/extra-service.service';
+import { TransportGroupService } from '../../services/transport-group.service';
+import { AgencyService } from '../../services/agency.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-reservations',
@@ -23,6 +28,10 @@ export class ReservationsComponent implements OnInit {
   pilots: Pilot[] = [];
   flightTimes: FlightTime[] = [];
   payments: Payment[] = [];
+  flightPackages: FlightPackage[] = [];
+  extraServices: ExtraService[] = [];
+  transportGroups: TransportGroup[] = [];
+  agencies: Agency[] = [];
   selectedFlightTimeId: number | null = null;
   groupedReservations: { flightTime: FlightTime, reservations: Reservation[] }[] = [];
   connectedLists: string[] = [];
@@ -43,6 +52,10 @@ export class ReservationsComponent implements OnInit {
     private flightTimeService: FlightTimeService,
     private paymentService: PaymentService,
     private currencyService: CurrencyService,
+    private flightPackageService: FlightPackageService,
+    private extraServiceService: ExtraServiceService,
+    private transportGroupService: TransportGroupService,
+    private agencyService: AgencyService,
     private router: Router
   ) { }
 
@@ -60,6 +73,10 @@ export class ReservationsComponent implements OnInit {
       this.updateConnectedLists();
       this.groupReservations();
     });
+    this.flightPackageService.getFlightPackages().subscribe(data => this.flightPackages = data);
+    this.extraServiceService.getExtraServices().subscribe(data => this.extraServices = data);
+    this.transportGroupService.getTransportGroups().subscribe(data => this.transportGroups = data);
+    this.agencyService.getAgencies().subscribe(data => this.agencies = data);
   }
 
   loadPayments(): void {
@@ -186,7 +203,7 @@ export class ReservationsComponent implements OnInit {
         const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
         return sum + converted;
       }, 0);
-    return (paid + Number(deposit)) >= totalDue && totalDue > 0;
+    return Number((paid + Number(deposit)).toFixed(2)) >= totalDue && totalDue > 0;
   }
 
   getRemainingBalance(res: Reservation): number {
@@ -201,7 +218,142 @@ export class ReservationsComponent implements OnInit {
         const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
         return sum + converted;
       }, 0);
-    return Math.max(0, totalDue - (paid + Number(deposit)));
+    const balance = totalDue - (paid + Number(deposit));
+    return Math.max(0, Number(balance.toFixed(2)));
+  }
+
+  getAmountPaidForRes(res: Reservation): number {
+    const deposit = res.deposit || 0;
+    const prefCurrency = res.preferredCurrency || PaymentCurrency.USD;
+    const paid = this.payments
+      .filter(p => p.reservationId === res.id)
+      .reduce((sum, p) => {
+        const fromCode = this.getCurrencyCode(p.currency);
+        const toCode = this.getCurrencyCode(prefCurrency);
+        const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+        return sum + converted;
+      }, 0);
+    return Number((paid + Number(deposit)).toFixed(2));
+  }
+
+  exportToExcel(): void {
+    const dataToExport: any[] = [];
+    const reservationsToExport = this.filteredListReservations;
+
+    const getFlightTimeLabel = (id?: number) => {
+      return this.flightTimes.find(ft => ft.id === id)?.time || '';
+    };
+
+    const getStatusLabel = (res: Reservation) => {
+      if (res.status === 2 && this.hasRefund(res)) return 'Refunded';
+      switch (res.status) {
+        case 0: return 'Pending';
+        case 1: return 'Confirmed';
+        case 2: return 'Cancelled';
+        default: return 'Unknown';
+      }
+    };
+
+    const getAgencyName = (res: Reservation) => {
+      if (!res.isAgencyBooking) return 'N/A';
+      return this.agencies.find(a => a.id === res.agencyId)?.name || res.agencyName || 'Agency';
+    };
+
+    reservationsToExport.forEach(r => {
+      const remainingBalance = this.getRemainingBalance(r);
+      const paidAmount = this.getAmountPaidForRes(r);
+      const statusLabel = getStatusLabel(r);
+      const timeLabel = getFlightTimeLabel(r.flightTimeId);
+      const currencyLabel = this.getCurrencyCode(r.preferredCurrency);
+      const agencyName = getAgencyName(r);
+
+      if (r.details && r.details.length > 0) {
+        r.details.forEach((d, index) => {
+          const customerName = d.customer ? d.customer.fullName || '' : `Passenger ${index + 1}`;
+          const customerPhone = d.customer?.phoneNumber || '';
+          const pilotName = this.pilots.find(p => p.id === d.pilotId)?.fullName || '';
+          const packageName = this.flightPackages.find(p => p.id === d.flightPackageId)?.title || '';
+          const transportGroupName = this.transportGroups.find(tg => tg.id === d.transportGroupId)
+            ? `Plate: ${this.transportGroups.find(tg => tg.id === d.transportGroupId)?.vehiclePlate || ''} (${this.transportGroups.find(tg => tg.id === d.transportGroupId)?.driverName || ''})`
+            : '';
+          
+          const extrasList = d.extraServiceIds && d.extraServiceIds.length > 0
+            ? d.extraServiceIds.map(eid => this.extraServices.find(es => es.id === eid)?.name || '').filter(Boolean).join(', ')
+            : '';
+
+          dataToExport.push({
+            'Res ID': r.id,
+            'Flight Date': typeof r.flightDate === 'string' ? r.flightDate.split('T')[0] : new Date(r.flightDate).toISOString().split('T')[0],
+            'Flight Time': timeLabel,
+            'Reservation Name': r.title || '',
+            'Status': statusLabel,
+            'Agency Booking': r.isAgencyBooking ? 'Yes' : 'No',
+            'Agency Name': agencyName,
+            'Total Amount': r.totalAmount || 0,
+            'Paid Amount': paidAmount,
+            'Remaining Balance': remainingBalance,
+            'Currency': currencyLabel,
+            'Passenger No': index + 1,
+            'Passenger Name': customerName,
+            'Passenger Phone': customerPhone,
+            'Weight Limit Exceeded': d.weightLimitStatus ? 'Yes' : 'No',
+            'Pilot': pilotName,
+            'Flight Package': packageName,
+            'Transport Details': transportGroupName,
+            'Extra Services': extrasList,
+            'Passenger Notes': d.pilotNote || '',
+            'Reservation Notes': r.notes || ''
+          });
+        });
+      } else {
+        dataToExport.push({
+          'Res ID': r.id,
+          'Flight Date': typeof r.flightDate === 'string' ? r.flightDate.split('T')[0] : new Date(r.flightDate).toISOString().split('T')[0],
+          'Flight Time': timeLabel,
+          'Reservation Name': r.title || '',
+          'Status': statusLabel,
+          'Agency Booking': r.isAgencyBooking ? 'Yes' : 'No',
+          'Agency Name': agencyName,
+          'Total Amount': r.totalAmount || 0,
+          'Paid Amount': paidAmount,
+          'Remaining Balance': remainingBalance,
+          'Currency': currencyLabel,
+          'Passenger No': '',
+          'Passenger Name': '',
+          'Passenger Phone': '',
+          'Weight Limit Exceeded': '',
+          'Pilot': '',
+          'Flight Package': '',
+          'Transport Details': '',
+          'Extra Services': '',
+          'Passenger Notes': '',
+          'Reservation Notes': r.notes || ''
+        });
+      }
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Reservations');
+    
+    // Auto-fit columns
+    const max_width = dataToExport.reduce((w, r) => {
+      Object.keys(r).forEach((key, col_idx) => {
+        const val = String(r[key] || '');
+        w[col_idx] = Math.max(w[col_idx] || 0, val.length, key.length);
+      });
+      return w;
+    }, []);
+    worksheet['!cols'] = max_width.map((w: any) => ({ wch: w + 2 }));
+
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = `Reservations_${this.selectedDate}.xlsx`;
+    
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(data);
+    link.download = fileName;
+    link.click();
   }
 
   getCustomersDisplay(r: Reservation): string {
