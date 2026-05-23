@@ -15,7 +15,7 @@ namespace ReservationSystem_backend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("DROP TABLE IF EXISTS FlightTimes;");
-            migrationBuilder.Sql("ALTER TABLE Reservations DROP COLUMN IF EXISTS FlightTimeId;");
+            // migrationBuilder.Sql("ALTER TABLE Reservations DROP COLUMN IF EXISTS FlightTimeId;");
             migrationBuilder.CreateTable(
                 name: "FlightTimes",
                 columns: table => new

@@ -14,7 +14,7 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 
 export namespace ReservationPG {
   const sessionName = 'reservationPGlogin';
-  const urlServer = 'https://localhost:5265/api/';
+  const urlServer = 'https://flygravitysystem.cloud/api/';
   export const title_header = function (route: ActivatedRoute): string[] {
     var breadcrumbs: string[] = [];
     breadcrumbs.push('Home');

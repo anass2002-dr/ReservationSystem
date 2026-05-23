@@ -156,6 +156,19 @@ namespace ReservationSystem_backend.Services.ReservationService
                 entity.TotalAmount = totalAmount;
             }
 
+            if (dto.Photos != null)
+            {
+                foreach (var photoDto in dto.Photos)
+                {
+                    entity.ReservationPhotos.Add(new ReservationPhoto
+                    {
+                        PhotoData = photoDto.PhotoData,
+                        FileName = photoDto.FileName,
+                        ContentType = photoDto.ContentType
+                    });
+                }
+            }
+
             var savedEntity = _repo.AddReservation(entity);
             return new ReservationDtos(savedEntity);
         }
@@ -269,6 +282,20 @@ namespace ReservationSystem_backend.Services.ReservationService
                 else
                 {
                     existingEntity.TotalAmount = totalAmount;
+                }
+
+                existingEntity.ReservationPhotos.Clear();
+                if (dto.Photos != null)
+                {
+                    foreach (var photoDto in dto.Photos)
+                    {
+                        existingEntity.ReservationPhotos.Add(new ReservationPhoto
+                        {
+                            PhotoData = photoDto.PhotoData,
+                            FileName = photoDto.FileName,
+                            ContentType = photoDto.ContentType
+                        });
+                    }
                 }
 
                 var updatedEntity = _repo.UpdateReservation(id, existingEntity);

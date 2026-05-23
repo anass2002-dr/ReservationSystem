@@ -23,6 +23,7 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
                     .ThenInclude(rd => rd.ReservationExtras)
                 .Include(r => r.ReservationDetails)
                     .ThenInclude(rd => rd.Customer)
+                .Include(r => r.ReservationPhotos)
                 .ToList();
         }
 
@@ -35,6 +36,7 @@ namespace ReservationSystem_backend.Repository.ReservationRepo
                     .ThenInclude(rd => rd.ReservationExtras)
                 .Include(r => r.ReservationDetails)
                     .ThenInclude(rd => rd.Customer)
+                .Include(r => r.ReservationPhotos)
                 .FirstOrDefault(e => e.Id == id);
         }
 

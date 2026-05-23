@@ -27,6 +27,7 @@ namespace ReservationSystem_backend.DTOs
         public decimal? AgencyPrice { get; set; }
         
         public List<ReservationDetailDto> Details { get; set; } = new List<ReservationDetailDto>();
+        public List<ReservationPhotoDto> Photos { get; set; } = new List<ReservationPhotoDto>();
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -65,6 +66,21 @@ namespace ReservationSystem_backend.DTOs
                 foreach (var detail in model.ReservationDetails)
                 {
                     Details.Add(new ReservationDetailDto(detail));
+                }
+            }
+
+            if (model.ReservationPhotos != null)
+            {
+                foreach (var photo in model.ReservationPhotos)
+                {
+                    Photos.Add(new ReservationPhotoDto
+                    {
+                        Id = photo.Id,
+                        ReservationId = photo.ReservationId,
+                        PhotoData = photo.PhotoData,
+                        FileName = photo.FileName,
+                        ContentType = photo.ContentType
+                    });
                 }
             }
         }

@@ -300,6 +300,41 @@
             placeholder="Any dietary requirements, health issues, or special occasions?"></textarea>
         </div>
 
+        <!-- Photos Section -->
+        <div class="section-title mt-5">
+          <i class="bi bi-camera-fill"></i> Reservation Photos / Documents
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Upload Photos (e.g. payment receipt, passport copy, ticket files)</label>
+          <div class="photo-upload-zone p-4 bg-light rounded-4 border border-dashed text-center">
+            <i class="bi bi-cloud-upload display-4 text-muted mb-2 d-block"></i>
+            <p class="mb-2 text-muted">Drag & drop files here, or click to browse</p>
+            <input type="file" (change)="onPhotosSelected($event)" multiple accept="image/*" class="d-none" #fileInput>
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="fileInput.click()">
+              <i class="bi bi-file-earmark-image me-1"></i> Choose Photos
+            </button>
+          </div>
+
+          <!-- Photo Previews -->
+          <div class="row g-3 mt-3" *ngIf="reservation.photos && reservation.photos.length > 0">
+            <div class="col-6 col-md-3 col-lg-2" *ngFor="let photo of reservation.photos; let photoIdx = index">
+              <div class="card h-100 shadow-sm border-0 position-relative photo-card">
+                <img [src]="photo.photoData" class="card-img-top rounded-3 object-fit-cover cursor-pointer" 
+                  style="height: 120px;" alt="Reservation photo" (click)="viewPhoto(photo)">
+                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center"
+                  (click)="removePhoto(photoIdx)" style="width: 26px; height: 26px;">
+                  <i class="bi bi-x fs-6"></i>
+                </button>
+                <div class="card-body p-2 text-center" *ngIf="photo.fileName">
+                  <span class="small text-truncate d-block text-muted" style="max-width: 100%; font-size: 0.7rem;" [title]="photo.fileName">
+                    {{ photo.fileName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Action Buttons -->
         <div class="row mt-5 pt-4 border-top">
           <div class="col-12 d-flex justify-content-end gap-3">

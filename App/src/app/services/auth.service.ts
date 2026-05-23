@@ -19,7 +19,7 @@ export interface User {
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
-  private apiUrl = 'http://localhost:5265/api/Auth';
+  private apiUrl = 'https://flygravitysystem.cloud/api/Auth';
 
   constructor(private http: HttpClient, private router: Router) {
     const savedUser = localStorage.getItem('currentUser');

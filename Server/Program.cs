@@ -59,8 +59,11 @@ builder.Services.AddHttpContextAccessor();
 var MyPolicy = "Mypolicy";
 builder.Services.AddCors(options => options.AddPolicy(name: MyPolicy, policy =>
 {
-    policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-    policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+    // تعديل الـ CORS ليدعم السيرفر أونلاين والـ Local في نفس الوقت
+    policy.WithOrigins("http://localhost:4200", "http://2.24.115.165", "https://2.24.115.165", "http://flygravitysystem.cloud", "https://flygravitysystem.cloud")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials(); // مفيد جداً إذا كنتِ كتستعملي الـ Cookies أو الـ Sessions لاحقاً
 }));
 
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -102,12 +105,12 @@ builder.Services.AddScoped<ReservationSystem_backend.Repository.AgencyRepo.IAgen
 var app = builder.Build();
 app.UseCors(MyPolicy); // Use CORS before any other middleware
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// تفعيل الـ Swagger ديماً أونلاين لتسهيل التجربة والـ Testing دابا
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservation System API v1");
+});
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -117,5 +120,20 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapFallbackToFile("index.html");
-
+// الكود السحري لتحديث قاعدة البيانات تلقائياً عند التشغيل
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        // هاد السطر كيدوز الـ Migrations المتبقية تلقائياً بلا ما تحتاج لملف SQL
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "وقع خطأ أثناء تحديث قاعدة البيانات تلقائياً.");
+    }
+}
 app.Run();

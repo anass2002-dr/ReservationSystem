@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
-  apiUrl = 'http://localhost:5265/api/Auth';
+  apiUrl = 'https://flygravitysystem.cloud/api/Auth';
 
   constructor(private http: HttpClient) { }
 

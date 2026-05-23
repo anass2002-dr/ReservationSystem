@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  apiUrl = 'http://localhost:5265/api/Auth';
+  apiUrl = 'https://flygravitysystem.cloud/api/Auth';
 
   constructor(private authService: AuthService, private http: HttpClient) { }
 

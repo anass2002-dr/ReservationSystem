@@ -249,3 +249,30 @@
   border-left: none;
 }
 
+.photo-upload-zone {
+  border: 2px dashed #dee2e6;
+  border-radius: 18px;
+  background-color: #fafbfc !important;
+  transition: all 0.3s ease;
+}
+
+.photo-upload-zone:hover {
+  border-color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.02) !important;
+}
+
+.photo-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.photo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+

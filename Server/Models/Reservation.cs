@@ -29,5 +29,6 @@ namespace ReservationSystem_backend.Models
         // Navigation properties
         public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public ICollection<ReservationPhoto> ReservationPhotos { get; set; } = new List<ReservationPhoto>();
     }
 }

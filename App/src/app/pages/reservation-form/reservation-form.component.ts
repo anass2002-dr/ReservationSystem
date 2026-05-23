@@ -79,7 +79,8 @@ export class ReservationFormComponent implements OnInit {
         extraServiceIds: [],
         customer: this.createEmptyCustomer()
       }
-    ]
+    ],
+    photos: []
   };
 
   customers: Customer[] = [];
@@ -211,6 +212,7 @@ export class ReservationFormComponent implements OnInit {
   loadReservation(id: number): void {
     this.reservationService.getReservation(id).subscribe(data => {
       this.reservation = data;
+      this.reservation.photos = this.reservation.photos || [];
       if (this.reservation.flightDate) {
         // Parse the date and extract YYYY-MM-DD in local time to avoid timezone shifts
         const dateObj = new Date(this.reservation.flightDate);
@@ -423,6 +425,48 @@ export class ReservationFormComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/reservations']);
+  }
+
+  onPhotosSelected(event: any): void {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const base64Image = e.target.result;
+          if (!this.reservation.photos) {
+            this.reservation.photos = [];
+          }
+          this.reservation.photos.push({
+            photoData: base64Image,
+            fileName: file.name,
+            contentType: file.type
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  removePhoto(index: number): void {
+    if (this.reservation.photos) {
+      this.reservation.photos.splice(index, 1);
+    }
+  }
+
+  viewPhoto(photo: any): void {
+    Swal.fire({
+      imageUrl: photo.photoData,
+      imageAlt: photo.fileName || 'Reservation Photo',
+      showCloseButton: true,
+      showConfirmButton: false,
+      width: 'auto',
+      maxHeight: '80vh',
+      customClass: {
+        image: 'img-fluid rounded shadow-sm'
+      }
+    });
   }
 
   printReservation(): void {

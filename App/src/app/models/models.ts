@@ -104,6 +104,7 @@ export interface Reservation {
   deposit?: number;
   depositMethod?: PaymentMethod;
   details: ReservationDetail[];
+  photos?: ReservationPhoto[];
   createdAt?: string;
   updatedAt?: string;
   createdBy?: string;
@@ -149,4 +150,12 @@ export enum PaymentMethod {
 export interface Country {
   name: string;
   code: string;
+}
+
+export interface ReservationPhoto {
+  id?: number;
+  reservationId?: number;
+  photoData: string; // base64 string
+  fileName?: string;
+  contentType?: string;
 }

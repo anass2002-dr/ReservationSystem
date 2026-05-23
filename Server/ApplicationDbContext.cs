@@ -27,6 +27,7 @@ namespace ReservationSystem_backend
         public DbSet<ReservationExtra> ReservationExtras { get; set; } = null!;
         public DbSet<FlightTime> FlightTimes { get; set; } = null!;
         public DbSet<Agency> Agencies { get; set; } = null!;
+        public DbSet<ReservationPhoto> ReservationPhotos { get; set; } = null!;
 
         public override int SaveChanges()
         {
@@ -163,6 +164,12 @@ namespace ReservationSystem_backend
                 .HasOne(p => p.Reservation)
                 .WithMany(r => r.Payments)
                 .HasForeignKey(p => p.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ReservationPhoto>()
+                .HasOne(rp => rp.Reservation)
+                .WithMany(r => r.ReservationPhotos)
+                .HasForeignKey(rp => rp.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // 4. Extras: ReservationDetail <-> ExtraService (Many-to-Many via ReservationExtra)
