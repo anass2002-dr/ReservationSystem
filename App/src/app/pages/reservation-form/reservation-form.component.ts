@@ -17,6 +17,7 @@ import { TransportGroupService } from '../../services/transport-group.service';
 import { ExtraServiceService } from '../../services/extra-service.service';
 import { FlightTimeService } from '../../services/flight-time.service';
 import { CurrencyService } from '../../services/currency.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reservation-form',
@@ -462,7 +463,6 @@ export class ReservationFormComponent implements OnInit {
       showCloseButton: true,
       showConfirmButton: false,
       width: 'auto',
-      maxHeight: '80vh',
       customClass: {
         image: 'img-fluid rounded shadow-sm'
       }

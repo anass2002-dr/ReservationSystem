@@ -3,6 +3,7 @@ import { AuthService, User } from '../../services/auth.service';
 
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  apiUrl = 'https://flygravitysystem.cloud/api/Auth';
+  apiUrl = `${environment.ApiUrl}/Auth`;
 
   constructor(private authService: AuthService, private http: HttpClient) { }
 

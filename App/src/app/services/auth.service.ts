@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 export interface User {
   id: string;
@@ -19,7 +20,7 @@ export interface User {
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
-  private apiUrl = 'https://flygravitysystem.cloud/api/Auth';
+  private apiUrl = `${environment.ApiUrl}/Auth`;
 
   constructor(private http: HttpClient, private router: Router) {
     const savedUser = localStorage.getItem('currentUser');

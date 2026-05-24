@@ -57,13 +57,15 @@ builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 var MyPolicy = "Mypolicy";
+var allowedOrigins = configuration.GetSection("CORS:AllowedOrigins").Get<string[]>() 
+                     ?? new[] { "http://localhost:4200" };
+
 builder.Services.AddCors(options => options.AddPolicy(name: MyPolicy, policy =>
 {
-    // تعديل الـ CORS ليدعم السيرفر أونلاين والـ Local في نفس الوقت
-    policy.WithOrigins("http://localhost:4200", "http://2.24.115.165", "https://2.24.115.165", "http://flygravitysystem.cloud", "https://flygravitysystem.cloud")
+    policy.WithOrigins(allowedOrigins)
           .AllowAnyMethod()
           .AllowAnyHeader()
-          .AllowCredentials(); // مفيد جداً إذا كنتِ كتستعملي الـ Cookies أو الـ Sessions لاحقاً
+          .AllowCredentials();
 }));
 
 builder.Services.AddControllers().AddJsonOptions(x =>

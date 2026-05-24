@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  ApiUrl: "https://flygravitysystem.cloud/api"
+  ApiUrl: "http://localhost:5265/api"
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

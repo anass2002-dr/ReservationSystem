@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-management',
@@ -11,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
-  apiUrl = 'https://flygravitysystem.cloud/api/Auth';
+  apiUrl = `${environment.ApiUrl}/Auth`;
 
   constructor(private http: HttpClient) { }
 
