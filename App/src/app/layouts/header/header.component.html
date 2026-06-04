@@ -20,6 +20,10 @@
       <div class="currency-label">USD/GBP</div>
       <div class="currency-value">{{ rates['GBP'] | number:'1.2-3' }}</div>
     </div>
+    
+    <button *ngIf="authService.isAdmin()" class="btn btn-sm btn-outline-primary ms-3 rounded-pill px-3 shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#updateRateModal" (click)="openRatesModal()">
+      <i class="bi bi-currency-exchange me-1"></i> Update Rate
+    </button>
   </div>
 
   <!-- Quick Converter -->
@@ -88,4 +92,47 @@
       </li>
     </ul>
   </nav>
-</header>>
+</header>
+
+<!-- Update Rate Modal -->
+<div class="modal fade" id="updateRateModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-primary text-white border-0 py-3">
+        <h5 class="modal-title fw-bold"><i class="bi bi-currency-exchange me-2"></i>Update Exchange Rates</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" id="closeRatesModalBtn" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <form (ngSubmit)="saveCustomRates()" #rateForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small mb-1">1 USD = ? TRY</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white text-muted">₺</span>
+              <input type="number" class="form-control form-control-lg" [(ngModel)]="customRates.TRY" name="rateTry" step="0.0001" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small mb-1">1 USD = ? EUR</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white text-muted">€</span>
+              <input type="number" class="form-control form-control-lg" [(ngModel)]="customRates.EUR" name="rateEur" step="0.0001" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small mb-1">1 USD = ? GBP</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white text-muted">£</span>
+              <input type="number" class="form-control form-control-lg" [(ngModel)]="customRates.GBP" name="rateGbp" step="0.0001" required>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm" [disabled]="!rateForm.form.valid || isSavingRates">
+              <span *ngIf="!isSavingRates">Save Rates</span>
+              <div *ngIf="isSavingRates" class="spinner-border spinner-border-sm text-white" role="status"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>>

@@ -1,3 +1,8 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading reservations...</div>
+</div>
+
 <div class="pagetitle d-flex justify-content-between align-items-center">
   <div>
     <h1>Reservations Dashboard</h1>
@@ -15,7 +20,7 @@
       </button>
       <div class="d-flex align-items-center mx-3">
         <label class="fw-bold me-2 text-muted small text-uppercase mb-0">Date:</label>
-        <input type="date" class="form-control border-0 fw-bold text-primary p-0 bg-transparent"
+        <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control border-0 fw-bold text-primary p-0 bg-transparent"
           [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none;">
       </div>
       <button class="btn btn-sm btn-light rounded-circle" (click)="nextDay()" title="Next Day">
@@ -56,9 +61,16 @@
             <h5 class="card-title text-dark mb-0 fw-bold">
               <i class="bi bi-clock me-2 text-primary"></i>{{ group.flightTime.time }}
             </h5>
-            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
-              {{ group.reservations.length }} Slots
-            </span>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-sm btn-outline-danger border-0 d-flex align-items-center gap-1 rounded-pill px-2 py-1"
+                (click)="printSlotPdf(group)" title="Print PDF Manifest">
+                <i class="bi bi-file-pdf text-danger fs-6"></i>
+                <span class="small fw-bold">Print PDF</span>
+              </button>
+              <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
+                {{ group.reservations.length }} Slots
+              </span>
+            </div>
           </div>
         </div>
 
@@ -73,8 +85,8 @@
               No reservations for this slot.
             </div>
 
-            <div *ngFor="let res of group.reservations" cdkDrag
-              class="p-3 rounded border bg-white shadow-sm position-relative reservation-card transition-all cursor-grab">
+            <div *ngFor="let res of group.reservations" cdkDrag (click)="editReservation(res)"
+              class="p-3 rounded border bg-white shadow-sm position-relative reservation-card transition-all cursor-grab" style="cursor: pointer;">
 
               <!-- Drag Placeholder -->
               <div class="cdk-drag-placeholder" *cdkDragPlaceholder></div>
@@ -82,8 +94,14 @@
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div>
                   <h6 class="fw-bold mb-0 text-dark">{{ res.title || 'Untitled Reservation' }}</h6>
-                  <div class="d-flex align-items-center gap-2 mt-1">
+                  <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
                     <span class="badge bg-secondary small">#{{ res.id }}</span>
+                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small fw-bold">
+                      {{ getPassengersCount(res) }} PAX
+                    </span>
+                    <span *ngIf="res.bookingSource" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 small">
+                      <i class="bi bi-funnel me-1"></i> {{ formatSourceLabel(res.bookingSource) }}
+                    </span>
                     <span *ngIf="res.isAgencyBooking" class="badge bg-purple-soft text-purple small">
                       <i class="bi bi-building me-1"></i> {{ res.agencyName }}
                     </span>
@@ -119,17 +137,20 @@
                   </div>
                 </div>
                 <div class="text-end">
-                  <div *ngIf="res.deposit" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-2">
+                  <div *ngIf="res.deposit && !isFullyPaid(res)" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-2">
                     <i class="bi bi-wallet2 me-1"></i> {{ (res.totalAmount || 0) - (res.deposit || 0) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} To Pay
                   </div>
                   <div class="btn-group d-block">
-                    <button class="btn btn-outline-primary btn-sm border-0" (click)="printReservation(res)" title="Print Voucher">
+                    <button class="btn btn-outline-success btn-sm border-0 fw-bold" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
+                      Pay
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm border-0" (click)="$event.stopPropagation(); printReservation(res)" title="Print Voucher">
                       <i class="bi bi-printer"></i>
                     </button>
-                    <button class="btn btn-outline-info btn-sm border-0" (click)="editReservation(res)" title="Edit">
+                    <button class="btn btn-outline-info btn-sm border-0" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-sm border-0" (click)="deleteReservation(res.id!)"
+                    <button class="btn btn-outline-danger btn-sm border-0" (click)="$event.stopPropagation(); deleteReservation(res.id!)"
                       title="Delete">
                       <i class="bi bi-trash"></i>
                     </button>
@@ -143,10 +164,8 @@
               </div>
 
               <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between">
-                <span><i class="bi bi-plus-circle me-1"></i> {{ res.createdBy || 'System' }} ({{ res.createdAt |
-                  date:'short' }})</span>
-                <span *ngIf="res.updatedAt"><i class="bi bi-pencil-square me-1"></i> {{ res.updatedBy || 'System' }} ({{
-                  res.updatedAt | date:'shortTime' }})</span>
+                <span *ngIf="res.createdAt" class="text-muted" title="Created At"><i class="bi bi-clock me-1"></i>(Cr: {{ res.createdAt | date:'dd/MM/yyyy HH:mm' }})</span>
+                <span *ngIf="res.updatedAt" class="text-muted ms-2" title="Updated At"><i class="bi bi-arrow-repeat me-1"></i>(Up: {{ res.updatedAt | date:'HH:mm' }})</span>
               </div>
             </div>
           </div>
@@ -163,7 +182,7 @@
     <div class="card-body p-4">
       <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
       <div class="row g-3 align-items-end">
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label class="form-label small fw-bold text-muted">Status</label>
           <select class="form-select" [(ngModel)]="filterStatus">
             <option value="all">All Statuses</option>
@@ -172,22 +191,32 @@
             <option value="2">Cancelled</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label class="form-label small fw-bold text-muted">Flight Time</label>
           <select class="form-select" [(ngModel)]="filterFlightTimeId">
             <option value="all">All Times</option>
             <option *ngFor="let ft of flightTimes" [value]="ft.id">{{ ft.time }}</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+          <label class="form-label small fw-bold text-muted">Date Range</label>
+          <select class="form-select" [(ngModel)]="filterDateRange">
+            <option value="day">Selected Day</option>
+            <option value="week">One Week</option>
+            <option value="month">One Month</option>
+            <option value="year">One Year</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+        <div class="col-md-3">
           <label class="form-label small fw-bold text-muted">Search</label>
           <div class="input-group mb-0">
             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by ID, Title, or Passenger Name..." [(ngModel)]="filterSearch">
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search ID, Title, Passenger..." [(ngModel)]="filterSearch">
           </div>
         </div>
-        <div class="col-md-2 d-flex gap-2">
-          <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''">
+        <div class="col-md-2">
+          <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''; filterDateRange='day'">
             <i class="bi bi-arrow-counterclockwise"></i> Reset
           </button>
         </div>
@@ -226,7 +255,7 @@
                 No reservations found matching your criteria.
               </td>
             </tr>
-            <tr *ngFor="let res of filteredListReservations">
+            <tr *ngFor="let res of filteredListReservations" (click)="editReservation(res)" style="cursor: pointer;">
               <td>
                 <span class="badge bg-secondary">#{{ res.id }}</span>
               </td>
@@ -256,13 +285,16 @@
               </td>
               <td class="text-center">
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-primary border-0" (click)="printReservation(res)" title="Print">
+                  <button class="btn btn-sm btn-outline-success border-0 fw-bold" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
+                    Pay
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary border-0" (click)="$event.stopPropagation(); printReservation(res)" title="Print">
                     <i class="bi bi-printer"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-info border-0" (click)="editReservation(res)" title="Edit">
+                  <button class="btn btn-sm btn-outline-info border-0" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger border-0" (click)="deleteReservation(res.id!)" title="Delete">
+                  <button class="btn btn-sm btn-outline-danger border-0" (click)="$event.stopPropagation(); deleteReservation(res.id!)" title="Delete">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -270,6 +302,85 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Panel -->
+  <div class="row g-4 mt-4" *ngIf="filteredListReservations.length > 0">
+    <div class="col-xl-6 col-md-12">
+      <div class="card shadow-sm border-0 h-100 bg-white">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Financial Summary</h5>
+          <div class="table-responsive">
+            <table class="table align-middle table-sm border-0">
+              <thead>
+                <tr>
+                  <th>Currency</th>
+                  <th class="text-end text-muted small">Total Price</th>
+                  <th class="text-end text-success small">Total Paid</th>
+                  <th class="text-end text-danger small">Remaining Due</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fin of analytics.financials">
+                  <td class="fw-bold text-dark">{{ fin.currency }}</td>
+                  <td class="text-end fw-bold text-dark">{{ fin.total | number:'1.2-2' }}</td>
+                  <td class="text-end text-success fw-bold">{{ fin.paid | number:'1.2-2' }}</td>
+                  <td class="text-end text-danger fw-bold">{{ fin.due | number:'1.2-2' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="card shadow-sm border-0 h-100 bg-white">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Booking Channels</h5>
+          <div class="d-flex flex-column gap-3">
+            <div *ngIf="analytics.sources.length === 0" class="text-muted small">No channel data available</div>
+            <div *ngFor="let src of analytics.sources" class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">{{ formatSourceLabel(src.name) }}</span>
+              <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold">{{ src.count }} PAX</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+      <div class="card shadow-sm border-0 h-100 bg-white">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Booking Overview</h5>
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">Total Reservations</span>
+              <span class="fw-bold text-dark h5 mb-0">{{ analytics.totalBookings }}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">Total PAX (Passengers)</span>
+              <span class="fw-bold text-dark h5 mb-0">{{ analytics.totalPassengers }}</span>
+            </div>
+            <hr class="my-2">
+            <div class="d-flex gap-2 justify-content-between text-center mt-1">
+              <div>
+                <div class="small text-warning fw-bold">{{ analytics.statusCounts.pending }}</div>
+                <div class="x-small text-muted">Pending</div>
+              </div>
+              <div>
+                <div class="small text-success fw-bold">{{ analytics.statusCounts.confirmed }}</div>
+                <div class="x-small text-muted">Confirmed</div>
+              </div>
+              <div>
+                <div class="small text-danger fw-bold">{{ analytics.statusCounts.cancelled }}</div>
+                <div class="x-small text-muted">Cancelled</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,3 +1,8 @@
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Saving reservation...</div>
+</div>
+
 <div class="reservation-container">
   <div class="pagetitle mb-4">
     <h1 class="fw-bold text-dark">{{ isEditing ? 'Edit Reservation' : 'New Reservation' }}</h1>
@@ -14,7 +19,17 @@
     <div class="premium-card mb-5">
       <div class="card-header-premium d-flex justify-content-between align-items-center">
         <div>
-          <h5><i class="bi bi-calendar-check me-2"></i> {{ isEditing ? 'Update Flight Details' : 'Book a New Flight' }}
+          <h5 class="d-flex align-items-center gap-2 mb-0 text-white">
+            <i class="bi bi-calendar-check me-2"></i>
+            <select class="form-select form-select-sm border-0 bg-white text-primary fw-bold rounded-pill px-3 py-1 cursor-pointer"
+                    style="width: auto; outline: none; box-shadow: none;"
+                    name="paxDropdown"
+                    [ngModel]="reservation.details.length"
+                    (ngModelChange)="onPaxChange($event)">
+              <option *ngFor="let n of paxOptions" [value]="n" class="text-dark">{{ n }} PAX</option>
+            </select>
+            <span class="mx-2">|</span>
+            {{ isEditing ? 'Update Flight Details' : 'Book a New Flight' }}
           </h5>
           <p class="mb-0 text-white-50 small mt-1">Please provide the flight and passenger details below.</p>
         </div>
@@ -35,14 +50,21 @@
         </div>
 
         <div class="row g-4 mb-5">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <label class="form-label">Reservation Title</label>
             <input type="text" class="form-control" name="title" [(ngModel)]="reservation.title"
               placeholder="e.g. Anniversary Trip, VIP Group">
           </div>
+          <div class="col-md-4">
+            <label class="form-label">Booking Source <span class="text-danger">*</span></label>
+            <select class="form-select p-2 height-60" name="bookingSource" [(ngModel)]="reservation.bookingSource" required>
+              <option value="" disabled selected>Select Source</option>
+              <option *ngFor="let opt of bookingSourceOptions" [value]="opt.value">{{ opt.label }}</option>
+            </select>
+          </div>
           <div class="col-md-6">
             <label class="form-label">Flight Date <span class="text-danger">*</span></label>
-            <input type="date" class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate"
+            <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate"
               required>
           </div>
 
@@ -82,6 +104,12 @@
             </div>
           </div>
 
+          <div class="col-md-3" *ngIf="reservation.isAgencyBooking">
+            <label class="form-label">Billet Number</label>
+            <input type="text" class="form-control p-2 height-60" name="billetNumber"
+              [(ngModel)]="reservation.billetNumber" placeholder="Billet / Ticket Number">
+          </div>
+
           <div class="col-md-3">
             <label class="form-label">Preferred Currency</label>
             <select class="form-select p-2 height-60" name="preferredCurrency"
@@ -108,10 +136,9 @@
             <div class="input-group height-60">
               <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
                   class="bi bi-cash-stack"></i></span>
-              <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold text-success" name="deposit"
-                [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="calculateBalances()">
-              <select class="form-select p-2 w-50 height-60" name="depositMethod"
-                [(ngModel)]="reservation.depositMethod">
+              <input type="number" class="form-control p-2 border-start-0 fw-bold text-success" name="deposit"
+                [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="calculateBalances()" style="width: 45%;">
+              <select class="form-select p-2" name="depositMethod" [(ngModel)]="reservation.depositMethod" style="width: 45%;">
                 <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
               </select>
             </div>
@@ -168,7 +195,7 @@
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control" [name]="'custDob_' + i"
+                    <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control" [name]="'custDob_' + i"
                       [(ngModel)]="detail.customer.dateOfBirth" required>
                   </div>
                   <div class="col-md-6">
@@ -271,15 +298,24 @@
               <option *ngFor="let opt of pickupStatusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
             </select>
           </div>
-          <div class="col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired">
+          <div class="col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired" style="position: relative;">
             <label class="form-label">Pickup Location / Hotel Name</label>
             <div class="input-group input-group-premium height-60">
               <input type="text" class="form-control p-2 height-60" name="pickupLocation"
                 [(ngModel)]="reservation.pickupLocation" placeholder="Enter hotel or location name"
-                (keyup.enter)="searchLocation()">
+                (input)="onPickupLocationInput($event)" (blur)="onPickupLocationBlur()" (keyup.enter)="searchLocation()"
+                autocomplete="off">
               <button class="btn btn-primary" type="button" (click)="searchLocation()">
                 <i class="bi bi-search me-1"></i> Search
               </button>
+            </div>
+
+            <!-- Suggestions Dropdown -->
+            <div *ngIf="locationSuggestions.length > 0" class="suggestions-dropdown shadow-lg">
+              <div *ngFor="let sug of locationSuggestions" class="suggestion-item" (click)="selectSuggestion(sug)">
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                <span class="text-truncate" [title]="sug.display_name">{{ sug.display_name }}</span>
+              </div>
             </div>
           </div>
           <div class="col-12" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired">

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import * as L from 'leaflet';
 import {
   Reservation, ReservationStatus, Customer, Pilot, PilotGroup, Agency,
@@ -31,6 +32,9 @@ export class ReservationFormComponent implements OnInit {
   private map: L.Map | undefined;
   private marker: L.Marker | undefined;
   mapInitialized = false;
+  isLoading = false;
+  private searchTimeout: any;
+  locationSuggestions: any[] = [];
 
   ReservationStatus = ReservationStatus;
   PickupStatus = PickupStatus;
@@ -61,6 +65,18 @@ export class ReservationFormComponent implements OnInit {
     { value: PaymentMethod.Transfer, label: 'Transfer/IBAN' }
   ];
 
+  bookingSourceOptions = [
+    { value: 'office', label: 'Office' },
+    { value: 'instagram', label: 'Instagram' },
+    { value: 'whatsapp', label: 'WhatsApp' },
+    { value: 'agency', label: 'Agency' },
+    { value: 'rednote wechat', label: 'Rednote WeChat' },
+    { value: 'website', label: 'Website' },
+    { value: 'guest', label: 'Guest' }
+  ];
+
+  paxOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   reservation: Reservation = {
     flightDate: '',
     flightTimeId: 1, // Default to first slot
@@ -70,6 +86,9 @@ export class ReservationFormComponent implements OnInit {
     isAgencyBooking: false,
     preferredCurrency: PaymentCurrency.USD,
     depositMethod: PaymentMethod.Cash,
+    depositCurrency: PaymentCurrency.USD,
+    billetNumber: '',
+    bookingSource: '',
     details: [
       {
         customerId: 0,
@@ -119,14 +138,49 @@ export class ReservationFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadLookups();
+    this.isLoading = true;
 
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.isEditing = true;
-        this.reservationId = +id;
-        this.loadReservation(this.reservationId);
+    const lookups = {
+      customers: this.customerService.getCustomers(),
+      pilots: this.pilotService.getPilots(),
+      pilotGroups: this.pilotGroupService.getPilotGroups(),
+      packages: this.flightPackageService.getFlightPackages(),
+      transports: this.transportGroupService.getTransportGroups(),
+      extras: this.extraServiceService.getExtraServices(),
+      flightTimes: this.flightTimeService.getFlightTimes(),
+      agencies: this.agencyService.getAgencies(),
+      countries: this.http.get<Country[]>('/assets/js/Countries/countries.json')
+    };
+
+    forkJoin(lookups).subscribe({
+      next: (res) => {
+        this.customers = res.customers;
+        this.pilots = res.pilots;
+        this.pilotGroups = res.pilotGroups;
+        this.flightPackages = res.packages;
+        this.transportGroups = res.transports;
+        this.extraServices = res.extras;
+        this.flightTimes = res.flightTimes;
+        this.agencies = res.agencies;
+        this.countries = res.countries;
+
+        this.mapAndSortPilots();
+
+        this.route.paramMap.subscribe(params => {
+          const id = params.get('id');
+          if (id) {
+            this.isEditing = true;
+            this.reservationId = +id;
+            this.loadReservation(this.reservationId);
+          } else {
+            this.reservation.details.forEach((_, i) => this.updateFilteredPilots(i));
+            this.isLoading = false;
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error loading lookups', err);
+        this.isLoading = false;
       }
     });
   }
@@ -142,28 +196,7 @@ export class ReservationFormComponent implements OnInit {
   }
 
   loadLookups(): void {
-    this.customerService.getCustomers().subscribe(data => this.customers = data);
-    this.pilotService.getPilots().subscribe(data => {
-      this.pilots = data;
-      this.mapAndSortPilots();
-      // Initialize filtered pilots for all existing details
-      this.reservation.details.forEach((_, i) => this.updateFilteredPilots(i));
-    });
-    this.pilotGroupService.getPilotGroups().subscribe((data: PilotGroup[]) => {
-      this.pilotGroups = data;
-      this.mapAndSortPilots();
-      this.reservation.details.forEach((_, i) => this.updateFilteredPilots(i));
-    });
-    this.flightPackageService.getFlightPackages().subscribe(data => this.flightPackages = data);
-    this.transportGroupService.getTransportGroups().subscribe(data => this.transportGroups = data);
-    this.extraServiceService.getExtraServices().subscribe(data => this.extraServices = data);
-    this.flightTimeService.getFlightTimes().subscribe(data => this.flightTimes = data);
-    this.agencyService.getAgencies().subscribe(data => this.agencies = data);
-    
-    // Load countries from JSON
-    this.http.get<Country[]>('/assets/js/Countries/countries.json').subscribe(data => {
-      this.countries = data;
-    });
+    // Keep as a fallback but actual load is via forkJoin in ngOnInit
   }
 
   mapAndSortPilots(): void {
@@ -223,9 +256,11 @@ export class ReservationFormComponent implements OnInit {
         this.reservation.flightDate = `${year}-${month}-${day}`;
       }
       
-      if (this.reservation.preferredCurrency === undefined) {
+      if (this.reservation.preferredCurrency === undefined || this.reservation.preferredCurrency === null) {
         this.reservation.preferredCurrency = PaymentCurrency.USD;
       }
+
+      this.reservation.depositCurrency = this.reservation.preferredCurrency;
 
       if (!this.reservation.details || this.reservation.details.length === 0) {
         this.reservation.details = [this.createEmptyDetail()];
@@ -245,6 +280,14 @@ export class ReservationFormComponent implements OnInit {
           this.updateFilteredPilots(i);
         });
       }
+      if (this.reservation.pickupStatus !== PickupStatus.NotRequired) {
+        setTimeout(() => {
+          this.initMap();
+          if (this.reservation.pickupLocation) {
+            this.searchLocation();
+          }
+        }, 500);
+      }
       this.loadPayments(id);
     });
   }
@@ -253,6 +296,7 @@ export class ReservationFormComponent implements OnInit {
     this.paymentService.getPayments().subscribe(data => {
       this.payments = data.filter(p => p.reservationId === reservationId);
       this.calculateBalances();
+      this.isLoading = false;
     });
   }
 
@@ -267,8 +311,13 @@ export class ReservationFormComponent implements OnInit {
   }
 
   calculateBalances(): void {
-    if (this.reservation.isAgencyBooking && this.reservation.agencyPrice !== undefined) {
-      this.reservation.totalAmount = this.reservation.agencyPrice;
+    const paxCount = this.reservation.details.length || 1;
+    if (this.reservation.isAgencyBooking) {
+      if (this.reservation.agencyPrice !== undefined && this.reservation.agencyPrice !== null) {
+        this.reservation.totalAmount = this.reservation.agencyPrice * paxCount;
+      } else {
+        this.reservation.agencyPrice = (this.reservation.totalAmount || 0) / paxCount;
+      }
     } else if (this.isEditing && this.reservation.totalAmount !== undefined && this.reservation.totalAmount > 0) {
       // If editing and we already have a saved total amount, don't overwrite it automatically
       // unless specifically triggered by a package change (which happens in the HTML event)
@@ -291,8 +340,10 @@ export class ReservationFormComponent implements OnInit {
     }
     const totalDue = this.reservation.totalAmount || 0;
     const deposit = this.reservation.deposit || 0;
-    const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
-    
+    const prefCurrency = (this.reservation.preferredCurrency !== undefined && this.reservation.preferredCurrency !== null)
+      ? Number(this.reservation.preferredCurrency)
+      : PaymentCurrency.USD;
+
     const rawPaid = this.payments.reduce((sum, p) => {
       const fromCode = this.getCurrencyCode(p.currency);
       const toCode = this.getCurrencyCode(prefCurrency);
@@ -315,13 +366,27 @@ export class ReservationFormComponent implements OnInit {
   }
 
   onAgencyPriceChange(): void {
+    const paxCount = this.reservation.details.length || 1;
+    if (this.reservation.isAgencyBooking) {
+      if (this.reservation.agencyPrice === undefined || this.reservation.agencyPrice === null) {
+        this.reservation.agencyPrice = (this.reservation.totalAmount || 0) / paxCount;
+      }
+    } else {
+      this.reservation.agencyPrice = undefined;
+    }
     this.calculateBalances();
   }
 
   onManualTotalChange(): void {
+    const paxCount = this.reservation.details.length || 1;
+    if (this.reservation.isAgencyBooking) {
+      this.reservation.agencyPrice = (this.reservation.totalAmount || 0) / paxCount;
+    }
     const totalDue = this.reservation.totalAmount || 0;
     const deposit = this.reservation.deposit || 0;
-    const prefCurrency = this.reservation.preferredCurrency || PaymentCurrency.USD;
+    const prefCurrency = (this.reservation.preferredCurrency !== undefined && this.reservation.preferredCurrency !== null)
+      ? Number(this.reservation.preferredCurrency)
+      : PaymentCurrency.USD;
     
     const rawPaid = this.payments.reduce((sum, p) => {
       const fromCode = this.getCurrencyCode(p.currency);
@@ -355,14 +420,38 @@ export class ReservationFormComponent implements OnInit {
     };
   }
 
+  onPaxChange(count: number): void {
+    const currentCount = this.reservation.details.length;
+    const targetCount = Number(count);
+    
+    if (targetCount > currentCount) {
+      const firstDetail = this.reservation.details[0];
+      for (let i = currentCount; i < targetCount; i++) {
+        const newDetail = this.createEmptyDetail();
+        if (firstDetail) {
+          newDetail.flightPackageId = firstDetail.flightPackageId;
+          newDetail.extraServiceIds = firstDetail.extraServiceIds ? [...firstDetail.extraServiceIds] : [];
+        }
+        this.reservation.details.push(newDetail);
+        this.updateFilteredPilots(i);
+      }
+    } else if (targetCount < currentCount) {
+      this.reservation.details.splice(targetCount);
+    }
+    
+    this.calculateBalances();
+  }
+
   addDetail(): void {
     this.reservation.details.push(this.createEmptyDetail());
     this.updateFilteredPilots(this.reservation.details.length - 1);
+    this.calculateBalances();
   }
 
   removeDetail(index: number): void {
     if (this.reservation.details.length > 1) {
       this.reservation.details.splice(index, 1);
+      this.calculateBalances();
     }
   }
 
@@ -385,9 +474,21 @@ export class ReservationFormComponent implements OnInit {
   save(): void {
     this.reservation.status = Number(this.reservation.status);
     this.reservation.flightTimeId = Number(this.reservation.flightTimeId);
-    this.reservation.preferredCurrency = Number(this.reservation.preferredCurrency || PaymentCurrency.USD);
+    this.reservation.preferredCurrency = (this.reservation.preferredCurrency !== undefined && this.reservation.preferredCurrency !== null)
+      ? Number(this.reservation.preferredCurrency)
+      : PaymentCurrency.USD;
     this.reservation.depositMethod = this.reservation.depositMethod !== undefined ? Number(this.reservation.depositMethod) : undefined;
+    this.reservation.depositCurrency = this.reservation.preferredCurrency;
     this.reservation.totalAmount = Number(this.reservation.totalAmount || 0);
+    
+    if (this.reservation.isAgencyBooking) {
+      this.reservation.agencyPrice = Number(this.reservation.agencyPrice || 0);
+      this.reservation.totalAmount = this.reservation.agencyPrice * (this.reservation.details.length || 1);
+    } else {
+      this.reservation.agencyPrice = undefined;
+      this.reservation.agencyId = undefined;
+      this.reservation.billetNumber = undefined;
+    }
     
     // Ensure all numeric values are properly casted
     this.reservation.details.forEach(detail => {
@@ -413,13 +514,28 @@ export class ReservationFormComponent implements OnInit {
       }
     });
 
+    this.isLoading = true;
     if (this.isEditing) {
-      this.reservationService.updateReservation(this.reservation.id!, this.reservation).subscribe(() => {
-        this.router.navigate(['/reservations']);
+      this.reservationService.updateReservation(this.reservation.id!, this.reservation).subscribe({
+        next: () => {
+          this.router.navigate(['/reservations']);
+        },
+        error: (err) => {
+          console.error('Error updating reservation', err);
+          this.isLoading = false;
+          Swal.fire('Error', 'Failed to update reservation', 'error');
+        }
       });
     } else {
-      this.reservationService.addReservation(this.reservation).subscribe(() => {
-        this.router.navigate(['/reservations']);
+      this.reservationService.addReservation(this.reservation).subscribe({
+        next: () => {
+          this.router.navigate(['/reservations']);
+        },
+        error: (err) => {
+          console.error('Error adding reservation', err);
+          this.isLoading = false;
+          Swal.fire('Error', 'Failed to add reservation', 'error');
+        }
       });
     }
   }
@@ -522,18 +638,27 @@ export class ReservationFormComponent implements OnInit {
     const statusLabel = this.statusOptions.find(o => o.value === res.status)?.label || 'Pending';
     const totalAmount = res.isAgencyBooking ? (res.agencyPrice || 0) : (res.totalAmount || 0);
     const deposit = res.deposit || 0;
+    const prefCurrency = (res.preferredCurrency !== undefined && res.preferredCurrency !== null)
+      ? Number(res.preferredCurrency)
+      : PaymentCurrency.USD;
     
-    // Calculate total paid including payments and deposit
-    const paidFromPayments = this.payments.reduce((sum, p) => sum + Number(p.amount), 0);
-    const totalPaid = Number(paidFromPayments) + Number(deposit);
-    const restToPay = Math.max(0, totalAmount - totalPaid);
+    // Calculate total paid with currency conversion
+    const paidFromPayments = this.payments.reduce((sum, p) => {
+      const fromCode = this.getCurrencyCode(p.currency);
+      const toCode = this.getCurrencyCode(prefCurrency);
+      const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
+      return sum + converted;
+    }, 0);
+
+    const totalPaid = Number((paidFromPayments + Number(deposit)).toFixed(2));
+    const restToPay = Math.max(0, Number((totalAmount - totalPaid).toFixed(2)));
     
     const agencyName = res.isAgencyBooking ? (this.agencies.find(a => a.id === res.agencyId)?.name || 'Agency') : '';
 
     // Get payment details from the first payment record, or fallback to reservation preference
     const firstPayment = this.payments[0];
-    const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : 'CASH') : 'CASH';
-    const payCurrency = firstPayment ? this.getCurrencyLabel(firstPayment.currency) : this.getCurrencyLabel(res.preferredCurrency || 0);
+    const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : (firstPayment.method === 2 ? 'TRANSFER' : 'CASH')) : (res.depositMethod === 1 ? 'CARD' : (res.depositMethod === 2 ? 'TRANSFER' : 'CASH'));
+    const payCurrency = this.getCurrencyLabel(prefCurrency);
 
     if (mode === 'A5') {
       const passengersHtml = res.details.map((d, i) => `
@@ -578,7 +703,7 @@ export class ReservationFormComponent implements OnInit {
           <body>
             <div class="ticket">
               <div class="header">
-                <div><h1>Flight Reservation</h1><div style="font-size: 10px; opacity: 0.8;">Voucher #${res.id} | ${new Date().toLocaleDateString()}</div></div>
+                <div><h1>Flight Reservation</h1><div style="font-size: 10px; opacity: 0.8;">Voucher #${res.id} | ${new Date().toLocaleDateString('en-GB')}</div></div>
                 <div style="text-align: right"><div style="font-weight: bold;">${res.title || 'Paragliding Experience'}</div><div style="font-size: 10px;">Status: ${statusLabel}</div></div>
               </div>
               <div class="content">
@@ -589,6 +714,7 @@ export class ReservationFormComponent implements OnInit {
                     <div class="info-item"><strong>Time</strong>${flightTimeLabel}</div>
                     <div class="info-item"><strong>Pickup</strong>${res.pickupLocation || 'No Pickup'}</div>
                     <div class="info-item"><strong>Source</strong>${res.isAgencyBooking ? 'Agency: ' + agencyName : 'Direct'}</div>
+                    ${res.isAgencyBooking && res.billetNumber ? `<div class="info-item"><strong>Billet No</strong>${res.billetNumber}</div>` : ''}
                     <div class="info-item"><strong>Created By</strong>${res.createdBy || 'System'}</div>
                   </div>
                 </div>
@@ -653,6 +779,8 @@ export class ReservationFormComponent implements OnInit {
             <div class="row"><span>DATE:</span><span>${res.flightDate}</span></div>
             <div class="row"><span>TIME:</span><span>${flightTimeLabel}</span></div>
             <div class="row"><span>PICKUP:</span><span>${res.pickupLocation || 'None'}</span></div>
+            ${res.isAgencyBooking ? `<div class="row"><span>AGENCY:</span><span>${agencyName}</span></div>` : ''}
+            ${res.isAgencyBooking && res.billetNumber ? `<div class="row"><span>BILLET NO:</span><span>${res.billetNumber}</span></div>` : ''}
             <div class="sep"></div>
             <div class="bold">PASSENGERS:</div>
             ${passengersList}
@@ -720,9 +848,10 @@ export class ReservationFormComponent implements OnInit {
   }
 
   initMap() {
+    if (this.mapInitialized) return;
     setTimeout(() => {
         const mapContainer = document.getElementById('pickupMap');
-        if (!mapContainer) return;
+        if (!mapContainer || this.mapInitialized) return;
 
         this.map = L.map('pickupMap').setView([36.585, 29.115], 11); // Fethiye/Oludeniz center
 
@@ -754,5 +883,42 @@ export class ReservationFormComponent implements OnInit {
             this.marker = L.marker([lat, lng]).addTo(this.map);
         }
     }
+  }
+
+  onPickupLocationInput(event: any): void {
+    const val = event.target.value;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    if (!val || val.length < 3) {
+      this.locationSuggestions = [];
+      return;
+    }
+
+    this.searchTimeout = setTimeout(() => {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(val)}&viewbox=28.9,36.75,29.3,36.4&bounded=1&limit=5`;
+      this.http.get<any[]>(url).subscribe({
+        next: (results) => {
+          this.locationSuggestions = results || [];
+        },
+        error: (err) => {
+          console.error('Error fetching suggestions', err);
+        }
+      });
+    }, 400);
+  }
+
+  selectSuggestion(sug: any): void {
+    this.reservation.pickupLocation = sug.display_name;
+    this.locationSuggestions = [];
+    const lat = parseFloat(sug.lat);
+    const lon = parseFloat(sug.lon);
+    this.updateMap(lat, lon);
+  }
+
+  onPickupLocationBlur(): void {
+    setTimeout(() => {
+      this.locationSuggestions = [];
+    }, 200);
   }
 }

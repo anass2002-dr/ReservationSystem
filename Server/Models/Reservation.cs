@@ -10,6 +10,8 @@ namespace ReservationSystem_backend.Models
         public PaymentCurrency PreferredCurrency { get; set; } = PaymentCurrency.USD;
         public decimal Deposit { get; set; }
         public PaymentMethod? DepositMethod { get; set; }
+        public PaymentCurrency DepositCurrency { get; set; } = PaymentCurrency.USD;
+        public string? BilletNumber { get; set; }
 
         public int FlightTimeId { get; set; }
         public FlightTime FlightTime { get; set; } = null!;
@@ -25,6 +27,7 @@ namespace ReservationSystem_backend.Models
         public int? AgencyId { get; set; }
         public Agency? Agency { get; set; }
         public decimal? AgencyPrice { get; set; }
+        public string? BookingSource { get; set; }
 
         // Navigation properties
         public ICollection<ReservationDetail> ReservationDetails { get; set; } = new List<ReservationDetail>();

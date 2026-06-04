@@ -103,6 +103,9 @@ export interface Reservation {
   agencyPrice?: number;
   deposit?: number;
   depositMethod?: PaymentMethod;
+  depositCurrency?: PaymentCurrency;
+  billetNumber?: string;
+  bookingSource?: string;
   details: ReservationDetail[];
   photos?: ReservationPhoto[];
   createdAt?: string;

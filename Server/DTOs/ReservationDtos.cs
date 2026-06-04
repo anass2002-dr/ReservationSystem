@@ -14,6 +14,8 @@ namespace ReservationSystem_backend.DTOs
         public PaymentCurrency PreferredCurrency { get; set; }
         public decimal Deposit { get; set; }
         public PaymentMethod? DepositMethod { get; set; }
+        public PaymentCurrency DepositCurrency { get; set; }
+        public string? BilletNumber { get; set; }
         public int FlightTimeId { get; set; }
         public string? FlightTime { get; set; }
         public ReservationStatus Status { get; set; }
@@ -25,6 +27,7 @@ namespace ReservationSystem_backend.DTOs
         public int? AgencyId { get; set; }
         public string? AgencyName { get; set; }
         public decimal? AgencyPrice { get; set; }
+        public string? BookingSource { get; set; }
         
         public List<ReservationDetailDto> Details { get; set; } = new List<ReservationDetailDto>();
         public List<ReservationPhotoDto> Photos { get; set; } = new List<ReservationPhotoDto>();
@@ -45,6 +48,8 @@ namespace ReservationSystem_backend.DTOs
             PreferredCurrency = model.PreferredCurrency;
             Deposit = model.Deposit;
             DepositMethod = model.DepositMethod;
+            DepositCurrency = model.DepositCurrency;
+            BilletNumber = model.BilletNumber;
             FlightTimeId = model.FlightTimeId;
             FlightTime = model.FlightTime?.Time;
             Status = model.Status;
@@ -55,9 +60,10 @@ namespace ReservationSystem_backend.DTOs
             AgencyId = model.AgencyId;
             AgencyName = model.Agency?.Name;
             AgencyPrice = model.AgencyPrice;
+            BookingSource = model.BookingSource;
 
-            CreatedAt = model.CreatedAt;
-            UpdatedAt = model.UpdatedAt;
+            CreatedAt = DateTime.SpecifyKind(model.CreatedAt, DateTimeKind.Utc);
+            UpdatedAt = model.UpdatedAt.HasValue ? DateTime.SpecifyKind(model.UpdatedAt.Value, DateTimeKind.Utc) : (DateTime?)null;
             CreatedBy = model.CreatedBy;
             UpdatedBy = model.UpdatedBy;
 

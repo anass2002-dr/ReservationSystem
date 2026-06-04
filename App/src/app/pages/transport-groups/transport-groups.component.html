@@ -32,7 +32,7 @@
               @for (tg of transportGroups; track tg.id) {
               <tr>
                 <th scope="row">{{tg.id}}</th>
-                <td>{{tg.departureTime | date:'short'}}</td>
+                <td>{{tg.departureTime | date:'dd/MM/yyyy HH:mm'}}</td>
                 <td>{{tg.vehiclePlate}}</td>
                 <td>{{tg.driverName}}</td>
                 <td>

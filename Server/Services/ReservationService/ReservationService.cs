@@ -62,6 +62,9 @@ namespace ReservationSystem_backend.Services.ReservationService
                 PreferredCurrency = dto.PreferredCurrency,
                 Deposit = dto.Deposit,
                 DepositMethod = dto.DepositMethod,
+                DepositCurrency = dto.DepositCurrency,
+                BilletNumber = dto.BilletNumber,
+                BookingSource = dto.BookingSource,
                 TotalAmount = dto.TotalAmount,
                 ReservationDetails = new List<ReservationDetail>()
             };
@@ -191,6 +194,9 @@ namespace ReservationSystem_backend.Services.ReservationService
                 existingEntity.PreferredCurrency = dto.PreferredCurrency;
                 existingEntity.Deposit = dto.Deposit;
                 existingEntity.DepositMethod = dto.DepositMethod;
+                existingEntity.DepositCurrency = dto.DepositCurrency;
+                existingEntity.BilletNumber = dto.BilletNumber;
+                existingEntity.BookingSource = dto.BookingSource;
                 existingEntity.TotalAmount = dto.TotalAmount;
                 
                 decimal totalAmount = 0;

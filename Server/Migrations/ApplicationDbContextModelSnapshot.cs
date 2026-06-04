@@ -415,35 +415,35 @@ namespace ReservationSystem_backend.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 5, 24, 13, 12, 49, 97, DateTimeKind.Utc).AddTicks(6096),
+                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(7175),
                             IsActive = true,
                             Time = "08:30"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 5, 24, 13, 12, 49, 97, DateTimeKind.Utc).AddTicks(7613),
+                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8013),
                             IsActive = true,
                             Time = "10:30"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 5, 24, 13, 12, 49, 97, DateTimeKind.Utc).AddTicks(7617),
+                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8014),
                             IsActive = true,
                             Time = "13:00"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 5, 24, 13, 12, 49, 97, DateTimeKind.Utc).AddTicks(7618),
+                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8015),
                             IsActive = true,
                             Time = "15:00"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 5, 24, 13, 12, 49, 97, DateTimeKind.Utc).AddTicks(7620),
+                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8016),
                             IsActive = true,
                             Time = "17:00"
                         });
@@ -587,6 +587,12 @@ namespace ReservationSystem_backend.Migrations
                     b.Property<decimal?>("AgencyPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("BilletNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BookingSource")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -595,6 +601,9 @@ namespace ReservationSystem_backend.Migrations
 
                     b.Property<decimal>("Deposit")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("DepositCurrency")
+                        .HasColumnType("int");
 
                     b.Property<int?>("DepositMethod")
                         .HasColumnType("int");

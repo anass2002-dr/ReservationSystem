@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CurrencyService {
-  private apiKey = 'deb3aa330c620dcd9c85b5a3';
-  private apiUrl = `https://v6.exchangerate-api.com/v6/${this.apiKey}/latest/USD`;
+  private apiUrl = `${environment.ApiUrl}/ExchangeRate`;
   
   private ratesSubject = new BehaviorSubject<any>(null);
   public rates$ = this.ratesSubject.asObservable();
@@ -17,13 +17,24 @@ export class CurrencyService {
   }
 
   refreshRates(): Observable<any> {
-    return this.http.get<any>(this.apiUrl).pipe(
+    return this.http.get<any>(`${this.apiUrl}/GetRates`).pipe(
       tap(data => {
-        if (data && data.conversion_rates) {
-          this.ratesSubject.next(data.conversion_rates);
-          localStorage.setItem('exchange_rates', JSON.stringify(data.conversion_rates));
+        if (data && data['USD']) {
+          this.ratesSubject.next(data);
+          localStorage.setItem('exchange_rates', JSON.stringify(data));
           localStorage.setItem('exchange_rates_updated', new Date().toISOString());
         }
+      })
+    );
+  }
+
+  updateCustomRates(newRates: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/UpdateRates`, newRates).pipe(
+      tap(() => {
+        // Optimistically update local state immediately
+        this.ratesSubject.next(newRates);
+        localStorage.setItem('exchange_rates', JSON.stringify(newRates));
+        localStorage.setItem('exchange_rates_updated', new Date().toISOString());
       })
     );
   }

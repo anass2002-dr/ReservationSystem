@@ -35,7 +35,7 @@
                 <tr *ngFor="let c of customers">
                   <th scope="row">{{c.id}}</th>
                   <td>{{c.fullName}}</td>
-                  <td>{{c.dateOfBirth | date:'shortDate'}}</td>
+                  <td>{{c.dateOfBirth | date:'dd/MM/yyyy'}}</td>
                   <td>{{c.phoneNumber}}</td>
                   <td>{{c.email}}</td>
                   <td>{{ getCountryName(c.country) }}</td>
@@ -72,7 +72,7 @@
           </div>
           <div class="mb-3">
             <label for="dateOfBirth" class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" [(ngModel)]="currentCustomer.dateOfBirth" required>
+            <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control" id="dateOfBirth" name="dateOfBirth" [(ngModel)]="currentCustomer.dateOfBirth" required>
           </div>
           <div class="mb-3">
             <label for="phoneNumber" class="form-label">Phone Number</label>

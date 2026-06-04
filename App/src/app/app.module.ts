@@ -1,7 +1,12 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeGb from '@angular/common/locales/en-GB';
+registerLocaleData(localeGb);
+
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FlatpickrModule } from 'angularx-flatpickr';
 import { AppRoutingModule } from './app.routes';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layouts/header/header.component';
@@ -153,8 +158,10 @@ import { SafePipe } from './pipes/safe.pipe';
         MatDividerModule,
         MatDialogModule,
         NgSelectModule,
-        DragDropModule
+        DragDropModule,
+        FlatpickrModule.forRoot()
     ], providers: [
+        { provide: LOCALE_ID, useValue: 'en-GB' },
         provideHttpClient(withInterceptorsFromDi()),
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

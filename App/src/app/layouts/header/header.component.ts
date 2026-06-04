@@ -23,6 +23,10 @@ export class HeaderComponent implements OnInit {
   calcTo: string = 'TRY';
   calcResult: number = 0;
 
+  // Custom Rates Modal
+  customRates: any = { TRY: 0, EUR: 0, GBP: 0 };
+  isSavingRates = false;
+
   displayCurrencies = ['USD', 'TRY', 'EUR', 'GBP'];
 
   constructor(
@@ -80,5 +84,37 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  openRatesModal(): void {
+    if (this.rates) {
+      this.customRates = {
+        TRY: this.rates['TRY'] || 0,
+        EUR: this.rates['EUR'] || 0,
+        GBP: this.rates['GBP'] || 0
+      };
+    }
+  }
+
+  saveCustomRates(): void {
+    this.isSavingRates = true;
+    const newRates = {
+      USD: 1,
+      TRY: Number(this.customRates.TRY),
+      EUR: Number(this.customRates.EUR),
+      GBP: Number(this.customRates.GBP)
+    };
+    
+    this.currencyService.updateCustomRates(newRates).subscribe({
+      next: () => {
+        this.isSavingRates = false;
+        const closeBtn = document.getElementById('closeRatesModalBtn');
+        if (closeBtn) closeBtn.click();
+      },
+      error: (err) => {
+        console.error('Error saving custom rates', err);
+        this.isSavingRates = false;
+      }
+    });
   }
 }
