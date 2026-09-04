@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/admin/user-management/user-management.component.css"],
+  "sourcesContent": [".avatar-circle {\n  width: 40px;\n  height: 40px;\n  background: #0d6efd;\n  color: white;\n  border-radius: 50%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: 700;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,SAAO;AACP,UAAQ;AACR,cAAY;AACZ,SAAO;AACP,iBAAe;AACf,WAAS;AACT,eAAa;AACb,mBAAiB;AACjB,eAAa;AACf;",
+  "names": []
+}

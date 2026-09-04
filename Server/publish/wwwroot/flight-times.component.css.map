@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/pages/flight-times/flight-times.component.css"],
+  "sourcesContent": [".transition-all {\n  transition: all 0.3s ease;\n}\n\n.card {\n  border-radius: 12px;\n}\n\n.table thead th {\n  font-size: 0.75rem;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  color: #888;\n}\n\n.btn-sm {\n  padding: 0.4rem 0.6rem;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,cAAY,IAAI,KAAK;AACvB;AAEA,CAAC;AACC,iBAAe;AACjB;AAEA,CAAC,MAAM,MAAM;AACX,aAAW;AACX,kBAAgB;AAChB,kBAAgB;AAChB,SAAO;AACT;AAEA,CAAC;AACC,WAAS,OAAO;AAClB;",
+  "names": []
+}

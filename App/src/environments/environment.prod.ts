@@ -1,5 +1,5 @@
 
 export const environment = {
   production: true,
-  ApiUrl: "https://flygravitysystem.cloud/api"
+  ApiUrl: "http://2.24.115.165/api"
 };

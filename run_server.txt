@@ -1,0 +1,5 @@
+To run with the local development database:
+dotnet run --launch-profile "http"
+To run with the public server database (normal):
+dotnet run --launch-profile "Production"
+

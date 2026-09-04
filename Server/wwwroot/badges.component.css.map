@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/badges/badges.component.css"],
+  "sourcesContent": [".badge\n{\n    margin-right: 5px;\n}\n.card-body .btn{\n    margin-right: 5px;\n}"],
+  "mappings": ";AAAA,CAAC;AAEG,gBAAc;AAClB;AACA,CAAC,UAAU,CAAC;AACR,gBAAc;AAClB;",
+  "names": []
+}

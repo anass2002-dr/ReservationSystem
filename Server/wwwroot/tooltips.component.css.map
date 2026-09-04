@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/tooltips/tooltips.component.css"],
+  "sourcesContent": [".card-body .btn{margin-right: 5px;}"],
+  "mappings": ";AAAA,CAAC,UAAU,CAAC;AAAI,gBAAc;AAAI;",
+  "names": []
+}

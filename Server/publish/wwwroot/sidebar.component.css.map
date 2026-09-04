@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/layouts/sidebar/sidebar.component.css"],
+  "sourcesContent": [".nav-item li a:hover {\n  background-color: rgba(192, 222, 255, 0.23);\n  padding-left: 45px;\n  border-radius: 5px;\n}\n\n\n\n.nav-profile img {\n  max-height: 36px;\n\n}\n\n.nav-profile {\n  color: #000;\n  margin-top: 10px;\n  /* position: absolute; */\n  /* bottom: 0; */\n\n}\n\n.nav-profile a {\n  color: #000;\n\n}"],
+  "mappings": ";AAAA,CAAC,SAAS,GAAG,CAAC;AACZ,oBAAkB,KAAK,GAAG,EAAE,GAAG,EAAE,GAAG,EAAE;AACtC,gBAAc;AACd,iBAAe;AACjB;AAIA,CAAC,YAAY;AACX,cAAY;AAEd;AAEA,CALC;AAMC,SAAO;AACP,cAAY;AAId;AAEA,CAbC,YAaY;AACX,SAAO;AAET;",
+  "names": []
+}

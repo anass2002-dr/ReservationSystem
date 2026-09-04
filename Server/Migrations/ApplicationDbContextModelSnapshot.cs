@@ -415,35 +415,35 @@ namespace ReservationSystem_backend.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(7175),
+                            CreatedAt = new DateTime(2026, 8, 16, 18, 48, 17, 805, DateTimeKind.Utc).AddTicks(2300),
                             IsActive = true,
                             Time = "08:30"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8013),
+                            CreatedAt = new DateTime(2026, 8, 16, 18, 48, 17, 805, DateTimeKind.Utc).AddTicks(2800),
                             IsActive = true,
                             Time = "10:30"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8014),
+                            CreatedAt = new DateTime(2026, 8, 16, 18, 48, 17, 805, DateTimeKind.Utc).AddTicks(2800),
                             IsActive = true,
                             Time = "13:00"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8015),
+                            CreatedAt = new DateTime(2026, 8, 16, 18, 48, 17, 805, DateTimeKind.Utc).AddTicks(2800),
                             IsActive = true,
                             Time = "15:00"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 6, 3, 9, 43, 31, 361, DateTimeKind.Utc).AddTicks(8016),
+                            CreatedAt = new DateTime(2026, 8, 16, 18, 48, 17, 805, DateTimeKind.Utc).AddTicks(2810),
                             IsActive = true,
                             Time = "17:00"
                         });

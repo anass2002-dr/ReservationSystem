@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/app.component.css"],
+  "sourcesContent": [".login-mode {\n  margin-left: 0 !important;\n  padding: 0 !important;\n}\n\nmain.login-mode {\n  min-height: 100vh;\n}"],
+  "mappings": ";AAAA,CAAC;AACC,eAAa;AACb,WAAS;AACX;AAEA,IAAI,CALH;AAMC,cAAY;AACd;",
+  "names": []
+}

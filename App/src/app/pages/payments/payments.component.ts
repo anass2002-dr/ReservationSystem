@@ -25,7 +25,7 @@ export class PaymentsComponent implements OnInit {
   pilots: Pilot[] = [];
   agencies: Agency[] = [];
   flightPackages: FlightPackage[] = [];
-  
+
   selectedDate: string = (() => {
     const d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -39,17 +39,17 @@ export class PaymentsComponent implements OnInit {
   filterMethod: string = 'all';
   filterCurrency: string = 'all';
   filterSearch: string = '';
-  
+
   PaymentCurrency = PaymentCurrency;
   PaymentMethod = PaymentMethod;
-  
+
   currencyOptions = [
     { value: PaymentCurrency.USD, label: 'USD' },
     { value: PaymentCurrency.EUR, label: 'EUR' },
     { value: PaymentCurrency.TL, label: 'TRY' },
     { value: PaymentCurrency.GBP, label: 'GBP' }
   ];
-  
+
   methodOptions = [
     { value: PaymentMethod.Cash, label: 'Cash' },
     { value: PaymentMethod.Card, label: 'Card' },
@@ -57,13 +57,13 @@ export class PaymentsComponent implements OnInit {
   ];
 
   private modal: any;
-  
+
   selectedReservation: Reservation | null = null;
   currentPayment: Payment = this.createEmptyPayment();
-  
+
   isEditing = false;
   isRefundMode = false;
-  
+
   totalAmountDue = 0;
   amountPaid = 0;
   remainingBalance = 0;
@@ -200,7 +200,7 @@ export class PaymentsComponent implements OnInit {
     const prefCurrency = (res.preferredCurrency !== undefined && res.preferredCurrency !== null)
       ? Number(res.preferredCurrency)
       : PaymentCurrency.USD;
-    
+
     // Calculate total paid with currency conversion
     const paidFromPayments = this.payments
       .filter(p => p.reservationId === res.id)
@@ -213,7 +213,7 @@ export class PaymentsComponent implements OnInit {
 
     const totalPaid = Number((paidFromPayments + Number(deposit)).toFixed(2));
     const restToPay = Math.max(0, Number((totalAmount - totalPaid).toFixed(2)));
-    
+
     const agencyName = res.isAgencyBooking ? (this.agencies.find(a => a.id === res.agencyId)?.name || 'Agency') : '';
 
     // Get payment details from the first payment record, or fallback to reservation preference
@@ -223,7 +223,7 @@ export class PaymentsComponent implements OnInit {
 
     const passengersList = res.details ? res.details.map((d, i) => `
       <div style="border-bottom: 1px dashed #000; padding: 5px 0;">
-        P${i+1}: ${d.customer?.fullName || 'N/A'}<br>
+        P${i + 1}: ${d.customer?.fullName || 'N/A'}<br>
         <small>Pilot: ${this.pilots.find(p => p.id === d.pilotId)?.fullName || 'Pending'}</small>
       </div>
     `).join('') : '';
@@ -358,7 +358,7 @@ export class PaymentsComponent implements OnInit {
     private flightPackageService: FlightPackageService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadFlightTimes();
@@ -400,7 +400,7 @@ export class PaymentsComponent implements OnInit {
     this.reservationService.getReservations().subscribe({
       next: (data) => {
         this.reservations = data;
-        
+
         // Auto-open payment modal if navigated from another page
         const resIdStr = this.route.snapshot.queryParams['id'];
         if (resIdStr) {
@@ -419,15 +419,15 @@ export class PaymentsComponent implements OnInit {
   get groupedReservations() {
     // Filter by selected date
     const filtered = this.reservations.filter(r => {
-      const rDateStr = typeof r.flightDate === 'string' 
-        ? r.flightDate.split('T')[0] 
+      const rDateStr = typeof r.flightDate === 'string'
+        ? r.flightDate.split('T')[0]
         : new Date(r.flightDate).toISOString().split('T')[0];
       return rDateStr === this.selectedDate;
     });
 
     // Group by flight time ID
     const groups: { flightTime: FlightTime, reservations: Reservation[] }[] = [];
-    
+
     // Create groups for all active flight times to keep the layout consistent
     this.flightTimes.filter(ft => ft.isActive).forEach(ft => {
       groups.push({
@@ -441,6 +441,18 @@ export class PaymentsComponent implements OnInit {
 
   getPassengersCount(res: Reservation): number {
     return res.details ? res.details.length : 0;
+  }
+
+  trackByGroup(index: number, group: { flightTime: FlightTime, reservations: Reservation[] }): number {
+    return group.flightTime.id!;
+  }
+
+  trackByReservation(index: number, res: Reservation): number {
+    return res.id!;
+  }
+
+  trackByTransaction(index: number, record: any): any {
+    return record.id || record.reservationId || index;
   }
 
   previousCurrency: PaymentCurrency = PaymentCurrency.USD;
@@ -483,52 +495,58 @@ export class PaymentsComponent implements OnInit {
   }
 
   openPaymentModal(reservation: Reservation): void {
-    this.selectedReservation = reservation;
-    this.isEditing = false;
-    this.currentPayment = this.createEmptyPayment();
-    this.currentPayment.reservationId = reservation.id!;
-    
-    // Auto-select the reservation's preferred currency
-    if (reservation.preferredCurrency !== undefined && reservation.preferredCurrency !== null) {
-      this.currentPayment.currency = reservation.preferredCurrency;
-    } else {
-      this.currentPayment.currency = PaymentCurrency.USD;
+    try {
+      // console.log(reservation);
+      this.selectedReservation = reservation;
+      this.isEditing = false;
+      this.currentPayment = this.createEmptyPayment();
+      this.currentPayment.reservationId = reservation.id!;
+
+      // Auto-select the reservation's preferred currency
+      if (reservation.preferredCurrency !== undefined && reservation.preferredCurrency !== null) {
+        this.currentPayment.currency = reservation.preferredCurrency;
+      } else {
+        this.currentPayment.currency = PaymentCurrency.USD;
+      }
+      this.previousCurrency = this.currentPayment.currency;
+
+      this.calculateBalances();
+      this.isRefundMode = (reservation.status === 2 && this.amountPaid > 0);
+      this.updateExchangeRates();
+
+      if (this.isRefundMode) {
+        this.convertedAmount = this.amountPaid;
+      } else {
+        this.convertedAmount = this.remainingBalance;
+      }
+      this.amountInPayCurrency = Number((this.convertedAmount * this.exchangeRate).toFixed(2));
+
+      this.showModal();
+    } catch (e: any) {
+      console.error('Error in openPaymentModal:', e);
+      alert('Error opening payment modal: ' + (e?.message || String(e)));
     }
-    this.previousCurrency = this.currentPayment.currency;
-    
-    this.calculateBalances();
-    this.isRefundMode = (reservation.status === 2 && this.amountPaid > 0);
-    this.updateExchangeRates();
-    
-    if (this.isRefundMode) {
-      this.convertedAmount = this.amountPaid;
-    } else {
-      this.convertedAmount = this.remainingBalance;
-    }
-    this.amountInPayCurrency = Number((this.convertedAmount * this.exchangeRate).toFixed(2));
-    
-    this.showModal();
   }
 
   calculateBalances(): void {
     if (!this.selectedReservation) return;
-    
+
     this.totalAmountDue = this.selectedReservation.totalAmount || 0;
     const deposit = this.selectedReservation.deposit || 0;
-    
+
     // Sum payments for this reservation, converting each to reservation's preferred currency
     const relatedPayments = this.payments.filter(p => p.reservationId === this.selectedReservation!.id);
     const prefCurrency = (this.selectedReservation.preferredCurrency !== undefined && this.selectedReservation.preferredCurrency !== null)
       ? Number(this.selectedReservation.preferredCurrency)
       : PaymentCurrency.USD;
-    
+
     const rawPaid = relatedPayments.reduce((sum, p) => {
       const fromCode = this.getCurrencyCode(p.currency);
       const toCode = this.getCurrencyCode(prefCurrency);
       const converted = this.currencyService.convert(Number(p.amount), fromCode, toCode);
       return sum + converted;
     }, 0) + deposit;
-    
+
     this.amountPaid = Number(rawPaid.toFixed(2));
     this.remainingBalance = Math.max(0, Number((this.totalAmountDue - this.amountPaid).toFixed(2)));
   }
@@ -550,13 +568,13 @@ export class PaymentsComponent implements OnInit {
 
   updateExchangeRates(): void {
     if (!this.selectedReservation) return;
-    
+
     const prefCurrency = (this.selectedReservation.preferredCurrency !== undefined && this.selectedReservation.preferredCurrency !== null)
       ? Number(this.selectedReservation.preferredCurrency)
       : PaymentCurrency.USD;
-      
+
     const payCurrency = Number(this.currentPayment.currency);
-    
+
     if (prefCurrency === payCurrency) {
       this.exchangeRate = 1;
     } else {
@@ -584,7 +602,7 @@ export class PaymentsComponent implements OnInit {
 
 
   getCurrencyCode(enumVal: any): string {
-    switch(Number(enumVal)) {
+    switch (Number(enumVal)) {
       case PaymentCurrency.TL: return 'TRY';
       case PaymentCurrency.USD: return 'USD';
       case PaymentCurrency.EUR: return 'EUR';
@@ -618,7 +636,7 @@ export class PaymentsComponent implements OnInit {
     if (!this.selectedReservation) return;
 
     let payAmount = Number(this.amountInPayCurrency);
-    
+
     if (this.isRefundMode) {
       // Save amount as negative decimal
       payAmount = -Math.abs(payAmount);
@@ -652,11 +670,21 @@ export class PaymentsComponent implements OnInit {
   }
 
   private showModal(): void {
-    if (!this.modal) {
-      const el = document.getElementById('paymentModal');
-      this.modal = new bootstrap.Modal(el);
+    try {
+      if (!this.modal) {
+        const el = document.getElementById('paymentModal');
+        if (!el) {
+          console.error('Modal element #paymentModal not found in DOM!');
+          alert('Error: Modal element not found on page.');
+          return;
+        }
+        this.modal = new bootstrap.Modal(el);
+      }
+      this.modal.show();
+    } catch (e: any) {
+      console.error('Error showing modal:', e);
+      alert('Error showing modal: ' + (e?.message || String(e)));
     }
-    this.modal.show();
   }
 
   private hideModal(): void {

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/forms-layouts/forms-layouts.component.css"],
+  "sourcesContent": [".card-body .btn{margin-right: 5px;}"],
+  "mappings": ";AAAA,CAAC,UAAU,CAAC;AAAI,gBAAc;AAAI;",
+  "names": []
+}

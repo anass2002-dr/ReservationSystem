@@ -21,11 +21,10 @@
         <div>
           <h5 class="d-flex align-items-center gap-2 mb-0 text-white">
             <i class="bi bi-calendar-check me-2"></i>
-            <select class="form-select form-select-sm border-0 bg-white text-primary fw-bold rounded-pill px-3 py-1 cursor-pointer"
-                    style="width: auto; outline: none; box-shadow: none;"
-                    name="paxDropdown"
-                    [ngModel]="reservation.details.length"
-                    (ngModelChange)="onPaxChange($event)">
+            <select
+              class="form-select form-select-sm border-0 bg-white text-primary fw-bold rounded-pill px-3 py-1 cursor-pointer"
+              style="width: auto; outline: none; box-shadow: none;" name="paxDropdown"
+              [ngModel]="reservation.details.length" (ngModelChange)="onPaxChange($event)">
               <option *ngFor="let n of paxOptions" [value]="n" class="text-dark">{{ n }} PAX</option>
             </select>
             <span class="mx-2">|</span>
@@ -57,15 +56,16 @@
           </div>
           <div class="col-md-4">
             <label class="form-label">Booking Source <span class="text-danger">*</span></label>
-            <select class="form-select p-2 height-60" name="bookingSource" [(ngModel)]="reservation.bookingSource" required>
+            <select class="form-select p-2 height-60" name="bookingSource" [(ngModel)]="reservation.bookingSource"
+              required>
               <option value="" disabled selected>Select Source</option>
               <option *ngFor="let opt of bookingSourceOptions" [value]="opt.value">{{ opt.label }}</option>
             </select>
           </div>
           <div class="col-md-6">
             <label class="form-label">Flight Date <span class="text-danger">*</span></label>
-            <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate"
-              required>
+            <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d"
+              class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate" required>
           </div>
 
           <div class="col-md-6">
@@ -126,7 +126,7 @@
             <div class="input-group height-60">
               <span class="input-group-text bg-light border-end-0 h-100"><i class="bi bi-wallet2"></i></span>
               <input type="number" class="form-control p-2 height-60 border-start-0 fw-bold" name="totalAmount"
-                [(ngModel)]="reservation.totalAmount" (input)="onManualTotalChange()" 
+                [(ngModel)]="reservation.totalAmount" (input)="onManualTotalChange()"
                 [required]="!isAnyPackageSelected()" placeholder="0.00">
             </div>
           </div>
@@ -137,8 +137,10 @@
               <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
                   class="bi bi-cash-stack"></i></span>
               <input type="number" class="form-control p-2 border-start-0 fw-bold text-success" name="deposit"
-                [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="calculateBalances()" style="width: 45%;">
-              <select class="form-select p-2" name="depositMethod" [(ngModel)]="reservation.depositMethod" style="width: 45%;">
+                [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="onManualTotalChange()"
+                style="width: 45%; height: 100%;">
+              <select class="form-select p-2" name="depositMethod" [(ngModel)]="reservation.depositMethod"
+                style="width: 45%; height: 100%;">
                 <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
               </select>
             </div>
@@ -195,8 +197,8 @@
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                    <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control" [name]="'custDob_' + i"
-                      [(ngModel)]="detail.customer.dateOfBirth" required>
+                    <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d"
+                      class="form-control" [name]="'custDob_' + i" [(ngModel)]="detail.customer.dateOfBirth" required>
                   </div>
                   <div class="col-md-6">
                     <label class="form-label">Email</label>
@@ -228,9 +230,10 @@
                         <div class="col-md-6">
                           <label class="form-label">Assigned Pilot</label>
                           <ng-select [items]="filteredPilots[i] || pilots" bindLabel="fullName" bindValue="id"
-                            groupBy="groupName" [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i" placeholder="Select Pilot">
+                            groupBy="groupName" [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i"
+                            placeholder="Select Pilot">
                             <ng-template ng-option-tmp let-item="item">
-                              {{ item.fullName }} 
+                              {{ item.fullName }}
                               <span class="text-muted small ms-1" style="font-size: 0.75rem;">
                                 (Assigned: {{ item.flightsAssigned || 0 }}, Flown: {{ item.flightsFlown || 0 }})
                               </span>
@@ -244,8 +247,8 @@
                   <div class="col-12">
                     <label class="form-label">Flight Package</label>
                     <ng-select [items]="flightPackages" bindLabel="title" bindValue="id"
-                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i"
-                      placeholder="Choose Package" (change)="calculateBalances()">
+                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i" placeholder="Choose Package"
+                      (change)="calculateBalances()">
                     </ng-select>
                   </div>
 
@@ -298,7 +301,8 @@
               <option *ngFor="let opt of pickupStatusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
             </select>
           </div>
-          <div class="col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired" style="position: relative;">
+          <div class="col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired"
+            style="position: relative;">
             <label class="form-label">Pickup Location / Hotel Name</label>
             <div class="input-group input-group-premium height-60">
               <input type="text" class="form-control p-2 height-60" name="pickupLocation"
@@ -355,14 +359,16 @@
           <div class="row g-3 mt-3" *ngIf="reservation.photos && reservation.photos.length > 0">
             <div class="col-6 col-md-3 col-lg-2" *ngFor="let photo of reservation.photos; let photoIdx = index">
               <div class="card h-100 shadow-sm border-0 position-relative photo-card">
-                <img [src]="photo.photoData" class="card-img-top rounded-3 object-fit-cover cursor-pointer" 
+                <img [src]="photo.photoData" class="card-img-top rounded-3 object-fit-cover cursor-pointer"
                   style="height: 120px;" alt="Reservation photo" (click)="viewPhoto(photo)">
-                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center"
+                <button type="button"
+                  class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center"
                   (click)="removePhoto(photoIdx)" style="width: 26px; height: 26px;">
                   <i class="bi bi-x fs-6"></i>
                 </button>
                 <div class="card-body p-2 text-center" *ngIf="photo.fileName">
-                  <span class="small text-truncate d-block text-muted" style="max-width: 100%; font-size: 0.7rem;" [title]="photo.fileName">
+                  <span class="small text-truncate d-block text-muted" style="max-width: 100%; font-size: 0.7rem;"
+                    [title]="photo.fileName">
                     {{ photo.fileName }}
                   </span>
                 </div>
