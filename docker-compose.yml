@@ -1,0 +1,84 @@
+services:
+  # Database Service (MariaDB / MySQL)
+  db:
+    image: mariadb:10.11
+    container_name: reservation_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: db_reservation
+      MYSQL_USER: my_api_user
+      MYSQL_PASSWORD: 123456789
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./Server/script.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    ports:
+      - "3307:3306"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password_123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Web API (.NET)
+  backend:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    container_name: reservation_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__defaultConnection=Server=db;Database=db_reservation;User=my_api_user;Password=123456789;
+      - JWT__ValidAudience=http://localhost
+      - JWT__ValidIssuer=http://localhost
+      - JWT__Secret=V3J5U3Ryb25nU2VjcmV0S2V5X0FuYXNzXzIwMjZfTW9yb2Njb19QYXJhZ2xpZGluZ0FnZW5jeV9TZWN1cml0eV9GaXJzdF8xMjM0NTY3ODk=
+    volumes:
+      - backend_uploads:/app/wwwroot/Uploads
+    networks:
+      - app_network
+
+  # Frontend Web App (Angular + Nginx Reverse Proxy)
+  frontend:
+    build:
+      context: ./App
+      dockerfile: Dockerfile
+    container_name: reservation_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - app_network
+
+  # phpMyAdmin Web Interface
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: reservation_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root_password_123
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+    driver: local
+  backend_uploads:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge
