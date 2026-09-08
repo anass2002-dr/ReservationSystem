@@ -53,7 +53,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "8080:80"
+      - "${PORT:-80}:80"
     networks:
       - app_network
 
