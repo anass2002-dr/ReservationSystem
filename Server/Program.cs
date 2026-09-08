@@ -140,12 +140,15 @@ builder.Services.AddScoped<ReservationSystem_backend.Repository.AgencyRepo.IAgen
 var app = builder.Build();
 app.UseCors(MyPolicy); // Use CORS before any other middleware
 
-// تفعيل الـ Swagger ديماً أونلاين لتسهيل التجربة والـ Testing دابا
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// Enable Swagger only in Development or if explicitly enabled in appsettings.json
+if (app.Environment.IsDevelopment() || configuration.GetValue<bool>("EnableSwagger", false))
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservation System API v1");
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservation System API v1");
+    });
+}
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -155,20 +158,59 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapFallbackToFile("index.html");
-// الكود السحري لتحديث قاعدة البيانات تلقائياً عند التشغيل
+
+// Automatic Database Migration and Admin User Seeding
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // هاد السطر كيدوز الـ Migrations المتبقية تلقائياً بلا ما تحتاج لملف SQL
         context.Database.Migrate();
+
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+        // 1. Ensure Roles Exist
+        string[] roles = { "Admin", "User" };
+        foreach (var role in roles)
+        {
+            if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
+            {
+                roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+            }
+        }
+
+        // 2. Ensure Default Admin Exists
+        var adminUser = userManager.FindByNameAsync("admin").GetAwaiter().GetResult();
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = "admin",
+                Email = "admin@reservations.com",
+                FullName = "Administrator",
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            var createResult = userManager.CreateAsync(adminUser, "admin123").GetAwaiter().GetResult();
+            if (createResult.Succeeded)
+            {
+                userManager.AddToRoleAsync(adminUser, "Admin").GetAwaiter().GetResult();
+            }
+        }
+        else
+        {
+            if (!userManager.IsInRoleAsync(adminUser, "Admin").GetAwaiter().GetResult())
+            {
+                userManager.AddToRoleAsync(adminUser, "Admin").GetAwaiter().GetResult();
+            }
+        }
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "وقع خطأ أثناء تحديث قاعدة البيانات تلقائياً.");
+        logger.LogError(ex, "Error during database migration and admin seeding.");
     }
 }
 app.Run();
