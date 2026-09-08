@@ -4,3 +4,5 @@ dist/
 .vscode/
 .angular/
 npm-debug.log
+._*
+.DS_Store

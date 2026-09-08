@@ -5,3 +5,5 @@ publish/
 .vs/
 .vscode/
 *.user
+._*
+.DS_Store
