@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update & Deployment Workflow Guide - Reservation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+    }
+    
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --secondary: #0ea5e9;
+      --secondary-light: #e0f2fe;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --gray-800: #1e293b;
+      --gray-700: #334155;
+      --gray-600: #475569;
+      --gray-300: #cbd5e1;
+      --gray-200: #e2e8f0;
+      --gray-100: #f1f5f9;
+      --gray-50: #f8fafc;
+      --white: #ffffff;
+      --code-bg: #1e1e2e;
+      --code-text: #cdd6f4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-800);
+      background-color: var(--white);
+      line-height: 1.55;
+      font-size: 13.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header Banner */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      color: var(--white);
+      padding: 24px 28px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header h1 {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #c7d2fe;
+      max-width: 680px;
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .section-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Workflow Diagram Box */
+    .workflow-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .workflow-step {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .workflow-step-num {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+    }
+
+    .workflow-step-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .workflow-step-desc {
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    .workflow-arrow {
+      font-size: 18px;
+      color: var(--gray-400);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Method Boxes */
+    .method-box {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      background: var(--white);
+    }
+
+    .method-box.featured {
+      border-color: #818cf8;
+      box-shadow: 0 4px 15px -3px rgba(79, 70, 229, 0.08);
+      background: linear-gradient(180deg, #fbfaff 0%, #ffffff 100%);
+    }
+
+    .method-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .method-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-local {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .badge-server {
+      background: #8b5cf6;
+      color: white;
+    }
+
+    .badge-auto {
+      background: var(--success);
+      color: white;
+    }
+
+    /* Steps */
+    .step-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    /* Code Blocks */
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'Fira Code', Consolas, Monaco, monospace;
+      font-size: 11.5px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 6px 0 10px 0;
+      overflow-x: auto;
+      line-height: 1.5;
+      border: 1px solid #313244;
+    }
+
+    .code-block code {
+      color: inherit;
+    }
+
+    .code-comment {
+      color: #6c7086;
+      font-style: italic;
+    }
+
+    .code-cmd {
+      color: #a6e3a1;
+      font-weight: 600;
+    }
+
+    .code-arg {
+      color: #f9e2af;
+    }
+
+    .code-flag {
+      color: #89b4fa;
+    }
+
+    /* Callouts */
+    .callout {
+      display: flex;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+
+    .callout-info {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      color: #3730a3;
+    }
+
+    .callout-success {
+      background: var(--success-light);
+      border-left: 4px solid var(--success);
+      color: #065f46;
+    }
+
+    .callout-warning {
+      background: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      color: #92400e;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    th {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1.5px solid var(--gray-300);
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-800);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Page Break Utilities */
+    .page-break {
+      page-break-before: always;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid var(--gray-200);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-badge">🔄 Update & Deployment Guide</div>
+      <h1>How to Update Code in Local Docker & Remote Server</h1>
+      <p>Complete step-by-step workflow: how to test changes in local Docker after making code edits, and how to deploy updates to your live production VPS server.</p>
+    </div>
+
+    <!-- Visual Workflow Diagram -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">1</div>
+        <span>The End-to-End Workflow</span>
+      </div>
+
+      <div class="workflow-flow">
+        <div class="workflow-step">
+          <div class="workflow-step-num">STEP 1</div>
+          <div class="workflow-step-title">Local Code Edit</div>
+          <div class="workflow-step-desc">Edit Angular / .NET code in IDE</div>
+        </div>
+        <div class="workflow-arrow">➔</div>
+        <div class="workflow-step">
+          <div class="workflow-step-num">STEP 2</div>
+          <div class="workflow-step-title">Local Docker Test</div>
+          <div class="workflow-step-desc">Rebuild & verify on localhost</div>
+        </div>
+        <div class="workflow-arrow">➔</div>
+        <div class="workflow-step">
+          <div class="workflow-step-num">STEP 3</div>
+          <div class="workflow-step-title">Deploy to Server</div>
+          <div class="workflow-step-desc">Git Push & VPS Rebuild</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 1: UPDATING LOCAL DOCKER -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">2</div>
+        <span>Part 1: How to Update Your Local Docker After Making Edits</span>
+      </div>
+
+      <div class="method-box">
+        <div class="method-header">
+          <div class="method-title">
+            <span>🐳 Update Local Docker Containers</span>
+          </div>
+          <span class="badge badge-local">Local Machine</span>
+        </div>
+        <p class="step-desc">Whenever you modify files in <code>App/</code> (Frontend) or <code>Server/</code> (Backend) and want to test them inside your local Docker containers:</p>
+
+        <div class="step-item" style="margin-top: 12px;">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-heading">Rebuild and restart all containers:</div>
+            <div class="code-block">
+              <span class="code-comment"># Rebuild only the modified code and restart containers</span><br>
+              <span class="code-cmd">docker-compose up -d --build</span>
+            </div>
+            <div class="callout callout-info">
+              <span>💡 <strong>Smart Cache:</strong> Docker will only recompile what changed (e.g. if you only edited Angular, it only rebuilds Frontend without touching the Database).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-heading">Speed Tip — Rebuild only one specific service:</div>
+            <p class="step-desc">If you only changed the frontend or only the backend, you can rebuild just that single container much faster:</p>
+            <div class="code-block">
+              <span class="code-comment"># If you only edited Frontend (Angular):</span><br>
+              <span class="code-cmd">docker-compose up -d --build frontend</span><br><br>
+              <span class="code-comment"># If you only edited Backend (.NET):</span><br>
+              <span class="code-cmd">docker-compose up -d --build backend</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-heading">Verify in your browser:</div>
+            <p class="step-desc">Open <code>http://localhost:8080</code> and do a <strong>Hard Refresh</strong> (<code>Cmd + Shift + R</code> on Mac or <code>Ctrl + F5</code> on Windows) to clear browser cache.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAGE BREAK -->
+    <div class="page-break"></div>
+
+    <!-- PART 2: UPDATING REMOTE SERVER -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">3</div>
+        <span>Part 2: How to Deploy & Update the Remote Server (VPS)</span>
+      </div>
+
+      <div class="method-box featured">
+        <div class="method-header">
+          <div class="method-title">
+            <span>🌐 Production VPS Deployment (2.24.115.165)</span>
+          </div>
+          <span class="badge badge-server">Live Server</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-heading">On Your Local Machine (Mac): Commit & Push Changes to Git</div>
+            <div class="code-block">
+              <span class="code-comment"># 1. Stage all your modified files</span><br>
+              <span class="code-cmd">git add .</span><br><br>
+              <span class="code-comment"># 2. Commit with a message describing what you changed</span><br>
+              <span class="code-cmd">git commit -m</span> <span class="code-arg">"Update reservation logic and UI fixes"</span><br><br>
+              <span class="code-comment"># 3. Push to GitHub</span><br>
+              <span class="code-cmd">git push origin main</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-item" style="margin-top: 8px;">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-heading">Connect to Your VPS Server via SSH:</div>
+            <div class="code-block">
+              <span class="code-cmd">ssh root@2.24.115.165</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-item" style="margin-top: 8px;">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-heading">On the Server: Pull Changes and Rebuild Containers:</div>
+            <div class="code-block">
+              <span class="code-comment"># 1. Go into the project directory</span><br>
+              <span class="code-cmd">cd /root/ReservationSystem</span><br><br>
+              <span class="code-comment"># 2. Pull latest code from GitHub</span><br>
+              <span class="code-cmd">git pull origin main</span><br><br>
+              <span class="code-comment"># 3. Rebuild and launch the updated containers on Port 80</span><br>
+              <span class="code-cmd">PORT=80 docker-compose up -d --build</span>
+            </div>
+            <div class="callout callout-success">
+              <span>🚀 <strong>Zero Downtime on Data:</strong> Your existing database, customers, pilots, and reservations remain 100% safe and intact inside the persistent Docker volume.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-item" style="margin-top: 8px;">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-heading">Verify Live Application:</div>
+            <p class="step-desc">Open <strong><code>http://2.24.115.165</code></strong> in your browser and press <code>Cmd + Shift + R</code> to verify your newly deployed changes.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PART 3: 1-CLICK AUTOMATION SCRIPT -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">4</div>
+        <span>Part 3: 1-Click Automated Deployment Script</span>
+      </div>
+
+      <div class="method-box">
+        <div class="method-header">
+          <div class="method-title">
+            <span>⚡ Automated Single-Command Update (`./deploy.sh`)</span>
+          </div>
+          <span class="badge badge-auto">Automation</span>
+        </div>
+        <p class="step-desc">We created a script <code>deploy.sh</code> in the project root so you don't even need to manually SSH into the server:</p>
+
+        <div class="code-block">
+          <span class="code-comment"># Run this single command from your Mac terminal to push & update server:</span><br>
+          <span class="code-cmd">./deploy.sh</span> <span class="code-arg">"My latest changes"</span>
+        </div>
+
+        <div class="callout callout-info">
+          <span>✨ This script automatically: (1) Adds and commits your local changes, (2) Pushes to GitHub, (3) SSHs into the VPS, (4) Pulls the updates, and (5) Rebuilds the Docker containers!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">5</div>
+        <span>Quick Reference Command Cheat Sheet</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Goal</th>
+            <th>Where to Run</th>
+            <th>Exact Command</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Update Local Docker</strong></td>
+            <td>Local Mac</td>
+            <td><code>docker-compose up -d --build</code></td>
+          </tr>
+          <tr>
+            <td><strong>Update only Frontend (Local)</strong></td>
+            <td>Local Mac</td>
+            <td><code>docker-compose up -d --build frontend</code></td>
+          </tr>
+          <tr>
+            <td><strong>Update only Backend (Local)</strong></td>
+            <td>Local Mac</td>
+            <td><code>docker-compose up -d --build backend</code></td>
+          </tr>
+          <tr>
+            <td><strong>Push Changes to GitHub</strong></td>
+            <td>Local Mac</td>
+            <td><code>git add . && git commit -m "update" && git push origin main</code></td>
+          </tr>
+          <tr>
+            <td><strong>Update Remote Server (VPS)</strong></td>
+            <td>VPS Terminal</td>
+            <td><code>git pull origin main && PORT=80 docker-compose up -d --build</code></td>
+          </tr>
+          <tr>
+            <td><strong>1-Click Auto Deploy</strong></td>
+            <td>Local Mac</td>
+            <td><code>./deploy.sh "commit message"</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-note avoid-break">
+      <strong>Reservation System</strong> • Deployment & Update Workflow Guide • Automated Documentation • 2026
+    </div>
+
+  </div>
+
+</body>
+</html>
