@@ -40,7 +40,7 @@ Core Features:
 ================================================================================
 2. ACCESS & LOGIN
 ================================================================================
-1. Open your browser and navigate to: http://2.24.115.165
+1. Open your browser and navigate to: http://localhost:8080 (or your company domain)
 2. Enter your assigned Username and Password.
 3. Click "Sign In".
 4. The system validates your credentials via JWT token and opens the Dashboard.

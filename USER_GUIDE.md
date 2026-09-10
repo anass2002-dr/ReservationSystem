@@ -72,7 +72,7 @@ The **Paragliding Reservation & Operations Management System** is an enterprise-
 
 ### 2.1 Accessing the Application
 1. Open your web browser (Google Chrome, Mozilla Firefox, Microsoft Edge, or Safari).
-2. Navigate to your company's server URL: `http://2.24.115.165` (or your registered domain name).
+2. Navigate to your application URL: `http://localhost:8080` (or your company domain name).
 3. If you are not logged in, the system automatically redirects you to the **Login Page** (`/login`).
 
 ### 2.2 Logging In

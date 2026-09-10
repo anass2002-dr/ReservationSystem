@@ -11,7 +11,7 @@
 
 **An enterprise-grade, full-stack management and booking platform designed for paragliding agencies, flight operations, pilot assignments, and financial tracking.**
 
-[Features](#-key-features) • [Quick Start](#-quick-start-docker) • [Manual Setup](#-manual-development-setup) • [Deployment](#-deployment--updates) • [Documentation](#-guides--documentation)
+[Features](#-key-features) • [Architecture](#-tech-stack--architecture) • [Quick Start (Docker)](#-quick-start-docker) • [Manual Setup](#-manual-development-setup) • [Documentation](#-guides--documentation)
 
 </div>
 
@@ -24,8 +24,8 @@
 - 👨‍✈️ **Pilot & Transport Management:** Organize pilots into duty groups, schedule transport shuttles, and manage daily flight capacities.
 - 🏢 **Agencies & Customer CRM:** Centralized customer database with search, identity documents, nationality records, and agency partner commissions.
 - 💳 **Payments & Multi-Currency:** Financial ledger supporting multiple currencies (**USD, EUR, GBP, TRY**) with live exchange rate conversions.
-- 🔐 **Role-Based Access Control (RBAC):** Secure JWT authentication, custom authorization policies, auto-seeded administrator, and protected production Swagger documentation.
-- 🐳 **Production-Ready Docker Setup:** Multi-container orchestration (Angular + Nginx, ASP.NET Core 9 Web API, MariaDB, and phpMyAdmin).
+- 🔐 **Role-Based Access Control (RBAC):** Secure JWT authentication, custom authorization policies, auto-seeded administrator, and protected Swagger documentation.
+- 🐳 **Dockerized Setup:** Multi-container orchestration (Angular + Nginx, ASP.NET Core 9 Web API, MariaDB, and phpMyAdmin).
 
 ---
 
@@ -35,7 +35,7 @@
                       ┌──────────────────────────────────────┐
                       │          Client Browser              │
                       └──────────────────┬───────────────────┘
-                                         │  Port 8080 / 80
+                                         │  Port 8080 (Localhost)
                                          ▼
                       ┌──────────────────────────────────────┐
                       │         Nginx Reverse Proxy          │
@@ -67,9 +67,9 @@
 
 ---
 
-## ⚡ Quick Start (Docker - Recommended)
+## ⚡ Quick Start (Docker)
 
-The easiest way to run the complete stack locally with a single command:
+The fastest way to run the entire application stack locally:
 
 ### 1. Clone the repository
 ```bash
@@ -83,7 +83,7 @@ docker-compose up -d --build
 ```
 
 ### 3. Access the services
-| Service | URL | Credentials |
+| Service | URL | Default Credentials |
 | :--- | :--- | :--- |
 | **🌐 Web Application** | [http://localhost:8080](http://localhost:8080) | **Username:** `admin`<br>**Password:** `admin123` |
 | **⚙️ Backend Web API** | [http://localhost:5000](http://localhost:5000) | REST Endpoints `http://localhost:5000/api/*` |
@@ -120,7 +120,6 @@ For active code development with hot-reloading:
 ### 2. Backend (.NET 9 Web API)
 ```bash
 cd Server
-# Verify your connection string in appsettings.json if needed
 dotnet restore
 dotnet run
 ```
@@ -132,33 +131,7 @@ cd App
 npm install --legacy-peer-deps
 npm start
 ```
-*Frontend runs on `http://localhost:4200` with instant live code reload.*
-
----
-
-## 🔄 Deployment & Updates
-
-### 1-Click Automated Deployment Script
-Deploy changes from your local Mac to the production VPS server (`2.24.115.165`):
-
-```bash
-./deploy.sh "Your commit message description"
-```
-
-### Manual Deployment Steps:
-1. **Commit & Push from Local:**
-   ```bash
-   git add .
-   git commit -m "Update reservation logic"
-   git push origin main
-   ```
-2. **Pull & Rebuild on VPS Server:**
-   ```bash
-   ssh root@2.24.115.165
-   cd /root/ReservationSystem
-   git pull origin main
-   PORT=80 docker-compose up -d --build
-   ```
+*Frontend runs on `http://localhost:4200` with live code reload.*
 
 ---
 
@@ -172,7 +145,7 @@ ReservationSystem/
 │   │   │   ├── layouts/          # Header, Sidebar, Footer
 │   │   │   ├── pages/            # Dashboard, Reservations, Customers, Pilots...
 │   │   │   └── services/         # API HTTP communication services
-│   │   └── environments/         # Environment configuration (Dev / Prod)
+│   │   └── environments/         # Environment configuration
 │   ├── Dockerfile                # Multi-stage Angular build + Nginx runtime
 │   └── nginx.conf                # Nginx SPA router & API reverse proxy
 │
@@ -182,12 +155,10 @@ ReservationSystem/
 │   ├── Repository/               # Data access repositories
 │   ├── Services/                 # Business logic services
 │   ├── Dockerfile                # .NET 9 SDK publish + ASP.NET runtime
-│   └── script.sql                # Complete database schema & seed data
+│   └── script.sql                # Database schema & seed data
 │
 ├── docker-compose.yml            # Multi-container orchestration definition
-├── deploy.sh                     # Automated 1-Click deployment script
 ├── LOCAL_SETUP_GUIDE.md          # Complete local installation guide (EN)
-├── DEPLOYMENT_UPDATE_GUIDE.md    # Code update & deployment workflow guide (EN)
 ├── GUIDE_INSTALLATION_LOCAL.md   # Complete local installation guide (FR)
 └── USER_GUIDE.md                 # End-user operational manual
 ```
@@ -196,10 +167,9 @@ ReservationSystem/
 
 ## 📚 Guides & Documentation
 
-Detailed guides and PDFs are available directly in the project root:
+Documentation files available in the project root:
 
 - 📖 **[Local Setup Guide (PDF)](./LOCAL_SETUP_GUIDE.pdf)** | **[Markdown](./LOCAL_SETUP_GUIDE.md)**: Full step-by-step local machine setup.
-- 🚀 **[Deployment & Update Guide (PDF)](./DEPLOYMENT_UPDATE_GUIDE.pdf)** | **[Markdown](./DEPLOYMENT_UPDATE_GUIDE.md)**: How to push changes and update containers.
 - 📋 **[User Guide (Markdown)](./USER_GUIDE.md)**: Detailed end-user manual for all booking operations.
 
 ---
@@ -208,7 +178,7 @@ Detailed guides and PDFs are available directly in the project root:
 
 | Role | Username | Password | Notes |
 | :--- | :--- | :--- | :--- |
-| **System Administrator** | `admin` | `admin123` | Full access to all dashboard operations |
+| **System Administrator** | `admin` | `admin123` | Initial account generated on first database start |
 | **Database (Docker)** | `root` | `rootpassword` | Access via phpMyAdmin at port `8081` |
 
 ---
