@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Installation & Setup Guide - Reservation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+    
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --gray-800: #1e293b;
+      --gray-700: #334155;
+      --gray-600: #475569;
+      --gray-300: #cbd5e1;
+      --gray-200: #e2e8f0;
+      --gray-100: #f1f5f9;
+      --gray-50: #f8fafc;
+      --white: #ffffff;
+      --code-bg: #1e1e2e;
+      --code-text: #cdd6f4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--gray-800);
+      background-color: var(--white);
+      line-height: 1.55;
+      font-size: 13.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header Banner */
+    .header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%);
+      color: var(--white);
+      padding: 24px 28px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header h1 {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #c7d2fe;
+      max-width: 650px;
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .section-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Architecture Grid */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .card-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .card-desc {
+      font-size: 11.5px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    /* Method Boxes */
+    .method-box {
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      background: var(--white);
+    }
+
+    .method-box.featured {
+      border-color: #818cf8;
+      box-shadow: 0 4px 15px -3px rgba(79, 70, 229, 0.08);
+      background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
+    }
+
+    .method-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .method-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-recommended {
+      background: #10b981;
+      color: white;
+    }
+
+    .badge-dev {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* Steps */
+    .step-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    /* Code Blocks */
+    .code-block {
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'Fira Code', Consolas, Monaco, monospace;
+      font-size: 11.5px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 6px 0 10px 0;
+      overflow-x: auto;
+      line-height: 1.5;
+      border: 1px solid #313244;
+    }
+
+    .code-block code {
+      color: inherit;
+    }
+
+    .code-comment {
+      color: #6c7086;
+      font-style: italic;
+    }
+
+    .code-cmd {
+      color: #a6e3a1;
+      font-weight: 600;
+    }
+
+    .code-arg {
+      color: #f9e2af;
+    }
+
+    .code-flag {
+      color: #89b4fa;
+    }
+
+    /* Info & Alert Callouts */
+    .callout {
+      display: flex;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+
+    .callout-info {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      color: #3730a3;
+    }
+
+    .callout-success {
+      background: var(--success-light);
+      border-left: 4px solid var(--success);
+      color: #065f46;
+    }
+
+    .callout-warning {
+      background: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      color: #92400e;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    th {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1.5px solid var(--gray-300);
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-800);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Credentials Box */
+    .creds-container {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 10px;
+    }
+
+    .creds-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .cred-item {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cred-label {
+      font-size: 10.5px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cred-val {
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-top: 2px;
+    }
+
+    /* Page Break Utilities for Clean PDF */
+    .page-break {
+      page-break-before: always;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid var(--gray-200);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-badge">🚀 Technical Quick-Start Guide</div>
+      <h1>Local Installation & Setup Guide (From Scratch)</h1>
+      <p>Complete step-by-step guide to configure, run, and test the Reservation Management System on your local machine (Mac / Windows / Linux).</p>
+    </div>
+
+    <!-- Architecture & Components -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">1</div>
+        <span>Project Architecture & Core Components</span>
+      </div>
+      
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-title">Frontend</div>
+          <div class="card-value">Angular 19</div>
+          <div class="card-desc">Port: <code>4200</code> or <code>8080</code></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Backend API</div>
+          <div class="card-value">ASP.NET Core 9</div>
+          <div class="card-desc">Port: <code>5000</code> / Swagger UI</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Database</div>
+          <div class="card-value">MySQL / MariaDB</div>
+          <div class="card-desc">Port: <code>3306</code> or <code>3307</code></div>
+        </div>
+        <div class="card">
+          <div class="card-title">DB Manager</div>
+          <div class="card-value">phpMyAdmin</div>
+          <div class="card-desc">Port: <code>8081</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prerequisites -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">2</div>
+        <span>System Prerequisites</span>
+      </div>
+      <table style="margin-bottom: 14px;">
+        <thead>
+          <tr>
+            <th>Required Tool</th>
+            <th>Recommended Version</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Docker & Docker Compose</strong></td>
+            <td>Latest (Docker Desktop)</td>
+            <td>For 1-Click automated deployment (Recommended)</td>
+          </tr>
+          <tr>
+            <td><strong>Node.js & npm</strong></td>
+            <td>Node v20.x LTS + npm 10.x</td>
+            <td>To build & run the Angular Frontend locally</td>
+          </tr>
+          <tr>
+            <td><strong>.NET SDK</strong></td>
+            <td>.NET 9.0 SDK</td>
+            <td>To build & run the C# Backend Web API locally</td>
+          </tr>
+          <tr>
+            <td><strong>MySQL / MariaDB</strong></td>
+            <td>MySQL 8.0+ / MariaDB 10.11+</td>
+            <td>Local database server (if running without Docker)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- METHOD 1: DOCKER (RECOMMENDED) -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">3</div>
+        <span>Method 1: Automated Start with Docker (1-Click - Recommended)</span>
+      </div>
+
+      <div class="method-box featured">
+        <div class="method-header">
+          <div class="method-title">
+            <span>⚡ Full Stack Launch in 1 Single Command</span>
+          </div>
+          <span class="badge badge-recommended">Fastest & Easiest</span>
+        </div>
+        <p class="step-desc">This method automatically downloads, builds, and runs the MariaDB Database, .NET 9 Web API, Angular Frontend (Nginx), and phpMyAdmin with zero manual database configuration.</p>
+
+        <div class="step-item" style="margin-top: 12px;">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-heading">Open terminal in the project root directory:</div>
+            <div class="code-block">
+              <span class="code-comment"># Navigate to the project root</span><br>
+              <span class="code-cmd">cd</span> <span class="code-arg">/path/to/ReservationSystem</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-heading">Launch all containers with Docker Compose:</div>
+            <div class="code-block">
+              <span class="code-cmd">docker-compose up -d --build</span>
+            </div>
+            <div class="callout callout-success">
+              <span>✅ <strong>Done!</strong> Docker will automatically create the database, import the <code>script.sql</code> schema, seed the default Admin account, and serve the application.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-heading">Access your services in the browser:</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Local URL</th>
+                  <th>Default Credentials</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>🌐 Web Application</strong></td>
+                  <td><code>http://localhost:8080</code></td>
+                  <td><strong>admin</strong> / <strong>admin123</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>⚙️ Backend API</strong></td>
+                  <td><code>http://localhost:5000</code></td>
+                  <td>Endpoints <code>/api/*</code></td>
+                </tr>
+                <tr>
+                  <td><strong>🗄️ phpMyAdmin</strong></td>
+                  <td><code>http://localhost:8081</code></td>
+                  <td>Server: <code>db</code> | User: <code>root</code> | Pass: <code>rootpassword</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="step-item" style="margin-top: 10px;">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-heading">Useful Docker commands:</div>
+            <div class="code-block">
+              <span class="code-comment"># Check container status</span><br>
+              <span class="code-cmd">docker ps</span><br><br>
+              <span class="code-comment"># View live container logs</span><br>
+              <span class="code-cmd">docker-compose logs -f</span><br><br>
+              <span class="code-comment"># Stop and remove all containers</span><br>
+              <span class="code-cmd">docker-compose down</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAGE BREAK FOR CLEAN PRINTING -->
+    <div class="page-break"></div>
+
+    <!-- METHOD 2: MANUAL SETUP (FOR DEVELOPMENT) -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">4</div>
+        <span>Method 2: Manual Setup Without Docker (Development Mode)</span>
+      </div>
+
+      <div class="method-box">
+        <div class="method-header">
+          <div class="method-title">
+            <span>💻 Local Development (Live Hot-Reload & Debugging)</span>
+          </div>
+          <span class="badge badge-dev">Developer Mode</span>
+        </div>
+
+        <!-- STEP A -->
+        <div class="step-item">
+          <div class="step-number">A</div>
+          <div class="step-content">
+            <div class="step-heading">Step 1: Setup Local Database (MySQL / MariaDB)</div>
+            <p class="step-desc">1. Start your local MySQL service (via XAMPP, Homebrew, or native MySQL server).<br>
+            2. Open phpMyAdmin or your MySQL client (e.g., DBeaver, TablePlus, Workbench).<br>
+            3. Create a new database named: <code>ReservationSystemDb</code>.<br>
+            4. Import the SQL initialization file located at: <code>Server/script.sql</code>.</p>
+          </div>
+        </div>
+
+        <!-- STEP B -->
+        <div class="step-item" style="margin-top: 8px;">
+          <div class="step-number">B</div>
+          <div class="step-content">
+            <div class="step-heading">Step 2: Start the Backend (.NET 9 Web API)</div>
+            <p class="step-desc">Verify your database connection string in <code>Server/appsettings.json</code>:</p>
+            <div class="code-block">
+              "DefaultConnection": "Server=localhost;Port=3306;Database=ReservationSystemDb;User=root;Password=;"
+            </div>
+            <p class="step-desc">Open a <strong>first terminal tab</strong> and run the following commands:</p>
+            <div class="code-block">
+              <span class="code-comment"># 1. Navigate to Server folder</span><br>
+              <span class="code-cmd">cd</span> <span class="code-arg">Server</span><br><br>
+              <span class="code-comment"># 2. Restore NuGet dependencies</span><br>
+              <span class="code-cmd">dotnet restore</span><br><br>
+              <span class="code-comment"># 3. Build and launch the Backend API</span><br>
+              <span class="code-cmd">dotnet run</span>
+            </div>
+            <div class="callout callout-info">
+              <span>👉 The Backend will run on <strong><code>http://localhost:5000</code></strong>. Interactive Swagger API documentation is available at <strong><code>http://localhost:5000/swagger</code></strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP C -->
+        <div class="step-item" style="margin-top: 8px;">
+          <div class="step-number">C</div>
+          <div class="step-content">
+            <div class="step-heading">Step 3: Start the Frontend (Angular 19)</div>
+            <p class="step-desc">Open a <strong>second terminal tab</strong> and run the following commands:</p>
+            <div class="code-block">
+              <span class="code-comment"># 1. Navigate to App folder</span><br>
+              <span class="code-cmd">cd</span> <span class="code-arg">App</span><br><br>
+              <span class="code-comment"># 2. Install npm packages (with legacy-peer-deps flag)</span><br>
+              <span class="code-cmd">npm install --legacy-peer-deps</span><br><br>
+              <span class="code-comment"># 3. Start Angular live development server</span><br>
+              <span class="code-cmd">npm start</span>
+            </div>
+            <div class="callout callout-info">
+              <span>👉 The Frontend will open on <strong><code>http://localhost:4200</code></strong> with automatic live reload on every source code edit.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CREDENTIALS & ACCESS -->
+    <div class="section avoid-break">
+      <div class="section-title">
+        <div class="section-icon">5</div>
+        <span>Default Authentication Credentials</span>
+      </div>
+
+      <div class="creds-container">
+        <div style="font-weight: 700; font-size: 13px; color: #f8fafc; margin-bottom: 2px;">
+          🔐 Auto-Seeded Administrator Account
+        </div>
+        <p style="font-size: 11.5px; color: #94a3b8;">
+          The system automatically generates and seeds this initial administrator account on database startup:
+        </p>
+
+        <div class="creds-grid">
+          <div class="cred-item">
+            <div class="cred-label">Username</div>
+            <div class="cred-val">admin</div>
+          </div>
+          <div class="cred-item">
+            <div class="cred-label">Password</div>
+            <div class="cred-val">admin123</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="section avoid-break" style="margin-top: 16px;">
+      <div class="section-title">
+        <div class="section-icon">6</div>
+        <span>Troubleshooting & FAQ</span>
+      </div>
+
+      <table style="margin-top: 4px;">
+        <thead>
+          <tr>
+            <th style="width: 35%;">Issue Description</th>
+            <th>Probable Cause & Solution</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Port 3306 conflict</strong><br><code>Error: bind: address already in use</code></td>
+            <td>A local MySQL service is already bound to port 3306.<br>
+            <strong>Fix:</strong> The project's <code>docker-compose.yml</code> maps the database to port <strong><code>3307:3306</code></strong> to prevent any port collisions.</td>
+          </tr>
+          <tr>
+            <td><strong>npm install dependency error</strong><br><code>ERESOLVE unable to resolve dependency tree</code></td>
+            <td>Minor peer dependency version mismatch in Angular packages.<br>
+            <strong>Fix:</strong> Always use the legacy flag: <code>npm install --legacy-peer-deps</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Blank Screen on first launch</strong><br>at <code>http://localhost:8080</code></td>
+            <td>The backend container is still applying initial database migrations.<br>
+            <strong>Fix:</strong> Wait 10 seconds and perform a <strong>Hard Refresh</strong> (<code>Cmd+Shift+R</code> or <code>Ctrl+F5</code>).</td>
+          </tr>
+          <tr>
+            <td><strong>Forcing a clean rebuild</strong></td>
+            <td>To force Docker to recompile modified code from scratch:<br>
+            <code>docker-compose down && docker-compose up -d --build</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-note avoid-break">
+      <strong>Reservation System</strong> • Local Installation & Execution Guide • Automated Documentation • 2026
+    </div>
+
+  </div>
+
+</body>
+</html>
