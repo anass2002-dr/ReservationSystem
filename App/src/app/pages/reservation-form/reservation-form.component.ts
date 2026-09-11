@@ -592,7 +592,7 @@ export class ReservationFormComponent implements OnInit {
   showPrintModal(res: Reservation): void {
     const modalHtml = `
       <div id="formPrintModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; font-family: 'Segoe UI', sans-serif;">
-        <div style="background: white; padding: 30px; border-radius: 20px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;">
+        <div style="background: white; padding: 24px; border-radius: 20px; width: 400px; max-width: calc(100% - 32px); margin: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;">
           <h3 style="margin-bottom: 10px; color: #333;">Print Options</h3>
           <p style="color: #666; margin-bottom: 25px;">Choose your preferred document format</p>
           

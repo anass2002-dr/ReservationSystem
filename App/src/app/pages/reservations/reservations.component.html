@@ -3,61 +3,61 @@
   <div class="loading-text">Loading reservations...</div>
 </div>
 
-<div class="pagetitle d-flex justify-content-between align-items-center">
+<div class="pagetitle d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
   <div>
     <h1>Reservations Dashboard</h1>
     <nav>
-      <ol class="breadcrumb">
+      <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
         <li class="breadcrumb-item active">Reservations</li>
       </ol>
     </nav>
   </div>
-  <div class="d-flex gap-3 align-items-center">
-    <div class="d-flex align-items-center bg-white rounded-pill px-2 py-2 shadow-sm border">
-      <button class="btn btn-sm btn-light rounded-circle" (click)="previousDay()" title="Previous Day">
+  <div class="d-flex flex-wrap flex-sm-nowrap gap-2 align-items-center w-100 w-md-auto justify-content-between justify-content-md-end">
+    <div class="d-flex align-items-center bg-white rounded-pill px-2 py-1 py-sm-2 shadow-sm border date-picker-pill flex-grow-1 flex-sm-grow-0 justify-content-between">
+      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="previousDay()" title="Previous Day" style="width: 32px; height: 32px;">
         <i class="bi bi-chevron-left"></i>
       </button>
-      <div class="d-flex align-items-center mx-3">
-        <label class="fw-bold me-2 text-muted small text-uppercase mb-0">Date:</label>
-        <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control border-0 fw-bold text-primary p-0 bg-transparent"
-          [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none;">
+      <div class="d-flex align-items-center mx-2 mx-sm-3">
+        <label class="fw-bold me-2 text-muted small text-uppercase mb-0 d-none d-xs-inline">Date:</label>
+        <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control border-0 fw-bold text-primary p-0 bg-transparent text-center"
+          [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none; max-width: 110px;">
       </div>
-      <button class="btn btn-sm btn-light rounded-circle" (click)="nextDay()" title="Next Day">
+      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="nextDay()" title="Next Day" style="width: 32px; height: 32px;">
         <i class="bi bi-chevron-right"></i>
       </button>
     </div>
-    <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="addReservation()">
-      <i class="bi bi-plus-lg me-2"></i>New Reservation
+    <button class="btn btn-primary rounded-pill px-3 px-sm-4 shadow-sm text-nowrap flex-grow-1 flex-sm-grow-0 d-flex align-items-center justify-content-center py-2" (click)="addReservation()">
+      <i class="bi bi-plus-lg me-1 me-sm-2"></i><span>New Reservation</span>
     </button>
   </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
-  <div class="d-flex gap-2">
-    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-2">
+  <div class="d-flex gap-2 w-100 w-sm-auto">
+    <button class="btn px-3 px-sm-4 py-2 fw-bold rounded-pill transition-all flex-fill flex-sm-grow-0 d-flex align-items-center justify-content-center"
       [class.btn-primary]="activeTab === 'schedule'"
       [class.btn-light]="activeTab !== 'schedule'"
       (click)="activeTab = 'schedule'">
-      <i class="bi bi-kanban me-2"></i>Schedule View
+      <i class="bi bi-kanban me-2"></i><span>Schedule View</span>
     </button>
-    <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
+    <button class="btn px-3 px-sm-4 py-2 fw-bold rounded-pill transition-all flex-fill flex-sm-grow-0 d-flex align-items-center justify-content-center"
       [class.btn-primary]="activeTab === 'list'"
       [class.btn-light]="activeTab !== 'list'"
       (click)="activeTab = 'list'">
-      <i class="bi bi-list-task me-2"></i>List View
+      <i class="bi bi-list-task me-2"></i><span>List View</span>
     </button>
   </div>
 </div>
 
 <section class="section" *ngIf="activeTab === 'schedule'">
   <!-- Flight Time Groups -->
-  <div class="row g-4" cdkDropListGroup>
-    <div class="col-md-6 col-xl-4" *ngFor="let group of groupedReservations; let i = index">
+  <div class="row g-3 g-md-4" cdkDropListGroup>
+    <div class="col-12 col-md-6 col-xl-4" *ngFor="let group of groupedReservations; let i = index">
       <div class="card h-100 shadow-sm border-0" style="border-top: 4px solid var(--bs-primary) !important;">
         <!-- Group Header -->
-        <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-          <div class="d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white border-bottom-0 pt-3 pt-md-4 pb-0">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h5 class="card-title text-dark mb-0 fw-bold">
               <i class="bi bi-clock me-2 text-primary"></i>{{ group.flightTime.time }}
             </h5>
@@ -65,9 +65,9 @@
               <button class="btn btn-sm btn-outline-danger border-0 d-flex align-items-center gap-1 rounded-pill px-2 py-1"
                 (click)="printSlotPdf(group)" title="Print PDF Manifest">
                 <i class="bi bi-file-pdf text-danger fs-6"></i>
-                <span class="small fw-bold">Print PDF</span>
+                <span class="small fw-bold d-none d-sm-inline">Print PDF</span>
               </button>
-              <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
+              <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2.5 py-1.5">
                 {{ group.reservations.length }} Slots
               </span>
             </div>
@@ -75,7 +75,7 @@
         </div>
 
         <!-- Group Body (Reservations) -->
-        <div class="card-body pt-3" id="slot-{{group.flightTime.id}}" cdkDropList [cdkDropListData]="group.reservations"
+        <div class="card-body pt-3 px-2 px-sm-3" id="slot-{{group.flightTime.id}}" cdkDropList [cdkDropListData]="group.reservations"
           [cdkDropListConnectedTo]="connectedLists" (cdkDropListDropped)="onDrop($event, group.flightTime.id!)"
           style="min-height: 100px;">
 
@@ -91,10 +91,10 @@
               <!-- Drag Placeholder -->
               <div class="cdk-drag-placeholder" *cdkDragPlaceholder></div>
 
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <h6 class="fw-bold mb-0 text-dark">{{ res.title || 'Untitled Reservation' }}</h6>
-                  <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
+              <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-2 mb-2">
+                <div class="w-100 w-sm-auto">
+                  <h6 class="fw-bold mb-0 text-dark text-break">{{ res.title || 'Untitled Reservation' }}</h6>
+                  <div class="d-flex align-items-center flex-wrap gap-1 gap-sm-2 mt-1">
                     <span class="badge bg-secondary small">#{{ res.id }}</span>
                     <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small fw-bold">
                       {{ getPassengersCount(res) }} PAX
@@ -107,8 +107,8 @@
                     </span>
                   </div>
                 </div>
-                <div>
-                  <span class="badge rounded-pill me-1" [ngClass]="getStatusBadgeClass(res.status)">
+                <div class="d-flex flex-wrap gap-1 align-items-center align-self-start align-self-sm-auto">
+                  <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(res.status)">
                     {{ getStatusLabel(res.status) }}
                   </span>
                   <span *ngIf="hasRefund(res)" class="badge rounded-pill bg-danger text-white border border-danger">
@@ -125,32 +125,32 @@
               </div>
 
               <div class="small text-muted mb-3">
-                <div class="mb-1"><i class="bi bi-people-fill me-1"></i> {{ getCustomersDisplay(res) }}</div>
-                <div><i class="bi bi-person-badge-fill me-1"></i> {{ getPilotsDisplay(res) }}</div>
+                <div class="mb-1 text-break"><i class="bi bi-people-fill me-1"></i> {{ getCustomersDisplay(res) }}</div>
+                <div class="text-break"><i class="bi bi-person-badge-fill me-1"></i> {{ getPilotsDisplay(res) }}</div>
               </div>
 
-              <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2 pt-2 border-top">
                 <div class="fw-bold text-primary">
                   {{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}
                   <div *ngIf="res.deposit" class="x-small text-success mt-1">
                     <i class="bi bi-cash-stack me-1"></i> Dep: {{ res.deposit | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}
                   </div>
                 </div>
-                <div class="text-end">
-                  <div *ngIf="res.deposit && !isFullyPaid(res)" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-2">
+                <div class="d-flex flex-column align-items-end gap-1">
+                  <div *ngIf="res.deposit && !isFullyPaid(res)" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-1">
                     <i class="bi bi-wallet2 me-1"></i> {{ (res.totalAmount || 0) - (res.deposit || 0) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} To Pay
                   </div>
-                  <div class="btn-group d-block">
-                    <button class="btn btn-outline-success btn-sm border-0 fw-bold" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
+                  <div class="btn-group">
+                    <button class="btn btn-outline-success btn-sm border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
                       Pay
                     </button>
-                    <button class="btn btn-outline-primary btn-sm border-0" (click)="$event.stopPropagation(); printReservation(res)" title="Print Voucher">
+                    <button class="btn btn-outline-primary btn-sm border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" title="Print Voucher">
                       <i class="bi bi-printer"></i>
                     </button>
-                    <button class="btn btn-outline-info btn-sm border-0" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
+                    <button class="btn btn-outline-info btn-sm border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-sm border-0" (click)="$event.stopPropagation(); deleteReservation(res.id!)"
+                    <button class="btn btn-outline-danger btn-sm border-0 px-2" (click)="$event.stopPropagation(); deleteReservation(res.id!)"
                       title="Delete">
                       <i class="bi bi-trash"></i>
                     </button>
@@ -159,13 +159,13 @@
               </div>
 
               <div *ngIf="res.notes"
-                class="mt-2 p-2 bg-light rounded small text-info border-start border-info border-3">
+                class="mt-2 p-2 bg-light rounded small text-info border-start border-info border-3 text-break">
                 <i class="bi bi-info-circle me-1"></i> {{ res.notes }}
               </div>
 
-              <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between">
+              <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between flex-wrap gap-1">
                 <span *ngIf="res.createdAt" class="text-muted" title="Created At"><i class="bi bi-clock me-1"></i>(Cr: {{ res.createdAt | date:'dd/MM/yyyy HH:mm' }})</span>
-                <span *ngIf="res.updatedAt" class="text-muted ms-2" title="Updated At"><i class="bi bi-arrow-repeat me-1"></i>(Up: {{ res.updatedAt | date:'HH:mm' }})</span>
+                <span *ngIf="res.updatedAt" class="text-muted" title="Updated At"><i class="bi bi-arrow-repeat me-1"></i>(Up: {{ res.updatedAt | date:'HH:mm' }})</span>
               </div>
             </div>
           </div>
@@ -179,10 +179,10 @@
 <section class="section" *ngIf="activeTab === 'list'">
   <!-- Advanced Filters Bar -->
   <div class="card shadow-sm border-0 mb-4 bg-white">
-    <div class="card-body p-4">
+    <div class="card-body p-3 p-md-4">
       <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
       <div class="row g-3 align-items-end">
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-lg-2">
           <label class="form-label small fw-bold text-muted">Status</label>
           <select class="form-select" [(ngModel)]="filterStatus">
             <option value="all">All Statuses</option>
@@ -191,14 +191,14 @@
             <option value="2">Cancelled</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-12 col-sm-6 col-lg-2">
           <label class="form-label small fw-bold text-muted">Flight Time</label>
           <select class="form-select" [(ngModel)]="filterFlightTimeId">
             <option value="all">All Times</option>
             <option *ngFor="let ft of flightTimes" [value]="ft.id">{{ ft.time }}</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
           <label class="form-label small fw-bold text-muted">Date Range</label>
           <select class="form-select" [(ngModel)]="filterDateRange">
             <option value="day">Selected Day</option>
@@ -208,16 +208,16 @@
             <option value="all">All Time</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
           <label class="form-label small fw-bold text-muted">Search</label>
           <div class="input-group mb-0">
             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control border-start-0 ps-0" placeholder="Search ID, Title, Passenger..." [(ngModel)]="filterSearch">
           </div>
         </div>
-        <div class="col-md-2">
-          <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''; filterDateRange='day'">
-            <i class="bi bi-arrow-counterclockwise"></i> Reset
+        <div class="col-12 col-lg-2">
+          <button class="btn btn-secondary w-100 py-2 rounded d-flex align-items-center justify-content-center" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''; filterDateRange='day'">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
           </button>
         </div>
       </div>
@@ -226,8 +226,8 @@
 
   <!-- Reservations Table -->
   <div class="card shadow-sm border-0 bg-white">
-    <div class="card-body p-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="card-body p-3 p-md-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
         <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Reservations ({{ filteredListReservations.length }})</h5>
         <button class="btn btn-success rounded-pill px-3 shadow-sm btn-sm fw-bold d-flex align-items-center gap-2" (click)="exportToExcel()" [disabled]="filteredListReservations.length === 0">
           <i class="bi bi-file-earmark-excel-fill text-white fs-6"></i>
@@ -236,7 +236,7 @@
       </div>
       
       <div class="table-responsive">
-        <table class="table table-hover align-middle border-0">
+        <table class="table table-hover align-middle border-0 reservations-data-table mb-0">
           <thead class="table-light">
             <tr>
               <th class="border-0">ID</th>
@@ -259,42 +259,42 @@
               <td>
                 <span class="badge bg-secondary">#{{ res.id }}</span>
               </td>
-              <td class="fw-bold text-dark">
+              <td class="fw-bold text-dark text-nowrap">
                 <ng-container *ngFor="let ft of flightTimes">
                   <span *ngIf="ft.id === res.flightTimeId"><i class="bi bi-clock me-1 text-primary"></i>{{ ft.time }}</span>
                 </ng-container>
               </td>
               <td>
-                <div class="fw-bold">{{ res.title || 'Untitled Reservation' }}</div>
+                <div class="fw-bold text-break">{{ res.title || 'Untitled Reservation' }}</div>
                 <div *ngIf="res.isAgencyBooking" class="small text-purple mt-1"><i class="bi bi-building me-1"></i>{{ res.agencyName }}</div>
               </td>
               <td>
-                <div class="small"><i class="bi bi-people-fill me-1"></i>{{ getCustomersDisplay(res) }}</div>
-                <div class="small text-muted"><i class="bi bi-person-badge-fill me-1"></i>{{ getPilotsDisplay(res) }}</div>
+                <div class="small text-break"><i class="bi bi-people-fill me-1"></i>{{ getCustomersDisplay(res) }}</div>
+                <div class="small text-muted text-break"><i class="bi bi-person-badge-fill me-1"></i>{{ getPilotsDisplay(res) }}</div>
               </td>
-              <td>
+              <td class="text-nowrap">
                  <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}</div>
                  <div *ngIf="hasRefund(res)" class="badge bg-danger text-white mt-1"><i class="bi bi-arrow-counterclockwise me-1"></i>Refund</div>
                  <div *ngIf="!hasRefund(res) && isFullyPaid(res)" class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>Paid</div>
                  <div *ngIf="!hasRefund(res) && !isFullyPaid(res)" class="small text-danger"><i class="bi bi-exclamation-circle me-1"></i>{{ getRemainingBalance(res) | number:'1.2-2' }} Due</div>
               </td>
-              <td class="text-center">
+              <td class="text-center text-nowrap">
                 <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(res.status)">
                   {{ getStatusLabel(res.status) }}
                 </span>
               </td>
-              <td class="text-center">
+              <td class="text-center text-nowrap">
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-success border-0 fw-bold" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
+                  <button class="btn btn-sm btn-outline-success border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
                     Pay
                   </button>
-                  <button class="btn btn-sm btn-outline-primary border-0" (click)="$event.stopPropagation(); printReservation(res)" title="Print">
+                  <button class="btn btn-sm btn-outline-primary border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" title="Print">
                     <i class="bi bi-printer"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-info border-0" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
+                  <button class="btn btn-sm btn-outline-info border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger border-0" (click)="$event.stopPropagation(); deleteReservation(res.id!)" title="Delete">
+                  <button class="btn btn-sm btn-outline-danger border-0 px-2" (click)="$event.stopPropagation(); deleteReservation(res.id!)" title="Delete">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -307,13 +307,13 @@
   </div>
 
   <!-- Analytics Panel -->
-  <div class="row g-4 mt-4" *ngIf="filteredListReservations.length > 0">
-    <div class="col-xl-6 col-md-12">
+  <div class="row g-3 g-md-4 mt-2" *ngIf="filteredListReservations.length > 0">
+    <div class="col-xl-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Financial Summary</h5>
+        <div class="card-body p-3 p-md-4">
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Financial Summary</h5>
           <div class="table-responsive">
-            <table class="table align-middle table-sm border-0">
+            <table class="table align-middle table-sm border-0 mb-0">
               <thead>
                 <tr>
                   <th>Currency</th>
@@ -336,25 +336,25 @@
       </div>
     </div>
     
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-3 col-md-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Booking Channels</h5>
+        <div class="card-body p-3 p-md-4">
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Booking Channels</h5>
           <div class="d-flex flex-column gap-3">
             <div *ngIf="analytics.sources.length === 0" class="text-muted small">No channel data available</div>
             <div *ngFor="let src of analytics.sources" class="d-flex justify-content-between align-items-center">
-              <span class="text-muted small">{{ formatSourceLabel(src.name) }}</span>
-              <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold">{{ src.count }} PAX</span>
+              <span class="text-muted small text-break">{{ formatSourceLabel(src.name) }}</span>
+              <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold text-nowrap">{{ src.count }} PAX</span>
             </div>
           </div>
         </div>
       </div>
     </div>
     
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-3 col-md-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Booking Overview</h5>
+        <div class="card-body p-3 p-md-4">
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Booking Overview</h5>
           <div class="d-flex flex-column gap-3">
             <div class="d-flex justify-content-between align-items-center">
               <span class="text-muted small">Total Reservations</span>

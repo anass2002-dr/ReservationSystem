@@ -10,9 +10,17 @@
   transition: all 0.2s ease-in-out;
 }
 
-.reservation-card:hover {
-  transform: scale(1.02);
-  z-index: 2;
+.reservation-card {
+  transition: all 0.2s ease-in-out;
+  border-radius: 12px !important;
+}
+
+@media (hover: hover) {
+  .reservation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+    z-index: 2;
+  }
 }
 
 .cursor-grab {
@@ -26,14 +34,14 @@
 /* CDK Drag and Drop Styles */
 .cdk-drag-preview {
   box-sizing: border-box;
-  border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-              0 8px 10px 1px rgba(0, 0, 0, 0.14),
-              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .cdk-drag-placeholder {
-  opacity: 0;
+  opacity: 0.3;
+  border: 2px dashed #0d6efd !important;
+  border-radius: 12px !important;
 }
 
 .cdk-drag-animating {
@@ -45,5 +53,23 @@
 }
 
 .x-small {
-  font-size: 0.7rem;
+  font-size: 0.725rem;
+}
+
+.date-picker-pill {
+  min-height: 42px;
+}
+
+.reservations-data-table {
+  min-width: 820px;
+}
+
+@media (max-width: 575.98px) {
+  .date-picker-pill input {
+    font-size: 0.85rem !important;
+  }
+
+  .reservation-card {
+    padding: 12px !important;
+  }
 }
