@@ -1,52 +1,53 @@
-.stat-card {
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-}
-
-.stat-card h6 {
-  letter-spacing: 1.2px;
-  line-height: 1.6;
-  font-weight: 700;
-}
-
-.stat-card h3 {
+.page-header-title {
+  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
   letter-spacing: -0.5px;
 }
 
-.module-card {
-  transition: all 0.3s ease-in-out;
-  border: none;
-  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+.stat-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
 }
 
-.module-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 30px rgba(1, 41, 112, 0.2);
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08) !important;
 }
 
-.module-card .card-icon {
-  transition: all 0.3s ease-in-out;
+.stat-label {
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  font-weight: 700;
+  font-size: 11px;
+  white-space: normal;
+  word-break: break-word;
 }
 
-.module-card:hover .card-icon {
-  transform: scale(1.1);
+.stat-number {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
-.module-card .card-title {
-  padding: 0 0 15px 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: #012970;
-  font-family: "Poppins", sans-serif;
-  margin-bottom: 0;
+.custom-schedule-table {
+  min-width: 520px;
 }
 
-.module-card .card-title span {
-  color: #899bbd;
-  font-size: 14px;
-  font-weight: 400;
+.custom-schedule-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  padding: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.custom-schedule-table td {
+  padding: 12px;
+  font-size: 13.5px;
+}
+
+@media (max-width: 575.98px) {
+  .stat-card .card-body {
+    padding: 14px !important;
+  }
 }

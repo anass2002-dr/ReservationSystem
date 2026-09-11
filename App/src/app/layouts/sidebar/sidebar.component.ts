@@ -41,16 +41,26 @@ export class SidebarComponent implements OnInit {
 
 
   }
+  closeMobileSidebar(): void {
+    if (window.innerWidth < 992) {
+      document.body.classList.remove('mobile-sidebar-open');
+      const sidebar = document.getElementById('sidebar');
+      sidebar?.classList.remove('mobile-open');
+      const backdrop = document.querySelector('.sidebar-backdrop');
+      backdrop?.classList.remove('show');
+    }
+  }
+
   sidebar_mouse_event() {
-    const sidebar = document.getElementsByClassName('sidebar')
-    if (sidebar[0].classList.contains('toggle-sidebar2')) {
-      const elements = document.getElementsByClassName('toggle-sidebar-btn');
-      if (elements.length > 0) {
-        (elements[0] as HTMLElement).click();
+    if (window.innerWidth >= 992) {
+      const sidebar = document.getElementsByClassName('sidebar');
+      if (sidebar.length > 0 && sidebar[0].classList.contains('toggle-sidebar2')) {
+        const elements = document.getElementsByClassName('toggle-sidebar-btn');
+        if (elements.length > 0) {
+          (elements[0] as HTMLElement).click();
+        }
       }
     }
-
-
   }
 
 }

@@ -1,7 +1,8 @@
+<div class="sidebar-backdrop" (click)="closeMobileSidebar()"></div>
 <aside id="sidebar" class="sidebar toggle-sidebar2" (mousedown)="sidebar_mouse_event()">
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
-      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileSidebar()">
         <i class="bi bi-grid"></i>
         <span class="toggle-sidebar_text">Dashboard</span>
       </a>
@@ -11,7 +12,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/reservations" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: false}">
+        [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-calendar-check"></i>
         <span class="toggle-sidebar_text">Reservations</span>
       </a>
@@ -19,7 +20,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/Customers" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: false}">
+        [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-people"></i>
         <span class="toggle-sidebar_text">Customers</span>
       </a>
@@ -27,7 +28,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/agencies" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: false}">
+        [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-building"></i>
         <span class="toggle-sidebar_text">Agencies</span>
       </a>
@@ -35,7 +36,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/payments" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: false}">
+        [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-cash-stack"></i>
         <span class="toggle-sidebar_text">Payments</span>
       </a>
@@ -43,7 +44,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/exchange-rates" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: false}">
+        [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-currency-exchange"></i>
         <span class="toggle-sidebar_text">Exchange Rates</span>
       </a>
@@ -59,27 +60,27 @@
       <ul id="setup-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
 
         <li>
-          <a routerLink="/pilots" routerLinkActive="active">
+          <a routerLink="/pilots" routerLinkActive="active" (click)="closeMobileSidebar()">
             <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Pilots</span>
           </a>
         </li>
         <li>
-          <a routerLink="/transport-groups" routerLinkActive="active">
+          <a routerLink="/transport-groups" routerLinkActive="active" (click)="closeMobileSidebar()">
             <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Transport Groups</span>
           </a>
         </li>
         <li>
-          <a routerLink="/flight-packages" routerLinkActive="active">
+          <a routerLink="/flight-packages" routerLinkActive="active" (click)="closeMobileSidebar()">
             <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Packages</span>
           </a>
         </li>
         <li>
-          <a routerLink="/extra-services" routerLinkActive="active">
+          <a routerLink="/extra-services" routerLinkActive="active" (click)="closeMobileSidebar()">
             <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Extra Services</span>
           </a>
         </li>
         <li>
-          <a routerLink="/flight-times" routerLinkActive="active">
+          <a routerLink="/flight-times" routerLinkActive="active" (click)="closeMobileSidebar()">
             <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Times</span>
           </a>
         </li>
@@ -89,7 +90,7 @@
     <li class="nav-heading" *ngIf="authService.isAdmin()">Admin</li>
 
     <li class="nav-item" *ngIf="authService.isAdmin()">
-      <a class="nav-link collapsed" routerLink="/admin/users" routerLinkActive="active">
+      <a class="nav-link collapsed" routerLink="/admin/users" routerLinkActive="active" (click)="closeMobileSidebar()">
         <i class="bi bi-person-badge"></i>
         <span class="toggle-sidebar_text">Manage Users</span>
       </a>

@@ -19,16 +19,18 @@ html, body {
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
   width: 100%;
-  background: #f1f1f1;
-  padding: 20px 0;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 16px 0;
   text-align: center;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: auto;
 }
 
 .main {
-  padding-bottom: 80px; /* Make space for fixed footer */
+  padding-bottom: 30px;
 }
 
 /* Back to top button */
