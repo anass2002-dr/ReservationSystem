@@ -1311,16 +1311,395 @@
     <section class="doc-chapter" id="payments">
       <div class="chapter-header">
         <div>
-          <h2 class="chapter-title"><i class="bi bi-credit-card-fill"></i> 9. Multi-Currency Payment Ledger</h2>
-          <p class="text-muted small mt-1">Process customer balances, handle multi-currency payments, and audit refunds.</p>
+          <h2 class="chapter-title"><i class="bi bi-credit-card-fill"></i> 9. Multi-Currency Payment Ledger & Cashier Hub</h2>
+          <p class="text-muted small mt-1">Process customer balances, handle multi-currency payments, execute cross-currency conversions, print thermal POS vouchers, and audit refunds.</p>
         </div>
         <span class="route-badge">/payments</span>
       </div>
 
+      <!-- Introduction to the Financial Engine -->
+      <div class="callout-box callout-tip mb-4">
+        <div class="callout-title"><i class="bi bi-info-circle-fill"></i> Operational Mission of the Payment Module</div>
+        <p class="mb-0">Operating commercial tandem paragliding in international tourist hotspots like Ölüdeniz / Babadağ requires extreme financial agility. Passengers arrive with varied foreign currencies (<strong>EUR, USD, GBP, Turkish Lira</strong>) and diverse tender types (<strong>Cash, POS Credit Cards, Bank Transfers</strong>). The Payment Module provides front-desk cashiers and flight dispatchers with a real-time settlement hub to collect pending flight balances, apply automatic or custom currency conversion rates, generate 80mm thermal POS customer vouchers, and safely process weather cancellation refunds.</p>
+      </div>
+
+      <!-- Section 9.1: Flight Time Payment Dispatch Console -->
+      <h3 class="subsection-title"><i class="bi bi-wallet2"></i> 9.1 Daily Flight Time Payment Dispatch Console (Collect Payments Tab)</h3>
+      <p>The <strong>Collect Payments</strong> view organizes all scheduled flights for any selected date into sequential flight time slot cards (e.g., <code>08:30</code>, <code>10:30</code>, <code>13:00</code>, <code>15:00</code>, <code>17:00</code>). Cashiers can immediately see which bookings are paid, which have pending balances, and which cancelled flights require deposit refunds.</p>
+
       <div class="screenshot-card">
-        <img src="manual_assets/11_payments_page.png" alt="Payments Page Screenshot">
+        <img src="manual_assets/11_payments_page.png" alt="Payments Collect View Screenshot">
         <div class="screenshot-caption">
-          <i class="bi bi-camera"></i> <strong>Figure 9.1:</strong> Financial transaction ledger and payment processing console.
+          <i class="bi bi-camera"></i> <strong>Figure 9.1:</strong> Daily payment collection console grouped by flight time slots with real-time financial status badges.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>UI Element / Badge</th>
+              <th>Display Type</th>
+              <th>Operational State</th>
+              <th>Description & Action Triggered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Date Selector (Flatpickr)</td>
+              <td><span class="field-type">Date Picker</span></td>
+              <td><span class="req-badge">Navigation</span></td>
+              <td>Allows the cashier to switch between operating dates. Defaults to the current operational day. Instantly reloads all slot cards for the selected date.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Slot Header & Reservation Counter</td>
+              <td><span class="field-type">Header Badge</span></td>
+              <td><span class="opt-badge">Information</span></td>
+              <td>Displays takeoff time (e.g. <code>08:30</code>) and total booking count scheduled in this flight window (e.g., <code>2 Reservations</code>).</td>
+            </tr>
+            <tr>
+              <td class="field-name">Reservation Card</td>
+              <td><span class="field-type">Clickable Card</span></td>
+              <td><span class="opt-badge">Interactive</span></td>
+              <td>Displays Booking Title, Unique ID (<code>#1042</code>), Passenger Count (<code>2 Passengers</code>), and Total Price in preferred currency (e.g. <code>300.00 USD</code>). Clicking anywhere on the card opens the Payment Gateway Modal.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Make Payment Button</td>
+              <td><span class="field-type">Action Button</span></td>
+              <td><span class="example-code" style="color: #198754; background: #e8f5e9;">Balance Due</span></td>
+              <td>Appears when <code>Total Due &gt; Amount Paid</code>. Clicking opens the Payment Modal pre-configured with the exact remaining balance due.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Paid Badge</td>
+              <td><span class="field-type">Status Badge</span></td>
+              <td><span class="example-code" style="color: #ffffff; background: #198754;">Settled</span></td>
+              <td>Displays a solid green checkmark badge when <code>Deposit + Total Payments &gt;= Total Amount</code>. Indicates passengers are cleared to board the mountain shuttle.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Issue Refund Button</td>
+              <td><span class="field-type">Action Button</span></td>
+              <td><span class="example-code" style="color: #000000; background: #ffc107;">Cancelled with Funds</span></td>
+              <td>Appears exclusively on cancelled flights (<code>Status = 2</code>) where deposits or payments were collected (<code>amountPaid &gt; 0</code>). Opens the refund authorization modal.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Agency Billing Badge</td>
+              <td><span class="field-type">Status Badge</span></td>
+              <td><span class="example-code" style="color: #0d6efd; background: #e7f1ff;">B2B Account</span></td>
+              <td>Identifies reservations booked through partner travel agencies (e.g. Pegas, Coral) where settlement occurs via monthly B2B agency reconciliation.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 9.2: Payment & Multi-Currency Processing Modal -->
+      <h3 class="subsection-title"><i class="bi bi-cash-coin"></i> 9.2 Payment & Multi-Currency Gateway Modal</h3>
+      <p>When collecting money at the front desk, the cashier opens the <strong>Payment Modal</strong>. This window features a 4-metric balance summary card, support for 4 major currencies, automatic cross-currency exchange rate conversions, and a single-click <em>Pay All</em> feature.</p>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/11b_payment_modal.png" alt="Payment Modal Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 9.2:</strong> Multi-currency payment modal with real-time currency conversion (e.g., Paying in EUR for a USD booking balance).
+        </div>
+      </div>
+
+      <!-- Balance Summary Cards Breakdown -->
+      <div class="row g-3 mb-4 text-center">
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-white rounded border shadow-sm">
+            <div class="text-muted small fw-bold text-uppercase">1. Total Due</div>
+            <div class="fw-bold text-dark fs-5 mt-1">300.00 USD</div>
+            <div class="text-muted small">Full flight contract price</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-white rounded border shadow-sm">
+            <div class="text-muted small fw-bold text-uppercase">2. Deposit</div>
+            <div class="fw-bold text-info fs-5 mt-1">50.00 USD</div>
+            <div class="text-muted small">Advance paid at booking</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-white rounded border shadow-sm">
+            <div class="text-muted small fw-bold text-uppercase">3. Total Paid</div>
+            <div class="fw-bold text-success fs-5 mt-1">150.00 USD</div>
+            <div class="text-muted small">Deposit + Recorded Payments</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="p-3 bg-white rounded border shadow-sm">
+            <div class="text-muted small fw-bold text-uppercase">4. Rest (Due)</div>
+            <div class="fw-bold text-danger fs-5 mt-1">150.00 USD</div>
+            <div class="text-muted small">Remaining balance to collect</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Field-by-Field Reference Table for Payment Modal -->
+      <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-input-cursor-text text-primary"></i> Payment Modal Field Reference</h4>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & Operational Action</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Amount in Payment Currency</td>
+              <td><span class="field-type">Number (Decimal)</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>The exact physical money handed over by the customer in the chosen payment currency. Pre-filled with the remaining balance.</td>
+              <td><span class="example-code">129.00</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Pay All / Refund All Shortcut</td>
+              <td><span class="field-type">Action Link</span></td>
+              <td><span class="opt-badge">Quick Action</span></td>
+              <td>Clicking this blue link automatically calculates and fills the exact converted amount required to fully clear the remaining balance (or full refund).</td>
+              <td><span class="example-code">Pay All (129.00 €)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Pay in Currency</td>
+              <td><span class="field-type">Select Dropdown</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Currency tender physically offered by customer (<code>USD ($)</code>, <code>EUR (€)</code>, <code>TRY (₺)</code>, <code>GBP (£)</code>). Switching currencies dynamically triggers the Exchange Rate Engine.</td>
+              <td><span class="example-code">EUR (€)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Exchange Rate Override</td>
+              <td><span class="field-type">Number (Step 0.0001)</span></td>
+              <td><span class="opt-badge">Dynamic</span></td>
+              <td>Visible only when Payment Currency differs from Booking Currency. Auto-populates from system exchange rates. Cashiers can manually override this rate if a custom exchange rate was negotiated.</td>
+              <td><span class="example-code">0.8600</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Equivalent in Booking Currency</td>
+              <td><span class="field-type">Number (Auto-Calculated)</span></td>
+              <td><span class="opt-badge">Read / Edit</span></td>
+              <td>Shows exactly how many Dollars / Euros of the reservation balance will be cleared: <code>convertedAmount = amountInPayCurrency / exchangeRate</code>.</td>
+              <td><span class="example-code">150.00 USD</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Payment Method</td>
+              <td><span class="field-type">Select Dropdown</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Tender channel used: <code>💵 Cash</code>, <code>💳 Card / POS Terminal</code>, or <code>🏦 Bank Transfer / IBAN</code>.</td>
+              <td><span class="example-code">💳 Card / POS Terminal</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Transaction Date & Time</td>
+              <td><span class="field-type">Datetime-Local</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Timestamp of payment collection. Defaults to current system time. Can be adjusted when logging historical or bank transfers.</td>
+              <td><span class="example-code">14/09/2026, 14:30</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Notes & Terminal Slip Reference</td>
+              <td><span class="field-type">Textarea</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Critical audit remarks such as POS Auth code, credit card last 4 digits, IBAN sender name, or cash drawer reference.</td>
+              <td><span class="example-code">POS Auth #89421 - Visa Ending in 4112</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Step-by-Step SOP for Collecting Payments -->
+      <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-list-ol text-primary"></i> Standard Operating Procedure: Collecting Passenger Balance</h4>
+      <div class="step-guide">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Locate Reservation Card in Takeoff Slot</div>
+            <p class="mb-0">On the <strong>Collect Payments</strong> tab, locate the flight slot (e.g. 08:30) and click <strong>Make Payment</strong> on the customer's card.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Select Customer's Currency Tender</div>
+            <p class="mb-0">Ask the customer which currency they wish to pay in. If paying in a foreign currency (e.g., Paying Euros for a USD price), select <strong>EUR</strong> from the dropdown.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Verify Dynamic Exchange Rate & Total</div>
+            <p class="mb-0">Verify the conversion rate (e.g. <code>1 USD = 0.8600 EUR</code>). Click <strong>Pay All</strong> or input the nominal amount. The system will confirm: <em>"129.00 EUR pays off 150.00 USD of reservation balance."</em></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Process Transaction & Log Slip Code</div>
+            <p class="mb-0">Swipe POS card or count cash. Enter the POS terminal auth slip number into <strong>Notes</strong>.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Confirm Payment & Print 80mm Voucher</div>
+            <p class="mb-0">Click <strong>Confirm Payment</strong>. The card status instantly flips to solid green <span class="badge bg-success">Paid</span>. Go to <em>Payment Records</em> and click the <strong>Printer</strong> icon to print the 80mm thermal receipt.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 9.3: Cancellation & Refund Processing Protocol -->
+      <h3 class="subsection-title"><i class="bi bi-arrow-counterclockwise"></i> 9.3 Flight Cancellation & Refund Protocol</h3>
+      <div class="callout-box callout-warning mb-4">
+        <div class="callout-title"><i class="bi bi-exclamation-triangle-fill"></i> Strict Security Rules for Refund Execution</div>
+        <ul class="mb-0 ps-3">
+          <li><strong>Status Prerequisite:</strong> The <em>Issue Refund</em> button appears <u>only</u> when the reservation status has been formally set to <strong>Cancelled (Status = 2)</strong> and the customer has collected payments (<code>amountPaid &gt; 0</code>).</li>
+          <li><strong>Amount Cap Protection:</strong> The system strictly caps the refund ceiling at the exact <code>amountPaid</code>. Frontline staff cannot issue a refund larger than the collected funds.</li>
+          <li><strong>Negative Ledger Entry:</strong> Refunds are automatically recorded in the ledger as negative amounts (e.g. <code>-50.00 USD</code>) with an automatic <code>[Refund]</code> audit prefix in the notes.</li>
+        </ul>
+      </div>
+
+      <!-- Section 9.4: Multi-Currency Accounting Ledger -->
+      <h3 class="subsection-title"><i class="bi bi-journal-text"></i> 9.4 Multi-Currency Accounting Ledger (Payment Records Tab)</h3>
+      <p>The <strong>Payment Records</strong> tab serves as the official financial ledger and daily cash audit dashboard. It combines all recorded transactions, deposits, and due balances with multi-currency metric counters and export/print tools.</p>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/11c_payment_records.png" alt="Payment Records Ledger Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 9.3:</strong> Financial audit ledger with multi-currency summary counters, filter engine, and thermal slip printing actions.
+        </div>
+      </div>
+
+      <!-- Multi-Currency KPI Cards -->
+      <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-speedometer2 text-primary"></i> Real-Time Multi-Currency Cash Balance Cards</h4>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 border-start border-primary border-4 p-3 bg-white h-100">
+            <div class="text-muted small fw-bold text-uppercase">TRY Collected (₺)</div>
+            <div class="h3 fw-bold text-primary mt-2 mb-0">Turkish Lira</div>
+            <div class="text-muted small mt-1">Aggregated net cash, card, and bank transfers received in TRY.</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 border-start border-success border-4 p-3 bg-white h-100">
+            <div class="text-muted small fw-bold text-uppercase">USD Collected ($)</div>
+            <div class="h3 fw-bold text-success mt-2 mb-0">US Dollars</div>
+            <div class="text-muted small mt-1">Total revenue collected from international tourists paying in USD.</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 border-start border-warning border-4 p-3 bg-white h-100">
+            <div class="text-muted small fw-bold text-uppercase">EUR Collected (€)</div>
+            <div class="h3 fw-bold text-warning mt-2 mb-0">Euros</div>
+            <div class="text-muted small mt-1">Total revenue collected in EUR across European travel agencies and direct sales.</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm border-0 border-start border-info border-4 p-3 bg-white h-100">
+            <div class="text-muted small fw-bold text-uppercase">GBP Collected (£)</div>
+            <div class="h3 fw-bold text-info mt-2 mb-0">British Pounds</div>
+            <div class="text-muted small mt-1">Total revenue collected in GBP from UK package holidaymakers.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ledger Filter Engine -->
+      <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-funnel-fill text-primary"></i> Ledger Filter & Auditing Tools</h4>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Filter Control</th>
+              <th>Type</th>
+              <th>Options / Format</th>
+              <th>Auditing Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Start Date & End Date</td>
+              <td><span class="field-type">Flatpickr Range</span></td>
+              <td><code>DD/MM/YYYY</code></td>
+              <td>Filters ledger transactions within a specified historical date range for daily cash-box closing or monthly accountant audits.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Payment Method Filter</td>
+              <td><span class="field-type">Dropdown</span></td>
+              <td><code>All Methods</code>, <code>Cash</code>, <code>Card</code>, <code>Transfer/IBAN</code></td>
+              <td>Isolates credit card transactions for POS terminal reconciliation, or cash payments for physical register counting.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Currency Filter</td>
+              <td><span class="field-type">Dropdown</span></td>
+              <td><code>All Currencies</code>, <code>TRY (₺)</code>, <code>USD ($)</code>, <code>EUR (€)</code>, <code>GBP (£)</code></td>
+              <td>Separates cash-drawer currency envelopes at the end of the shift.</td>
+            </tr>
+            <tr>
+              <td class="field-name">Full-Text Search Bar</td>
+              <td><span class="field-type">Live Search</span></td>
+              <td>Reservation ID, Title, Passenger Name</td>
+              <td>Instantly locates any transaction by entering the ticket number (e.g. <code>#1042</code>) or tourist name (e.g. <code>Smith</code>).</td>
+            </tr>
+            <tr>
+              <td class="field-name">Reset Button</td>
+              <td><span class="field-type">Action Button</span></td>
+              <td>Purple Reset Icon</td>
+              <td>Clears all active filters and restores full transaction visibility.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 9.5: 80mm Thermal Bill Voucher Format -->
+      <h3 class="subsection-title"><i class="bi bi-printer-fill"></i> 9.5 80mm Thermal Bill & POS Slip Output</h3>
+      <p>Clicking the <strong>Printer Icon (<i class="bi bi-printer text-primary"></i>)</strong> on any transaction row generates an industry-standard 80mm thermal receipt formatted specifically for POS slip printers (e.g., Epson, Bixolon, Star Micronics). The window triggers <code>window.print()</code> automatically.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 bg-light rounded border font-monospace" style="font-size: 0.85rem; line-height: 1.6; border: 2px dashed #6c757d !important; max-width: 360px; margin: auto;">
+            <div class="text-center fw-bold fs-6">GRAVITY PARAGLIDING</div>
+            <div class="text-center small text-muted">FETHIYE / OLUDENIZ</div>
+            <hr class="my-2">
+            <div class="text-center fw-bold">BOOKING VOUCHER</div>
+            <div class="text-center">#1042</div>
+            <hr class="my-2">
+            <div class="d-flex justify-content-between"><span>DATE:</span><span>14/09/2026</span></div>
+            <div class="d-flex justify-content-between"><span>TIME:</span><span>08:30 Slot</span></div>
+            <div class="d-flex justify-content-between"><span>PICKUP:</span><span>Liberty Hotels Lykia</span></div>
+            <div class="d-flex justify-content-between"><span>SOURCE:</span><span>Direct Booking</span></div>
+            <hr class="my-2">
+            <div class="fw-bold">PASSENGERS:</div>
+            <div class="ps-2">
+              P1: John Smith (82kg)<br>
+              <small class="text-muted">Pilot: Ali Yilmaz</small><br>
+              P2: Sarah Smith (64kg)<br>
+              <small class="text-muted">Pilot: Mehmet Kaya</small>
+            </div>
+            <hr class="my-2">
+            <div class="d-flex justify-content-between"><span>METHOD:</span><span class="fw-bold">CARD (POS)</span></div>
+            <div class="d-flex justify-content-between fw-bold"><span>TOTAL:</span><span>300.00 USD</span></div>
+            <div class="d-flex justify-content-between"><span>PAID:</span><span>300.00 USD</span></div>
+            <div class="d-flex justify-content-between fw-bold fs-6"><span>REST:</span><span>0.00 USD</span></div>
+            <div class="d-flex justify-content-between small text-muted"><span>CASHIER:</span><span>admin</span></div>
+            <hr class="my-2">
+            <div class="text-center fw-bold fs-6 mt-2">*** PAID IN FULL ***</div>
+            <hr class="my-2">
+            <div class="text-center small text-muted" style="font-size: 0.75rem;">
+              Please be ready 15 mins early at pickup point.<br>
+              Emergency Contact: +90 252 616 7788<br>
+              Have a wonderful flight over Blue Lagoon!
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+          <h5 class="fw-bold text-dark"><i class="bi bi-receipt me-2 text-primary"></i> Thermal Slip Key Audit Elements</h5>
+          <ul class="list-unstyled mt-2">
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Reservation Identifier:</strong> Large bold voucher number (<code>#1042</code>) for quick pilot check-in.</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Takeoff & Hotel Pickup:</strong> Exact flight slot (<code>08:30</code>) and passenger pickup hotel.</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Passenger-to-Pilot Roster:</strong> Lists every passenger alongside their assigned commercial pilot.</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Financial Watermark:</strong> Displays <code>*** PAID ***</code> or <code>*** BALANCE DUE ***</code> to prevent unauthorized takeoffs without full payment.</li>
+            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Dispatcher Accountability:</strong> Prints the cashier username who processed the payment for shift audit compliance.</li>
+          </ul>
         </div>
       </div>
     </section>
