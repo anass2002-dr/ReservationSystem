@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paragliding Operations & Reservation System — Comprehensive User & Operations Manual</title>
+  <title>Paragliding Operations & Reservation System — Complete User & Operations Manual</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
       --text: #334155;
       --text-muted: #64748b;
       --card-bg: #ffffff;
-      --sidebar-width: 290px;
+      --sidebar-width: 300px;
     }
 
     * {
@@ -115,18 +115,18 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .nav-link {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 12px;
+      padding: 8px 12px;
       color: var(--text);
       text-decoration: none;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 500;
       transition: all 0.2s ease;
     }
@@ -138,8 +138,8 @@
     }
 
     .nav-link i {
-      font-size: 1.1rem;
-      width: 20px;
+      font-size: 1.05rem;
+      width: 18px;
       text-align: center;
     }
 
@@ -148,7 +148,7 @@
       margin-left: var(--sidebar-width);
       flex: 1;
       padding: 40px 48px;
-      max-width: 1250px;
+      max-width: 1280px;
     }
 
     /* Top Hero Header */
@@ -183,7 +183,7 @@
     .doc-hero p {
       font-size: 1.05rem;
       color: rgba(255, 255, 255, 0.9);
-      max-width: 750px;
+      max-width: 780px;
       margin-bottom: 20px;
     }
 
@@ -226,7 +226,7 @@
 
     .chapter-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 700;
       color: var(--dark);
       display: flex;
@@ -252,7 +252,7 @@
     /* Subsections */
     .subsection-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.22rem;
       font-weight: 600;
       color: #1e293b;
       margin: 28px 0 14px 0;
@@ -524,7 +524,7 @@
       <li><a href="#dashboard" class="nav-link"><i class="bi bi-grid-fill"></i> 2. Live Dashboard</a></li>
     </ul>
 
-    <div class="nav-section-title">Core Operations</div>
+    <div class="nav-section-title">Flight Operations</div>
     <ul class="nav-list">
       <li><a href="#reservations-kanban" class="nav-link"><i class="bi bi-kanban"></i> 3. Schedule & Slots</a></li>
       <li><a href="#reservations-list" class="nav-link"><i class="bi bi-list-task"></i> 4. Filter & Table View</a></li>
@@ -536,8 +536,18 @@
     <ul class="nav-list">
       <li><a href="#customers" class="nav-link"><i class="bi bi-people"></i> 7. Customers Database</a></li>
       <li><a href="#agencies" class="nav-link"><i class="bi bi-building"></i> 8. B2B Agencies</a></li>
-      <li><a href="#payments" class="nav-link"><i class="bi bi-credit-card-2-front"></i> 9. Payments & Rates</a></li>
-      <li><a href="#daily-checklist" class="nav-link"><i class="bi bi-check2-all"></i> 10. Daily SOPs</a></li>
+      <li><a href="#payments" class="nav-link"><i class="bi bi-credit-card-2-front"></i> 9. Payments & Ledger</a></li>
+    </ul>
+
+    <div class="nav-section-title">Configuration & Admin</div>
+    <ul class="nav-list">
+      <li><a href="#users" class="nav-link"><i class="bi bi-person-gear"></i> 10. Manage Users</a></li>
+      <li><a href="#flight-packages" class="nav-link"><i class="bi bi-box-seam"></i> 11. Flight Packages</a></li>
+      <li><a href="#flight-times" class="nav-link"><i class="bi bi-clock-history"></i> 12. Flight Time Slots</a></li>
+      <li><a href="#extra-services" class="nav-link"><i class="bi bi-camera-reels"></i> 13. Extra Services</a></li>
+      <li><a href="#transport-groups" class="nav-link"><i class="bi bi-truck"></i> 14. Transport Shuttles</a></li>
+      <li><a href="#exchange-rates" class="nav-link"><i class="bi bi-currency-exchange"></i> 15. Exchange Rates</a></li>
+      <li><a href="#daily-checklist" class="nav-link"><i class="bi bi-check2-all"></i> 16. Daily SOPs</a></li>
     </ul>
   </aside>
 
@@ -547,7 +557,7 @@
     <!-- Hero Banner -->
     <div class="doc-hero" id="overview">
       <h1>Paragliding Flight Operations & Reservation System</h1>
-      <p>Official Field & Operations Manual — Comprehensive step-by-step documentation, screenshots, input field rules, and best practices for frontline flight dispatchers, accountants, and pilots.</p>
+      <p>Official Field & Operations Manual — Comprehensive step-by-step documentation, screenshots, input field rules, and best practices for frontline flight dispatchers, accountants, system administrators, and pilots.</p>
       <div class="hero-meta-badges">
         <span class="hero-badge"><i class="bi bi-shield-check"></i> Production Version 1.0</span>
         <span class="hero-badge"><i class="bi bi-phone"></i> 100% Mobile & Desktop Responsive</span>
@@ -1077,30 +1087,128 @@
       </div>
     </section>
 
-    <!-- Chapter 6: Pilots -->
+    <!-- Chapter 6: Pilots & Groups -->
     <section class="doc-chapter" id="pilots">
       <div class="chapter-header">
         <div>
-          <h2 class="chapter-title"><i class="bi bi-person-badge-fill"></i> 6. Pilot Roster & Workload Management</h2>
-          <p class="text-muted small mt-1">Manage flight crew, track flights assigned vs flown, and ensure fair dispatch rotation.</p>
+          <h2 class="chapter-title"><i class="bi bi-person-badge-fill"></i> 6. Pilot Roster & Pilot Groups Management</h2>
+          <p class="text-muted small mt-1">Manage flight crew, track flights assigned vs flown, and configure pilot teams.</p>
         </div>
         <span class="route-badge">/pilots</span>
       </div>
 
       <div class="screenshot-card">
-        <img src="manual_assets/08_pilots_page.png" alt="Pilots Page Screenshot">
+        <img src="manual_assets/08_pilots_page.png" alt="Pilots Directory Screenshot">
         <div class="screenshot-caption">
           <i class="bi bi-camera"></i> <strong>Figure 6.1:</strong> Pilot roster displaying flight quotas, active duty statuses, and pilot teams.
         </div>
       </div>
 
-      <h3 class="subsection-title"><i class="bi bi-check2-circle"></i> Workload Equity Rules</h3>
-      <p class="text-muted">The system maintains live counters for each pilot:</p>
-      <ul style="padding-left: 20px; margin: 12px 0;" class="text-muted">
-        <li><strong>Flights Assigned:</strong> Number of upcoming bookings allocated to the pilot today.</li>
-        <li><strong>Flights Flown:</strong> Number of completed tandem flights landed successfully.</li>
-        <li><strong>Equity Indicator:</strong> Dispatchers must check that daily flight assignments remain balanced across all pilots on duty.</li>
-      </ul>
+      <!-- Section 6.1: Add Pilot Modal -->
+      <h3 class="subsection-title"><i class="bi bi-person-plus-fill"></i> 6.1 Add / Edit Pilot Form Modal</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/08b_pilot_modal.png" alt="Pilot Modal Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 6.2:</strong> Pilot modal form with license details, status, team selection, and flight metric overrides.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Full Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Commercial tandem pilot's official full name.</td>
+              <td><span class="example-code">Captain Emre Yilmaz</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">License Number</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Official Civil Aviation Authority (SHGM / FAI) tandem pilot license ID.</td>
+              <td><span class="example-code">THK-T2-99412</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Status</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Duty state: <strong>Active (Available)</strong>, <strong>On Leave</strong>, or <strong>Inactive</strong>.</td>
+              <td><span class="example-code">Active</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Pilot Group</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Assign pilot to a specific team rotation (e.g. Team Alpha, Team Bravo, Freelancers).</td>
+              <td><span class="example-code">Team Alpha (Morning)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Flights Assigned (Override)</td>
+              <td><span class="field-type">Number</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Manual override for assigned flight counter. Increments automatically via bookings.</td>
+              <td><span class="example-code">4</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Flights Flown (Override)</td>
+              <td><span class="field-type">Number</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Manual override for completed landed flight counter.</td>
+              <td><span class="example-code">3</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 6.2: Pilot Groups Modal -->
+      <h3 class="subsection-title"><i class="bi bi-diagram-3-fill"></i> 6.2 Pilot Groups Management Modal</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/08c_pilot_group_modal.png" alt="Pilot Group Modal Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 6.3:</strong> Pilot Group Manager for organizing flight shifts and team rosters.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Group Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Descriptive name for the pilot rotation shift, company wing, or contractor team.</td>
+              <td><span class="example-code">Team Alpha (Morning Shift)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Active Pilots Counter</td>
+              <td><span class="field-type">Badge</span></td>
+              <td><span class="req-badge">Read-Only</span></td>
+              <td>Shows the number of commercial pilots currently assigned to this group.</td>
+              <td><span class="example-code">6 Pilots</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <!-- Chapter 7: Customers -->
@@ -1116,7 +1224,7 @@
       <div class="screenshot-card">
         <img src="manual_assets/09_customers_page.png" alt="Customers Page Screenshot">
         <div class="screenshot-caption">
-          <i class="bi bi-camera"></i> <strong>Figure 7.1:</strong> Customer CRM table with flight histories and contact records.
+          <i class="bi bi-camera"></i> <strong>Figure 7.1:</strong> Customer CRM table with flight histories, nationalities, and contact records.
         </div>
       </div>
     </section>
@@ -1134,8 +1242,68 @@
       <div class="screenshot-card">
         <img src="manual_assets/10_agencies_page.png" alt="Agencies Page Screenshot">
         <div class="screenshot-caption">
-          <i class="bi bi-camera"></i> <strong>Figure 8.1:</strong> Travel agency partner roster and commission configurations.
+          <i class="bi bi-camera"></i> <strong>Figure 8.1:</strong> Travel agency partner roster and contact cards.
         </div>
+      </div>
+
+      <!-- Section 8.1: Add Agency Modal -->
+      <h3 class="subsection-title"><i class="bi bi-plus-circle-fill"></i> 8.1 Add / Edit Agency Form Modal</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/10b_agency_modal.png" alt="Agency Modal Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 8.2:</strong> Agency registration modal for entering corporate details and office contact channels.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Agency Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Official commercial name of the partner travel agency, tour operator, or hotel desk.</td>
+              <td><span class="example-code">Pegas Touristik Turkey</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Contact Person</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Name of the lead booking manager, hotel concierge, or operational rep.</td>
+              <td><span class="example-code">Murat Demir</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Phone Number</td>
+              <td><span class="field-type">Tel / Text</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Direct phone number or WhatsApp line for booking coordination.</td>
+              <td><span class="example-code">+90 252 616 7788</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Email Address</td>
+              <td><span class="field-type">Email</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Official agency email for sending booking vouchers and monthly invoice statements.</td>
+              <td><span class="example-code">booking@pegastour.com</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Office Address</td>
+              <td><span class="field-type">Textarea</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Physical office address, branch location, or resort hotel desk location.</td>
+              <td><span class="example-code">Belceğiz Caddesi No:14, Ölüdeniz / Fethiye</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1157,11 +1325,329 @@
       </div>
     </section>
 
-    <!-- Chapter 10: Daily SOPs -->
+    <!-- Chapter 10: Manage Users -->
+    <section class="doc-chapter" id="users">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-person-gear"></i> 10. User Management & Security (Admin)</h2>
+          <p class="text-muted small mt-1">Manage staff user accounts, assign system roles, and reset access credentials.</p>
+        </div>
+        <span class="route-badge">/admin/users</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/12_user_management.png" alt="User Management Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 10.1:</strong> Administrator user console displaying active staff accounts, roles, and security actions.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-person-plus-fill"></i> 10.1 Add New User Modal Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Username</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Unique system username for staff login (no spaces).</td>
+              <td><span class="example-code">dispatcher_ali</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Email</td>
+              <td><span class="field-type">Email</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Corporate staff email address for password reset notifications.</td>
+              <td><span class="example-code">ali@paragliding.com</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Password</td>
+              <td><span class="field-type">Password</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Strong account password (minimum 6 characters).</td>
+              <td><span class="example-code">Secret@2026!</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Full Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Employee's full first and last name displayed on audit records.</td>
+              <td><span class="example-code">Ali Kaya</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warning">
+        <i class="bi bi-shield-exclamation"></i>
+        <div>
+          <strong>Role Permissions:</strong> 
+          <strong>Admin:</strong> Full access to financial reports, user management, and system configuration. | 
+          <strong>Operator:</strong> Access to flight bookings, dispatch calendar, and customer service records.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 11: Flight Packages -->
+    <section class="doc-chapter" id="flight-packages">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-box-seam-fill"></i> 11. Flight Packages Configuration</h2>
+          <p class="text-muted small mt-1">Define commercial flight tiers, package pricing, and flight inclusions.</p>
+        </div>
+        <span class="route-badge">/flight-packages</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/13_flight_packages_modal.png" alt="Flight Packages Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 11.1:</strong> Flight package modal and package cards grid.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-card-text"></i> Package Form Field Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Package Title</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Marketing title of the flight experience tier.</td>
+              <td><span class="example-code">Sunset VIP Flight</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Price (USD)</td>
+              <td><span class="field-type">Number</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Standard base retail price in USD per passenger.</td>
+              <td><span class="example-code">180.00</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Package Description</td>
+              <td><span class="field-type">Textarea</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Details explaining flight duration (25-35 min), takeoff altitude (1965m), and inclusions.</td>
+              <td><span class="example-code">Includes takeoff from 1965m summit, golden hour sunset views over Blue Lagoon.</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chapter 12: Flight Time Slots -->
+    <section class="doc-chapter" id="flight-times">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-clock-history"></i> 12. Flight Time Slots Configuration</h2>
+          <p class="text-muted small mt-1">Configure daily departure slots synchronized with mountain summit shuttle schedules.</p>
+        </div>
+        <span class="route-badge">/flight-times</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/14_flight_times_page.png" alt="Flight Times Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 12.1:</strong> Time slot manager with active switches and slot creator.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-stopwatch"></i> Time Slot Field Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & Format</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Time</td>
+              <td><span class="field-type">Text (HH:mm)</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>24-hour departure time slot. Must follow <code>HH:mm</code> format.</td>
+              <td><span class="example-code">10:30</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Active Status</td>
+              <td><span class="field-type">Switch (Boolean)</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Toggle ON to make slot bookable on the Kanban schedule; toggle OFF for seasonal winter closures.</td>
+              <td><span class="example-code">Active (ON)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chapter 13: Extra Services -->
+    <section class="doc-chapter" id="extra-services">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-camera-reels-fill"></i> 13. Extra Services (Photos, Videos & Media)</h2>
+          <p class="text-muted small mt-1">Configure ancillary add-ons like 4K GoPro action footage, 360° VR cams, and pilot merchandise.</p>
+        </div>
+        <span class="route-badge">/extra-services</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/15_extra_services_modal.png" alt="Extra Services Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 13.1:</strong> Extra services modal form and media pricing catalog.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-tag-fill"></i> Extra Service Field Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Service Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Title of the ancillary product or photo/video package.</td>
+              <td><span class="example-code">4K GoPro Photos & 60fps Video</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Price (USD)</td>
+              <td><span class="field-type">Number</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Retail price added dynamically to passenger flight total.</td>
+              <td><span class="example-code">35.00</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chapter 14: Transport Groups -->
+    <section class="doc-chapter" id="transport-groups">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-truck-front-fill"></i> 14. Mountain Shuttle & Transport Groups</h2>
+          <p class="text-muted small mt-1">Organize mountain transfer shuttles, assign drivers, and manage license plates.</p>
+        </div>
+        <span class="route-badge">/transport-groups</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/16_transport_groups_modal.png" alt="Transport Groups Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 14.1:</strong> Mountain shuttle schedule modal with vehicle plate and driver assignment.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-car-front-fill"></i> Transport Group Field Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Departure Time</td>
+              <td><span class="field-type">Datetime-Local</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Exact time when the transfer vehicle departs office for mountain summit.</td>
+              <td><span class="example-code">15/09/2026 10:00</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Vehicle Plate</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Official license plate number of the Mercedes Sprinter or 4x4 transport van.</td>
+              <td><span class="example-code">48 BB 920</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Driver Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Full name of the designated mountain shuttle driver.</td>
+              <td><span class="example-code">Mehmet Usta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chapter 15: Exchange Rates -->
+    <section class="doc-chapter" id="exchange-rates">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-currency-exchange"></i> 15. Exchange Rates & Multi-Currency Engine</h2>
+          <p class="text-muted small mt-1">Live currency exchange rates, conversion tables, and cross-currency calculator.</p>
+        </div>
+        <span class="route-badge">/exchange-rates</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/17_exchange_rates_page.png" alt="Exchange Rates Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 15.1:</strong> Multi-currency dashboard with real-time conversion rates (TRY/EUR/GBP base USD).
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-arrow-repeat"></i> Currency Engine Capabilities</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">One-Click Rate Refresh</div>
+            <div class="step-desc">Click <strong>Refresh Rates</strong> in the top header to fetch live central bank rates from the currency API.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Interactive Currency Calculator</div>
+            <div class="step-desc">Enter any custom amount, select source currency (e.g. GBP), click swap to target currency (e.g. TRY), and get instantaneous cashier conversion.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 16: Daily SOPs -->
     <section class="doc-chapter" id="daily-checklist">
       <div class="chapter-header">
         <div>
-          <h2 class="chapter-title"><i class="bi bi-calendar-check-fill"></i> 10. Standard Operating Procedures (Daily SOPs)</h2>
+          <h2 class="chapter-title"><i class="bi bi-calendar-check-fill"></i> 16. Standard Operating Procedures (Daily SOPs)</h2>
           <p class="text-muted small mt-1">Daily operational checklist for flight dispatchers and cashiers.</p>
         </div>
         <span class="route-badge">SOP Workflow</span>
