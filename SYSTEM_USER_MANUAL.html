@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paragliding Operations & Reservation System — Comprehensive User & Operations Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --primary-dark: #0a58ca;
+      --primary-light: #e7f1ff;
+      --secondary: #6c757d;
+      --success: #198754;
+      --success-light: #d1e7dd;
+      --warning: #ffc107;
+      --warning-light: #fff3cd;
+      --danger: #dc3545;
+      --danger-light: #f8d7da;
+      --info: #0dcaf0;
+      --info-light: #cff4fc;
+      --purple: #6f42c1;
+      --purple-light: #f3f0ff;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+      --text: #334155;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+      --sidebar-width: 290px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background-color: #f1f5f9;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    /* Layout */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    .manual-sidebar {
+      width: var(--sidebar-width);
+      background: #ffffff;
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      z-index: 1000;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--dark);
+    }
+
+    .brand-logo i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin: 16px 12px 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-link i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Main Content Area */
+    .manual-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 1250px;
+    }
+
+    /* Top Hero Header */
+    .doc-hero {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(13, 110, 253, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-hero::after {
+      content: "🪂";
+      position: absolute;
+      right: 30px;
+      bottom: -10px;
+      font-size: 120px;
+      opacity: 0.15;
+    }
+
+    .doc-hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .doc-hero p {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 750px;
+      margin-bottom: 20px;
+    }
+
+    .hero-meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Chapter Cards */
+    .doc-chapter {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 36px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .chapter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+
+    .chapter-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chapter-title i {
+      color: var(--primary);
+    }
+
+    .route-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      background: #f1f5f9;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-weight: 600;
+    }
+
+    /* Subsections */
+    .subsection-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 28px 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subsection-title i {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    /* Visual Screenshot Containers */
+    .screenshot-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 20px 0 28px 0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .screenshot-caption {
+      padding: 12px 18px;
+      background: #f8fafc;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Field Reference Table */
+    .field-table-container {
+      overflow-x: auto;
+      margin: 18px 0 28px 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      background: white;
+    }
+
+    .field-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--dark);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .field-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .field-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .field-table tr:hover {
+      background: #fafbfc;
+    }
+
+    .field-name {
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .field-type {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      color: #0284c7;
+      background: #f0f9ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .req-badge {
+      background: var(--danger-light);
+      color: var(--danger);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .opt-badge {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .example-code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #059669;
+      background: #ecfdf5;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Alert / Callout Boxes */
+    .callout {
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 0.9rem;
+    }
+
+    .callout i {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .callout-info {
+      background: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    .callout-info i {
+      color: var(--primary);
+    }
+
+    .callout-warning {
+      background: var(--warning-light);
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .callout-warning i {
+      color: #d97706;
+    }
+
+    .callout-success {
+      background: var(--success-light);
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .callout-success i {
+      color: var(--success);
+    }
+
+    /* Step Lists */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .step-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Print Styles */
+    @media print {
+      .manual-sidebar {
+        display: none !important;
+      }
+      .manual-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .doc-chapter {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        margin-bottom: 20px !important;
+        padding: 20px !important;
+      }
+      body {
+        background: white !important;
+        color: black !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 991.98px) {
+      .manual-sidebar {
+        display: none;
+      }
+      .manual-content {
+        margin-left: 0;
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- Left Navigation Sidebar -->
+  <aside class="manual-sidebar">
+    <div class="sidebar-header">
+      <a href="#" class="brand-logo">
+        <i class="bi bi-compass"></i>
+        <div>
+          <div class="brand-title">Paragliding ERP</div>
+          <div class="brand-subtitle">Operations Manual</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="nav-section-title">Getting Started</div>
+    <ul class="nav-list">
+      <li><a href="#overview" class="nav-link active"><i class="bi bi-info-circle"></i> System Overview</a></li>
+      <li><a href="#login" class="nav-link"><i class="bi bi-box-arrow-in-right"></i> 1. Authentication</a></li>
+      <li><a href="#dashboard" class="nav-link"><i class="bi bi-grid-fill"></i> 2. Live Dashboard</a></li>
+    </ul>
+
+    <div class="nav-section-title">Core Operations</div>
+    <ul class="nav-list">
+      <li><a href="#reservations-kanban" class="nav-link"><i class="bi bi-kanban"></i> 3. Schedule & Slots</a></li>
+      <li><a href="#reservations-list" class="nav-link"><i class="bi bi-list-task"></i> 4. Filter & Table View</a></li>
+      <li><a href="#reservation-form" class="nav-link"><i class="bi bi-plus-circle-fill"></i> 5. Booking Form Guide</a></li>
+      <li><a href="#pilots" class="nav-link"><i class="bi bi-person-badge"></i> 6. Pilot Management</a></li>
+    </ul>
+
+    <div class="nav-section-title">CRM & Finance</div>
+    <ul class="nav-list">
+      <li><a href="#customers" class="nav-link"><i class="bi bi-people"></i> 7. Customers Database</a></li>
+      <li><a href="#agencies" class="nav-link"><i class="bi bi-building"></i> 8. B2B Agencies</a></li>
+      <li><a href="#payments" class="nav-link"><i class="bi bi-credit-card-2-front"></i> 9. Payments & Rates</a></li>
+      <li><a href="#daily-checklist" class="nav-link"><i class="bi bi-check2-all"></i> 10. Daily SOPs</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="manual-content">
+    
+    <!-- Hero Banner -->
+    <div class="doc-hero" id="overview">
+      <h1>Paragliding Flight Operations & Reservation System</h1>
+      <p>Official Field & Operations Manual — Comprehensive step-by-step documentation, screenshots, input field rules, and best practices for frontline flight dispatchers, accountants, and pilots.</p>
+      <div class="hero-meta-badges">
+        <span class="hero-badge"><i class="bi bi-shield-check"></i> Production Version 1.0</span>
+        <span class="hero-badge"><i class="bi bi-phone"></i> 100% Mobile & Desktop Responsive</span>
+        <span class="hero-badge"><i class="bi bi-globe"></i> Multi-Currency (TRY, USD, EUR, GBP)</span>
+        <span class="hero-badge"><i class="bi bi-geo-alt"></i> Babadağ / Fethiye Edition</span>
+      </div>
+    </div>
+
+    <!-- Chapter 1: Authentication -->
+    <section class="doc-chapter" id="login">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-shield-lock-fill"></i> 1. Authentication & Sign In</h2>
+          <p class="text-muted small mt-1">Secure login portal protecting company financials and customer personal data.</p>
+        </div>
+        <span class="route-badge">/login</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/01_login_page.png" alt="Login Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 1.1:</strong> Authentication screen with JWT-secured credentials entry.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-key-fill"></i> Credentials & Field Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Input Type</th>
+              <th>Requirement</th>
+              <th>What to Enter / Action</th>
+              <th>Default Credentials</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Username</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Your assigned staff username or administrative account name.</td>
+              <td><span class="example-code">admin</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Password</td>
+              <td><span class="field-type">Password</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Case-sensitive password encrypted via ASP.NET Core PasswordHasher.</td>
+              <td><span class="example-code">admin123</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <i class="bi bi-lightbulb-fill"></i>
+        <div>
+          <strong>Session Duration:</strong> Successful login creates a cryptographically signed JWT Bearer Token stored in your browser session. You will remain logged in automatically across reloads.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 2: Dashboard -->
+    <section class="doc-chapter" id="dashboard">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-grid-1x2-fill"></i> 2. Operational Dashboard</h2>
+          <p class="text-muted small mt-1">Real-time command center displaying daily flight metrics, exchange rates, and quick shortcuts.</p>
+        </div>
+        <span class="route-badge">/ (Home)</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/02_dashboard_page.png" alt="Dashboard Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 2.1:</strong> Real-time Operational Dashboard showing daily counters, currency rates, and dispatch status.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-card-checklist"></i> Key Dashboard Components</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Top Currency Rate Bar & Live Calculator</div>
+            <div class="step-desc">Displays live exchange rates for USD/TRY, USD/EUR, and USD/GBP. The interactive calculator allows frontline cashiers to instantly convert tourist prices across all 4 currencies with one click.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Daily KPI Cards</div>
+            <div class="step-desc">Shows Today's Total Bookings, Passenger Count (PAX), Total Pilots on Duty, and Real-time Revenue Collected.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Quick Action "+ New Reservation" Button</div>
+            <div class="step-desc">Prominently positioned to allow one-click launch of the high-velocity booking form for walk-in tourists.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 3: Reservations Schedule View -->
+    <section class="doc-chapter" id="reservations-kanban">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-kanban-fill"></i> 3. Reservations Schedule (Kanban Slots)</h2>
+          <p class="text-muted small mt-1">Visual time-slot dispatcher board with fluid drag-and-drop flight rescheduling.</p>
+        </div>
+        <span class="route-badge">/reservations (Schedule View)</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/03_reservations_schedule.png" alt="Schedule Kanban Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 3.1:</strong> Time-slot flight board organized into daily departure slots (08:30, 10:30, 13:00, 15:00, 17:00).
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-sliders"></i> Operations on the Schedule Board</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">A</div>
+          <div class="step-content">
+            <div class="step-title">Date Navigation Pill</div>
+            <div class="step-desc">Use the <code>&lt;</code> and <code>&gt;</code> buttons or click the date input to inspect upcoming days or past historical flight manifests.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">B</div>
+          <div class="step-content">
+            <div class="step-title">Drag & Drop Flight Reassignment</div>
+            <div class="step-desc">Click and drag any reservation card from one time-slot column to another (e.g., moving a customer from 08:30 to 10:30 due to cloud cover). The server updates slot timings immediately.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">C</div>
+          <div class="step-content">
+            <div class="step-title">Print Slot Manifest PDF (<i class="bi bi-file-pdf text-danger"></i>)</div>
+            <div class="step-desc">Click <strong>Print PDF</strong> on any slot card header to instantly generate an official manifest list for mountain takeoff marshals and shuttle drivers.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">D</div>
+          <div class="step-content">
+            <div class="step-title">Card Quick Action Buttons</div>
+            <div class="step-desc">
+              <strong>Pay:</strong> Opens payment gateway modal | 
+              <strong>Print:</strong> Prints A5 / Thermal Voucher | 
+              <strong>Edit:</strong> Modifies booking details | 
+              <strong>Delete:</strong> Cancels reservation with confirmation.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 4: Reservations List View -->
+    <section class="doc-chapter" id="reservations-list">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-table"></i> 4. Reservations List & Advanced Filters</h2>
+          <p class="text-muted small mt-1">Tabular database view with multi-criteria filtering, financial summaries, and Excel export.</p>
+        </div>
+        <span class="route-badge">/reservations (List View)</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/04_reservations_list.png" alt="Reservations List Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 4.1:</strong> List view with multi-parameter filter bar and Financial Summary table.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-funnel-fill"></i> Filter Bar Reference</h3>
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Filter Control</th>
+              <th>Options / Input</th>
+              <th>How it filters the table</th>
+              <th>Default Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Status</td>
+              <td><span class="field-type">Dropdown</span>: All, Pending, Confirmed, Cancelled</td>
+              <td>Filters records by booking lifecycle state.</td>
+              <td><span class="example-code">All Statuses</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Flight Time</td>
+              <td><span class="field-type">Dropdown</span>: All Times, 08:30, 10:30, 13:00...</td>
+              <td>Isolates a specific time slot across the selected date range.</td>
+              <td><span class="example-code">All Times</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Date Range</td>
+              <td><span class="field-type">Dropdown</span>: Selected Day, One Week, One Month, One Year, All Time</td>
+              <td>Expands or narrows the query date window.</td>
+              <td><span class="example-code">Selected Day</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Search Box</td>
+              <td><span class="field-type">Text Input</span></td>
+              <td>Instant live search matching Booking ID, Title, Passenger Name, or Agency.</td>
+              <td><span class="example-code">Empty</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Reset Button</td>
+              <td><span class="field-type">Action Button</span></td>
+              <td>Clears all filters back to default values in one click.</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Chapter 5: Reservation Form (Field-by-Field Guide) -->
+    <section class="doc-chapter" id="reservation-form">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-ui-checks-grid"></i> 5. New / Edit Reservation Form (Field-by-Field Guide)</h2>
+          <p class="text-muted small mt-1">Detailed guide explaining every single input, validation rule, and workflow step.</p>
+        </div>
+        <span class="route-badge">/reservations/add | /reservations/edit/:id</span>
+      </div>
+
+      <!-- Section 5.1: General Info -->
+      <h3 class="subsection-title"><i class="bi bi-info-circle-fill"></i> 5.1 General Information & Header</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/05_reservation_form_general.png" alt="Form General Info Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 5.1:</strong> Header PAX selector, flight timings, currency, and deposit input group.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Description & What to Write</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">PAX Dropdown (Top Header)</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Select the number of passengers (1 to 10 PAX). Automatically adds or trims passenger cards.</td>
+              <td><span class="example-code">2 PAX</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Reservation Title</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Descriptive label for the booking (e.g. VIP Group, Family Tour, Honeymoon).</td>
+              <td><span class="example-code">Smith Family VIP</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Booking Source</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Channel where the customer booked (Direct Walk-in, Website, WhatsApp, Hotel Concierge).</td>
+              <td><span class="example-code">Direct Booking</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Flight Date</td>
+              <td><span class="field-type">Flatpickr Date</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>The scheduled calendar date of the flight takeoff.</td>
+              <td><span class="example-code">15/09/2026</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Time Slot</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Selected departure slot (08:30, 10:30, 13:00, 15:00, 17:00 Sunset).</td>
+              <td><span class="example-code">10:30</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Booking Status</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Status of reservation: <strong>Confirmed</strong> (Ready), <strong>Pending</strong> (Unpaid), or <strong>Cancelled</strong>.</td>
+              <td><span class="example-code">Confirmed</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Booking Channel (Direct / Agency)</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Choose between <strong>Direct Booking (Us)</strong> or <strong>Agency Booking</strong>. Selecting Agency unlocks the Agency picker and Ticket number fields.</td>
+              <td><span class="example-code">Agency Booking</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Agency Picker (if Agency)</td>
+              <td><span class="field-type">Search Select</span></td>
+              <td><span class="req-badge">Required (if Agency)</span></td>
+              <td>Select the referring travel agency or tour operator from the registered list.</td>
+              <td><span class="example-code">Pegas Touristik</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Billet / Ticket Number</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>External paper ticket or voucher number issued by the partner agency.</td>
+              <td><span class="example-code">PG-88421</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Preferred Currency</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Billing currency: <strong>TRY (₺)</strong>, <strong>USD ($)</strong>, <strong>EUR (€)</strong>, or <strong>GBP (£)</strong>.</td>
+              <td><span class="example-code">USD ($)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Total Amount</td>
+              <td><span class="field-type">Number</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Total price for the entire reservation. Automatically calculated from packages/extras or entered manually.</td>
+              <td><span class="example-code">350.00</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Deposit Amount & Method</td>
+              <td><span class="field-type">Number + Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Advance deposit collected right now, and payment method (Cash, Credit Card, Bank Transfer, POS).</td>
+              <td><span class="example-code">100.00 (Cash)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Rest to Pay (Auto)</td>
+              <td><span class="field-type">Calculated</span></td>
+              <td><span class="req-badge">Read-Only</span></td>
+              <td>Automatically displays remaining balance due upon customer arrival.</td>
+              <td><span class="example-code">250.00 USD</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 5.2: Passenger Details -->
+      <h3 class="subsection-title"><i class="bi bi-people-fill"></i> 5.2 Passenger Information & Flight Logistics</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/06_reservation_form_passenger.png" alt="Passenger Information Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 5.2:</strong> 2-Column passenger setup: Customer CRM info (left) and Flight Logistics & Pilot (right).
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Description & Instructions</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Search Existing Customer</td>
+              <td><span class="field-type">Search Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Type customer name to auto-fill returning passenger information instantly.</td>
+              <td><span class="example-code">John Doe</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Full Name</td>
+              <td><span class="field-type">Text</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Passenger's first and last name as written in passport.</td>
+              <td><span class="example-code">Alexander Wright</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Phone Number</td>
+              <td><span class="field-type">Tel / Text</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>WhatsApp or phone number with international country code.</td>
+              <td><span class="example-code">+44 7911 123456</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Date of Birth</td>
+              <td><span class="field-type">Flatpickr Date</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Passenger date of birth (required by aviation insurance).</td>
+              <td><span class="example-code">14/08/1995</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Email</td>
+              <td><span class="field-type">Email</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Email address to send flight photo links and digital vouchers.</td>
+              <td><span class="example-code">alex@example.com</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Nationality</td>
+              <td><span class="field-type">Search Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Country of citizenship (used for demographics and flight statistics).</td>
+              <td><span class="example-code">United Kingdom</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Pilot Group Filter</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Filters the pilot list by team shift (e.g. Team Alpha, Team Bravo, Freelancers).</td>
+              <td><span class="example-code">Team Alpha</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Assigned Pilot</td>
+              <td><span class="field-type">Search Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Select the commercial tandem pilot. Displays pilot workload (Assigned vs Flown).</td>
+              <td><span class="example-code">Captain Emre (Assigned: 3)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Flight Package</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Flight tier: Standard Tandem, Sunset VIP Flight, Acro Aerobatic Thrill.</td>
+              <td><span class="example-code">Sunset VIP Flight</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Transport Service</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Assigned mountain shuttle shuttle vehicle and driver name.</td>
+              <td><span class="example-code">Van 04 (Mehmet)</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Extra Services</td>
+              <td><span class="field-type">Multi-Select</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Add-on services: <strong>4K GoPro Photos & Videos</strong>, <strong>360° VR Camera</strong>, <strong>Merchandise</strong>.</td>
+              <td><span class="example-code">4K Video + 360 VR</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Weight Limit Verified</td>
+              <td><span class="field-type">Switch</span></td>
+              <td><span class="req-badge">Required Check</span></td>
+              <td>Safety toggle confirming passenger is within commercial tandem weight limit (under 105 kg).</td>
+              <td><span class="example-code">Checked (ON)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 5.3: Pickup & Logistics -->
+      <h3 class="subsection-title"><i class="bi bi-geo-alt-fill"></i> 5.3 Pickup Logistics, Map & File Uploads</h3>
+      <div class="screenshot-card">
+        <img src="manual_assets/07_reservation_form_pickup.png" alt="Pickup Map & Attachments Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 5.3:</strong> Hotel location search, interactive Leaflet map, notes, and photo attachment vault.
+        </div>
+      </div>
+
+      <div class="field-table-container">
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Description & Instructions</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="field-name">Pickup Service</td>
+              <td><span class="field-type">Select</span></td>
+              <td><span class="req-badge">Required</span></td>
+              <td>Choose <strong>Hotel Pickup Required</strong> or <strong>Not Required (Meeting at Office)</strong>.</td>
+              <td><span class="example-code">Hotel Pickup Required</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Pickup Location / Hotel Name</td>
+              <td><span class="field-type">Text + Search</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Type hotel or villa name. Click <strong>Search</strong> to auto-locate on the interactive map.</td>
+              <td><span class="example-code">Liberty Hotels Lykia</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Interactive Pickup Map</td>
+              <td><span class="field-type">Leaflet Map</span></td>
+              <td><span class="opt-badge">Visual Tool</span></td>
+              <td>Displays exact GPS pin in Ölüdeniz/Fethiye for the transport driver.</td>
+              <td><span class="example-code">Pin placed on hotel</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Special Requests / Notes</td>
+              <td><span class="field-type">Textarea</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Special requirements (e.g. Birthday surprise, fear of heights, language preference).</td>
+              <td><span class="example-code">Wants smooth gliding, no acro</span></td>
+            </tr>
+            <tr>
+              <td class="field-name">Upload Photos & Documents</td>
+              <td><span class="field-type">File Upload</span></td>
+              <td><span class="opt-badge">Optional</span></td>
+              <td>Drag and drop or select passport copies, payment receipts, or agency ticket scans.</td>
+              <td><span class="example-code">passport_scan.jpg</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-success">
+        <i class="bi bi-printer-fill"></i>
+        <div>
+          <strong>Voucher Printing:</strong> After saving or while editing, click <strong>Print Voucher</strong> to choose between an <strong>A5 Laser Color Voucher</strong> or an <strong>80mm Thermal POS Receipt</strong>.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 6: Pilots -->
+    <section class="doc-chapter" id="pilots">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-person-badge-fill"></i> 6. Pilot Roster & Workload Management</h2>
+          <p class="text-muted small mt-1">Manage flight crew, track flights assigned vs flown, and ensure fair dispatch rotation.</p>
+        </div>
+        <span class="route-badge">/pilots</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/08_pilots_page.png" alt="Pilots Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 6.1:</strong> Pilot roster displaying flight quotas, active duty statuses, and pilot teams.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-check2-circle"></i> Workload Equity Rules</h3>
+      <p class="text-muted">The system maintains live counters for each pilot:</p>
+      <ul style="padding-left: 20px; margin: 12px 0;" class="text-muted">
+        <li><strong>Flights Assigned:</strong> Number of upcoming bookings allocated to the pilot today.</li>
+        <li><strong>Flights Flown:</strong> Number of completed tandem flights landed successfully.</li>
+        <li><strong>Equity Indicator:</strong> Dispatchers must check that daily flight assignments remain balanced across all pilots on duty.</li>
+      </ul>
+    </section>
+
+    <!-- Chapter 7: Customers -->
+    <section class="doc-chapter" id="customers">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-people-fill"></i> 7. Customers CRM Database</h2>
+          <p class="text-muted small mt-1">Searchable passenger history, contact records, and loyalty profiles.</p>
+        </div>
+        <span class="route-badge">/customers</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/09_customers_page.png" alt="Customers Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 7.1:</strong> Customer CRM table with flight histories and contact records.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 8: Agencies -->
+    <section class="doc-chapter" id="agencies">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-building-fill"></i> 8. B2B Travel Agencies & Partners</h2>
+          <p class="text-muted small mt-1">Manage tour operators, hotels, commissions, and external ticket reconciliations.</p>
+        </div>
+        <span class="route-badge">/agencies</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/10_agencies_page.png" alt="Agencies Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 8.1:</strong> Travel agency partner roster and commission configurations.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 9: Payments -->
+    <section class="doc-chapter" id="payments">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-credit-card-fill"></i> 9. Multi-Currency Payment Ledger</h2>
+          <p class="text-muted small mt-1">Process customer balances, handle multi-currency payments, and audit refunds.</p>
+        </div>
+        <span class="route-badge">/payments</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/11_payments_page.png" alt="Payments Page Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 9.1:</strong> Financial transaction ledger and payment processing console.
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 10: Daily SOPs -->
+    <section class="doc-chapter" id="daily-checklist">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-calendar-check-fill"></i> 10. Standard Operating Procedures (Daily SOPs)</h2>
+          <p class="text-muted small mt-1">Daily operational checklist for flight dispatchers and cashiers.</p>
+        </div>
+        <span class="route-badge">SOP Workflow</span>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-title">Morning Setup (07:30 AM)</div>
+            <div class="step-desc">Check exchange rates in header, verify weather forecast with takeoff marshals, and print the 08:30 & 10:30 Slot Manifests for shuttle drivers.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-title">Passenger Arrival & Balance Settlement</div>
+            <div class="step-desc">Collect remaining balances (Rest to Pay) at cashier desk, toggle status to <strong>Confirmed / Paid</strong>, verify weight limits, and issue printed vouchers.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-title">Evening Cash Reconciliation & Excel Export (18:30 PM)</div>
+            <div class="step-desc">Navigate to <strong>Reservations &gt; List View</strong>, verify the Financial Summary table matches the cash drawer in TRY/USD/EUR/GBP, and click <strong>Export Excel</strong> for accounting records.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>
