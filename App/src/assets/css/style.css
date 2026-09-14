@@ -655,7 +655,6 @@ main.login-mode {
   background-color: #aab7cf;
 }
 
-/* Desktop: Collapsed icon-only state by default */
 @media (min-width: 992px) {
   .sidebar.toggle-sidebar2 {
     width: 97px;
@@ -677,7 +676,6 @@ main.login-mode {
   }
 }
 
-/* Mobile & Tablet (< 992px): Offcanvas Drawer */
 @media (max-width: 991.98px) {
   .sidebar {
     top: 60px;

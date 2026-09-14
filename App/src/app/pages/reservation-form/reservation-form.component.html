@@ -43,7 +43,7 @@
       </div>
 
       <div class="card-body p-3 p-sm-4 p-md-5">
-        <!-- General Info Section -->
+        
         <div class="section-title">
           <i class="bi bi-info-circle-fill"></i> General Information
         </div>
@@ -154,7 +154,6 @@
           </div>
         </div>
 
-        <!-- Passengers Section -->
         <div class="section-title mt-2">
           <i class="bi bi-people-fill"></i> Passenger Information
         </div>
@@ -173,7 +172,7 @@
 
           <div class="passenger-body">
             <div class="row g-4">
-              <!-- Customer Column -->
+              
               <div class="col-12 col-lg-6 border-end-lg pe-lg-4">
                 <div class="mb-3 mb-md-4">
                   <label class="form-label">Search Existing Customer</label>
@@ -212,7 +211,6 @@
                 </div>
               </div>
 
-              <!-- Logistics Column -->
               <div class="col-12 col-lg-6 ps-lg-4 mt-3 mt-lg-0">
                 <div class="row g-3">
                   <div class="col-12">
@@ -286,7 +284,6 @@
           </button>
         </div>
 
-        <!-- Pickup Section -->
         <div class="section-title">
           <i class="bi bi-geo-alt-fill"></i> Pickup & Logistics
         </div>
@@ -312,7 +309,6 @@
               </button>
             </div>
 
-            <!-- Suggestions Dropdown -->
             <div *ngIf="locationSuggestions.length > 0" class="suggestions-dropdown shadow-lg">
               <div *ngFor="let sug of locationSuggestions" class="suggestion-item" (click)="selectSuggestion(sug)">
                 <i class="bi bi-geo-alt-fill text-primary me-2 flex-shrink-0"></i>
@@ -327,7 +323,6 @@
           </div>
         </div>
 
-        <!-- Notes Section -->
         <div class="section-title mt-4 mt-md-5">
           <i class="bi bi-pencil-square"></i> Additional Information
         </div>
@@ -338,7 +333,6 @@
             placeholder="Any dietary requirements, health issues, or special occasions?"></textarea>
         </div>
 
-        <!-- Photos Section -->
         <div class="section-title mt-4 mt-md-5">
           <i class="bi bi-camera-fill"></i> Reservation Photos / Documents
         </div>
@@ -353,7 +347,6 @@
             </button>
           </div>
 
-          <!-- Photo Previews -->
           <div class="row g-2 g-sm-3 mt-3" *ngIf="reservation.photos && reservation.photos.length > 0">
             <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let photo of reservation.photos; let photoIdx = index">
               <div class="card h-100 shadow-sm border-0 position-relative photo-card">
@@ -375,7 +368,6 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="row mt-4 mt-md-5 pt-3 pt-md-4 border-top">
           <div class="col-12 d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2 gap-sm-3">
             <button type="button" class="btn btn-secondary-premium w-100 w-sm-auto" (click)="cancel()">Cancel</button>

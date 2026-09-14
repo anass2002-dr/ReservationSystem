@@ -17,13 +17,11 @@ export class HeaderComponent implements OnInit {
   lang: any = "En"
   rates: any = null;
   
-  // Converter properties
   calcAmount: number = 0;
   calcFrom: string = 'USD';
   calcTo: string = 'TRY';
   calcResult: number = 0;
 
-  // Custom Rates Modal
   customRates: any = { TRY: 0, EUR: 0, GBP: 0 };
   isSavingRates = false;
 

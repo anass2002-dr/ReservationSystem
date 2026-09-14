@@ -33,7 +33,6 @@ export class PaymentsComponent implements OnInit {
 
   activeTab: 'collect' | 'records' = 'collect';
 
-  // Advanced Filters
   filterStartDate: string = '';
   filterEndDate: string = '';
   filterMethod: string = 'all';
@@ -99,7 +98,6 @@ export class PaymentsComponent implements OnInit {
   get filteredTransactions(): any[] {
     const items: any[] = [];
 
-    // Add regular payments
     this.payments.forEach(p => {
       items.push({
         id: p.id,
@@ -114,7 +112,6 @@ export class PaymentsComponent implements OnInit {
       });
     });
 
-    // Add deposits
     this.reservations.forEach(r => {
       if (r.deposit && r.deposit > 0) {
         items.push({
@@ -130,7 +127,6 @@ export class PaymentsComponent implements OnInit {
       }
     });
 
-    // Add unpaid/due balances
     this.reservations.forEach(r => {
       const unpaid = this.getRemainingBalanceForRes(r);
       if (unpaid > 0 && r.status !== 2) {
@@ -147,9 +143,7 @@ export class PaymentsComponent implements OnInit {
       }
     });
 
-    // Apply advanced filters
     return items.filter(item => {
-      // Date filter
       if (this.filterStartDate) {
         const itemDate = item.paymentDate.toString().split('T')[0];
         if (itemDate < this.filterStartDate) return false;
@@ -158,15 +152,12 @@ export class PaymentsComponent implements OnInit {
         const itemDate = item.paymentDate.toString().split('T')[0];
         if (itemDate > this.filterEndDate) return false;
       }
-      // Method filter
       if (this.filterMethod !== 'all') {
         if (item.method.toString() !== this.filterMethod) return false;
       }
-      // Currency filter
       if (this.filterCurrency !== 'all') {
         if (item.currency.toString() !== this.filterCurrency) return false;
       }
-      // Search filter
       if (this.filterSearch) {
         const query = this.filterSearch.toLowerCase();
         const res = this.reservations.find(r => r.id === item.reservationId);
@@ -201,7 +192,6 @@ export class PaymentsComponent implements OnInit {
       ? Number(res.preferredCurrency)
       : PaymentCurrency.USD;
 
-    // Calculate total paid with currency conversion
     const paidFromPayments = this.payments
       .filter(p => p.reservationId === res.id)
       .reduce((sum, p) => {
@@ -216,7 +206,6 @@ export class PaymentsComponent implements OnInit {
 
     const agencyName = res.isAgencyBooking ? (this.agencies.find(a => a.id === res.agencyId)?.name || 'Agency') : '';
 
-    // Get payment details from the first payment record, or fallback to reservation preference
     const firstPayment = this.payments.find(p => p.reservationId === res.id);
     const payMethod = firstPayment ? (firstPayment.method === 1 ? 'CARD' : (firstPayment.method === 2 ? 'TRANSFER' : 'CASH')) : (res.depositMethod === 1 ? 'CARD' : (res.depositMethod === 2 ? 'TRANSFER' : 'CASH'));
     const payCurrency = this.getCurrencyLabel(prefCurrency);
@@ -401,13 +390,11 @@ export class PaymentsComponent implements OnInit {
       next: (data) => {
         this.reservations = data;
 
-        // Auto-open payment modal if navigated from another page
         const resIdStr = this.route.snapshot.queryParams['id'];
         if (resIdStr) {
           const resId = Number(resIdStr);
           const resToOpen = this.reservations.find(r => r.id === resId);
           if (resToOpen) {
-            // Slight delay to ensure UI is ready
             setTimeout(() => this.openPaymentModal(resToOpen), 100);
           }
         }
@@ -417,7 +404,6 @@ export class PaymentsComponent implements OnInit {
   }
 
   get groupedReservations() {
-    // Filter by selected date
     const filtered = this.reservations.filter(r => {
       const rDateStr = typeof r.flightDate === 'string'
         ? r.flightDate.split('T')[0]
@@ -425,10 +411,8 @@ export class PaymentsComponent implements OnInit {
       return rDateStr === this.selectedDate;
     });
 
-    // Group by flight time ID
     const groups: { flightTime: FlightTime, reservations: Reservation[] }[] = [];
 
-    // Create groups for all active flight times to keep the layout consistent
     this.flightTimes.filter(ft => ft.isActive).forEach(ft => {
       groups.push({
         flightTime: ft,
@@ -496,13 +480,11 @@ export class PaymentsComponent implements OnInit {
 
   openPaymentModal(reservation: Reservation): void {
     try {
-      // console.log(reservation);
       this.selectedReservation = reservation;
       this.isEditing = false;
       this.currentPayment = this.createEmptyPayment();
       this.currentPayment.reservationId = reservation.id!;
 
-      // Auto-select the reservation's preferred currency
       if (reservation.preferredCurrency !== undefined && reservation.preferredCurrency !== null) {
         this.currentPayment.currency = reservation.preferredCurrency;
       } else {
@@ -534,7 +516,6 @@ export class PaymentsComponent implements OnInit {
     this.totalAmountDue = this.selectedReservation.totalAmount || 0;
     const deposit = this.selectedReservation.deposit || 0;
 
-    // Sum payments for this reservation, converting each to reservation's preferred currency
     const relatedPayments = this.payments.filter(p => p.reservationId === this.selectedReservation!.id);
     const prefCurrency = (this.selectedReservation.preferredCurrency !== undefined && this.selectedReservation.preferredCurrency !== null)
       ? Number(this.selectedReservation.preferredCurrency)
@@ -638,7 +619,6 @@ export class PaymentsComponent implements OnInit {
     let payAmount = Number(this.amountInPayCurrency);
 
     if (this.isRefundMode) {
-      // Save amount as negative decimal
       payAmount = -Math.abs(payAmount);
       if (!this.currentPayment.notes || !this.currentPayment.notes.includes('[Refund]')) {
         this.currentPayment.notes = `[Refund] ${this.currentPayment.notes || ''}`.trim();

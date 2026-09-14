@@ -47,13 +47,11 @@
       font-size: 15px;
     }
 
-    /* Layout */
     .app-layout {
       display: flex;
       min-height: 100vh;
     }
 
-    /* Sidebar Navigation */
     .manual-sidebar {
       width: var(--sidebar-width);
       background: #ffffff;
@@ -143,7 +141,6 @@
       text-align: center;
     }
 
-    /* Main Content Area */
     .manual-content {
       margin-left: var(--sidebar-width);
       flex: 1;
@@ -151,7 +148,6 @@
       max-width: 1280px;
     }
 
-    /* Top Hero Header */
     .doc-hero {
       background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
       color: white;
@@ -205,7 +201,6 @@
       gap: 6px;
     }
 
-    /* Chapter Cards */
     .doc-chapter {
       background: var(--card-bg);
       border-radius: 18px;
@@ -249,7 +244,6 @@
       font-weight: 600;
     }
 
-    /* Subsections */
     .subsection-title {
       font-family: 'Outfit', sans-serif;
       font-size: 1.22rem;
@@ -266,7 +260,6 @@
       font-size: 1.1rem;
     }
 
-    /* Visual Screenshot Containers */
     .screenshot-card {
       background: #ffffff;
       border: 1px solid var(--border);
@@ -293,7 +286,6 @@
       gap: 8px;
     }
 
-    /* Field Reference Table */
     .field-table-container {
       overflow-x: auto;
       margin: 18px 0 28px 0;
@@ -376,7 +368,6 @@
       border-radius: 4px;
     }
 
-    /* Alert / Callout Boxes */
     .callout {
       border-radius: 12px;
       padding: 16px 20px;
@@ -423,7 +414,6 @@
       color: var(--success);
     }
 
-    /* Step Lists */
     .step-list {
       display: flex;
       flex-direction: column;
@@ -467,7 +457,6 @@
       font-size: 0.9rem;
     }
 
-    /* Print Styles */
     @media print {
       .manual-sidebar {
         display: none !important;
@@ -490,7 +479,6 @@
       }
     }
 
-    /* Responsive */
     @media (max-width: 991.98px) {
       .manual-sidebar {
         display: none;
@@ -505,7 +493,7 @@
 <body>
 
 <div class="app-layout">
-  <!-- Left Navigation Sidebar -->
+  
   <aside class="manual-sidebar">
     <div class="sidebar-header">
       <a href="#" class="brand-logo">
@@ -551,10 +539,8 @@
     </ul>
   </aside>
 
-  <!-- Main Content Area -->
   <main class="manual-content">
-    
-    <!-- Hero Banner -->
+
     <div class="doc-hero" id="overview">
       <h1>Paragliding Flight Operations & Reservation System</h1>
       <p>Official Field & Operations Manual — Comprehensive step-by-step documentation, screenshots, input field rules, and best practices for frontline flight dispatchers, accountants, system administrators, and pilots.</p>
@@ -566,7 +552,6 @@
       </div>
     </div>
 
-    <!-- Chapter 1: Authentication -->
     <section class="doc-chapter" id="login">
       <div class="chapter-header">
         <div>
@@ -622,7 +607,6 @@
       </div>
     </section>
 
-    <!-- Chapter 2: Dashboard -->
     <section class="doc-chapter" id="dashboard">
       <div class="chapter-header">
         <div>
@@ -665,7 +649,6 @@
       </div>
     </section>
 
-    <!-- Chapter 3: Reservations Schedule View -->
     <section class="doc-chapter" id="reservations-kanban">
       <div class="chapter-header">
         <div>
@@ -720,7 +703,6 @@
       </div>
     </section>
 
-    <!-- Chapter 4: Reservations List View -->
     <section class="doc-chapter" id="reservations-list">
       <div class="chapter-header">
         <div>
@@ -784,7 +766,6 @@
       </div>
     </section>
 
-    <!-- Chapter 5: Reservation Form (Field-by-Field Guide) -->
     <section class="doc-chapter" id="reservation-form">
       <div class="chapter-header">
         <div>
@@ -794,7 +775,6 @@
         <span class="route-badge">/reservations/add | /reservations/edit/:id</span>
       </div>
 
-      <!-- Section 5.1: General Info -->
       <h3 class="subsection-title"><i class="bi bi-info-circle-fill"></i> 5.1 General Information & Header</h3>
       <div class="screenshot-card">
         <img src="manual_assets/05_reservation_form_general.png" alt="Form General Info Screenshot">
@@ -910,7 +890,6 @@
         </table>
       </div>
 
-      <!-- Section 5.2: Passenger Details -->
       <h3 class="subsection-title"><i class="bi bi-people-fill"></i> 5.2 Passenger Information & Flight Logistics</h3>
       <div class="screenshot-card">
         <img src="manual_assets/06_reservation_form_passenger.png" alt="Passenger Information Screenshot">
@@ -1019,7 +998,6 @@
         </table>
       </div>
 
-      <!-- Section 5.3: Pickup & Logistics -->
       <h3 class="subsection-title"><i class="bi bi-geo-alt-fill"></i> 5.3 Pickup Logistics, Map & File Uploads</h3>
       <div class="screenshot-card">
         <img src="manual_assets/07_reservation_form_pickup.png" alt="Pickup Map & Attachments Screenshot">
@@ -1087,7 +1065,6 @@
       </div>
     </section>
 
-    <!-- Chapter 6: Pilots & Groups -->
     <section class="doc-chapter" id="pilots">
       <div class="chapter-header">
         <div>
@@ -1104,7 +1081,6 @@
         </div>
       </div>
 
-      <!-- Section 6.1: Add Pilot Modal -->
       <h3 class="subsection-title"><i class="bi bi-person-plus-fill"></i> 6.1 Add / Edit Pilot Form Modal</h3>
       <div class="screenshot-card">
         <img src="manual_assets/08b_pilot_modal.png" alt="Pilot Modal Screenshot">
@@ -1171,7 +1147,6 @@
         </table>
       </div>
 
-      <!-- Section 6.2: Pilot Groups Modal -->
       <h3 class="subsection-title"><i class="bi bi-diagram-3-fill"></i> 6.2 Pilot Groups Management Modal</h3>
       <div class="screenshot-card">
         <img src="manual_assets/08c_pilot_group_modal.png" alt="Pilot Group Modal Screenshot">
@@ -1211,7 +1186,6 @@
       </div>
     </section>
 
-    <!-- Chapter 7: Customers -->
     <section class="doc-chapter" id="customers">
       <div class="chapter-header">
         <div>
@@ -1229,7 +1203,6 @@
       </div>
     </section>
 
-    <!-- Chapter 8: Agencies -->
     <section class="doc-chapter" id="agencies">
       <div class="chapter-header">
         <div>
@@ -1246,7 +1219,6 @@
         </div>
       </div>
 
-      <!-- Section 8.1: Add Agency Modal -->
       <h3 class="subsection-title"><i class="bi bi-plus-circle-fill"></i> 8.1 Add / Edit Agency Form Modal</h3>
       <div class="screenshot-card">
         <img src="manual_assets/10b_agency_modal.png" alt="Agency Modal Screenshot">
@@ -1307,7 +1279,6 @@
       </div>
     </section>
 
-    <!-- Chapter 9: Payments -->
     <section class="doc-chapter" id="payments">
       <div class="chapter-header">
         <div>
@@ -1317,13 +1288,11 @@
         <span class="route-badge">/payments</span>
       </div>
 
-      <!-- Introduction to the Financial Engine -->
       <div class="callout-box callout-tip mb-4">
         <div class="callout-title"><i class="bi bi-info-circle-fill"></i> Operational Mission of the Payment Module</div>
         <p class="mb-0">Operating commercial tandem paragliding in international tourist hotspots like Ölüdeniz / Babadağ requires extreme financial agility. Passengers arrive with varied foreign currencies (<strong>EUR, USD, GBP, Turkish Lira</strong>) and diverse tender types (<strong>Cash, POS Credit Cards, Bank Transfers</strong>). The Payment Module provides front-desk cashiers and flight dispatchers with a real-time settlement hub to collect pending flight balances, apply automatic or custom currency conversion rates, generate 80mm thermal POS customer vouchers, and safely process weather cancellation refunds.</p>
       </div>
 
-      <!-- Section 9.1: Flight Time Payment Dispatch Console -->
       <h3 class="subsection-title"><i class="bi bi-wallet2"></i> 9.1 Daily Flight Time Payment Dispatch Console (Collect Payments Tab)</h3>
       <p>The <strong>Collect Payments</strong> view organizes all scheduled flights for any selected date into sequential flight time slot cards (e.g., <code>08:30</code>, <code>10:30</code>, <code>13:00</code>, <code>15:00</code>, <code>17:00</code>). Cashiers can immediately see which bookings are paid, which have pending balances, and which cancelled flights require deposit refunds.</p>
 
@@ -1391,7 +1360,6 @@
         </table>
       </div>
 
-      <!-- Section 9.2: Payment & Multi-Currency Processing Modal -->
       <h3 class="subsection-title"><i class="bi bi-cash-coin"></i> 9.2 Payment & Multi-Currency Gateway Modal</h3>
       <p>When collecting money at the front desk, the cashier opens the <strong>Payment Modal</strong>. This window features a 4-metric balance summary card, support for 4 major currencies, automatic cross-currency exchange rate conversions, and a single-click <em>Pay All</em> feature.</p>
 
@@ -1402,7 +1370,6 @@
         </div>
       </div>
 
-      <!-- Balance Summary Cards Breakdown -->
       <div class="row g-3 mb-4 text-center">
         <div class="col-6 col-md-3">
           <div class="p-3 bg-white rounded border shadow-sm">
@@ -1434,7 +1401,6 @@
         </div>
       </div>
 
-      <!-- Field-by-Field Reference Table for Payment Modal -->
       <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-input-cursor-text text-primary"></i> Payment Modal Field Reference</h4>
       <div class="field-table-container">
         <table class="field-table">
@@ -1508,7 +1474,6 @@
         </table>
       </div>
 
-      <!-- Step-by-Step SOP for Collecting Payments -->
       <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-list-ol text-primary"></i> Standard Operating Procedure: Collecting Passenger Balance</h4>
       <div class="step-guide">
         <div class="step-item">
@@ -1548,7 +1513,6 @@
         </div>
       </div>
 
-      <!-- Section 9.3: Cancellation & Refund Processing Protocol -->
       <h3 class="subsection-title"><i class="bi bi-arrow-counterclockwise"></i> 9.3 Flight Cancellation & Refund Protocol</h3>
       <div class="callout-box callout-warning mb-4">
         <div class="callout-title"><i class="bi bi-exclamation-triangle-fill"></i> Strict Security Rules for Refund Execution</div>
@@ -1559,7 +1523,6 @@
         </ul>
       </div>
 
-      <!-- Section 9.4: Multi-Currency Accounting Ledger -->
       <h3 class="subsection-title"><i class="bi bi-journal-text"></i> 9.4 Multi-Currency Accounting Ledger (Payment Records Tab)</h3>
       <p>The <strong>Payment Records</strong> tab serves as the official financial ledger and daily cash audit dashboard. It combines all recorded transactions, deposits, and due balances with multi-currency metric counters and export/print tools.</p>
 
@@ -1570,7 +1533,6 @@
         </div>
       </div>
 
-      <!-- Multi-Currency KPI Cards -->
       <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-speedometer2 text-primary"></i> Real-Time Multi-Currency Cash Balance Cards</h4>
       <div class="row g-3 mb-4">
         <div class="col-md-3">
@@ -1603,7 +1565,6 @@
         </div>
       </div>
 
-      <!-- Ledger Filter Engine -->
       <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-funnel-fill text-primary"></i> Ledger Filter & Auditing Tools</h4>
       <div class="field-table-container">
         <table class="field-table">
@@ -1650,7 +1611,6 @@
         </table>
       </div>
 
-      <!-- Section 9.5: 80mm Thermal Bill Voucher Format -->
       <h3 class="subsection-title"><i class="bi bi-printer-fill"></i> 9.5 80mm Thermal Bill & POS Slip Output</h3>
       <p>Clicking the <strong>Printer Icon (<i class="bi bi-printer text-primary"></i>)</strong> on any transaction row generates an industry-standard 80mm thermal receipt formatted specifically for POS slip printers (e.g., Epson, Bixolon, Star Micronics). The window triggers <code>window.print()</code> automatically.</p>
 
@@ -1704,7 +1664,6 @@
       </div>
     </section>
 
-    <!-- Chapter 10: Manage Users -->
     <section class="doc-chapter" id="users">
       <div class="chapter-header">
         <div>
@@ -1776,7 +1735,6 @@
       </div>
     </section>
 
-    <!-- Chapter 11: Flight Packages -->
     <section class="doc-chapter" id="flight-packages">
       <div class="chapter-header">
         <div>
@@ -1832,7 +1790,6 @@
       </div>
     </section>
 
-    <!-- Chapter 12: Flight Time Slots -->
     <section class="doc-chapter" id="flight-times">
       <div class="chapter-header">
         <div>
@@ -1881,7 +1838,6 @@
       </div>
     </section>
 
-    <!-- Chapter 13: Extra Services -->
     <section class="doc-chapter" id="extra-services">
       <div class="chapter-header">
         <div>
@@ -1930,7 +1886,6 @@
       </div>
     </section>
 
-    <!-- Chapter 14: Transport Groups -->
     <section class="doc-chapter" id="transport-groups">
       <div class="chapter-header">
         <div>
@@ -1986,7 +1941,6 @@
       </div>
     </section>
 
-    <!-- Chapter 15: Exchange Rates -->
     <section class="doc-chapter" id="exchange-rates">
       <div class="chapter-header">
         <div>
@@ -2022,7 +1976,6 @@
       </div>
     </section>
 
-    <!-- Chapter 16: Daily SOPs -->
     <section class="doc-chapter" id="daily-checklist">
       <div class="chapter-header">
         <div>
