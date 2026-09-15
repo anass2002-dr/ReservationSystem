@@ -14,16 +14,26 @@ export class LoginComponent implements OnInit {
   loading = false;
   error = '';
   returnUrl = '/';
+  showPassword = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Redirect if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
+  }
+
+  toggleShowPassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  fillDemoCredentials(user: string = 'admin', pass: string = 'admin123'): void {
+    this.username = user;
+    this.password = pass;
+    this.error = '';
   }
 
   ngOnInit(): void {

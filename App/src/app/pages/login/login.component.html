@@ -1,43 +1,192 @@
-<div class="login-page">
-  <div class="login-container">
-    <div class="login-card shadow-lg">
-      <div class="login-header">
-        <div class="logo">
-          <i class="bi bi-airplane-engines-fill"></i>
+<div class="login-wrapper">
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <div class="login-main-card shadow-2xl">
+    <!-- Left Hero & Brand Pane (Desktop) -->
+    <div class="login-hero-pane d-none d-lg-flex flex-column justify-content-between">
+      <div class="hero-top">
+        <div class="hero-brand d-flex align-items-center gap-3 mb-4">
+          <div class="brand-logo-glow">
+            <img src="assets/img/NewLogo.png" alt="Gravity Paragliding" class="brand-logo-img" (error)="logoImg.style.display='none'" #logoImg>
+            <i class="bi bi-airplane-engines-fill text-white fs-2" *ngIf="logoImg.style.display === 'none'"></i>
+          </div>
+          <div>
+            <h4 class="brand-title mb-0">GRAVITY</h4>
+            <span class="brand-subtitle">PARAGLIDING FETHIYE</span>
+          </div>
         </div>
-        <h3>Welcome Back</h3>
-        <p class="text-muted">Reservation Management System</p>
+
+        <div class="hero-badge-pill mb-3">
+          <span class="pulse-dot"></span>
+          <span>Babadağ 1960m • Flight Ops Online</span>
+        </div>
+
+        <h1 class="hero-heading">
+          Tandem Flight & Operations <span class="gradient-text">Control Hub</span>
+        </h1>
+        <p class="hero-desc">
+          Professional cloud dispatch platform for pilot assignments, daily flight schedules, B2B agency reconciliations, and multi-currency passenger ledger.
+        </p>
       </div>
 
-      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-body">
-        <div class="mb-4">
-          <label class="form-label small fw-bold text-uppercase">Username</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
-            <input type="text" name="username" [(ngModel)]="username" class="form-control border-0 bg-light" placeholder="Enter your username" required>
+      <!-- Feature Highlight Badges -->
+      <div class="hero-features d-flex flex-column gap-3 my-4">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="bi bi-calendar2-range-fill"></i>
+          </div>
+          <div>
+            <div class="feature-title">Real-Time Schedule Matrix</div>
+            <div class="feature-subtitle">5+ daily slots from 08:30 to Sunset with drag-and-drop</div>
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="form-label small fw-bold text-uppercase">Password</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
-            <input type="password" name="password" [(ngModel)]="password" class="form-control border-0 bg-light" placeholder="Enter your password" required>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="bi bi-currency-exchange"></i>
+          </div>
+          <div>
+            <div class="feature-title">Multi-Currency Payment Engine</div>
+            <div class="feature-subtitle">Instant conversions across USD, EUR, TRY, and GBP</div>
           </div>
         </div>
 
-        <div *ngIf="error" class="alert alert-danger py-2 small mb-4">
-          <i class="bi bi-exclamation-circle me-2"></i> {{ error }}
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <div>
+            <div class="feature-title">Pilot Equity & Safety Roster</div>
+            <div class="feature-subtitle">Automated workload balancing and passenger weight matching</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-footer text-white-50 small d-flex justify-content-between align-items-center pt-3 border-top border-white border-opacity-10">
+        <span><i class="bi bi-geo-alt-fill text-primary me-1"></i> Ölüdeniz / Babadağ HQ</span>
+        <span class="badge bg-white bg-opacity-10 text-white rounded-pill px-3 py-1">Enterprise v1.0</span>
+      </div>
+    </div>
+
+    <!-- Right Login Form Pane -->
+    <div class="login-form-pane d-flex flex-column justify-content-between">
+      <div>
+        <!-- Mobile/Tablet Brand Header -->
+        <div class="d-lg-none text-center mb-4">
+          <div class="mobile-logo-circle mx-auto mb-2">
+            <img src="assets/img/NewLogo.png" alt="Gravity Paragliding" style="height: 48px; width: auto;" (error)="mobLogo.style.display='none'" #mobLogo>
+            <i class="bi bi-airplane-engines-fill text-primary fs-3" *ngIf="mobLogo.style.display === 'none'"></i>
+          </div>
+          <h4 class="fw-extrabold text-dark mb-0">Gravity Paragliding</h4>
+          <p class="text-muted small">Flight Operations & Reservation System</p>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold" [disabled]="loading">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-          {{ loading ? 'Signing in...' : 'Sign In' }}
-        </button>
-      </form>
+        <div class="form-header mb-4">
+          <h2 class="form-title">Welcome Back</h2>
+          <p class="form-subtitle text-muted">Sign in to your account to access the flight console</p>
+        </div>
 
-      <div class="login-footer text-center mt-4">
-        <p class="text-muted small">© 2026 ReservationSystem. All rights reserved.</p>
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form" novalidate>
+          <!-- Username Input -->
+          <div class="form-group mb-3">
+            <label class="form-label text-dark fw-bold small text-uppercase" for="login-username">
+              Username
+            </label>
+            <div class="custom-input-group">
+              <span class="input-icon">
+                <i class="bi bi-person-circle"></i>
+              </span>
+              <input
+                type="text"
+                id="login-username"
+                name="username"
+                [(ngModel)]="username"
+                class="form-control custom-input"
+                placeholder="Enter your username"
+                required
+                autocomplete="username"
+                [disabled]="loading">
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label text-dark fw-bold small text-uppercase mb-0" for="login-password">
+                Password
+              </label>
+            </div>
+            <div class="custom-input-group">
+              <span class="input-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+              </span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="login-password"
+                name="password"
+                [(ngModel)]="password"
+                class="form-control custom-input pe-5"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+                [disabled]="loading">
+              <button
+                type="button"
+                class="btn-toggle-password"
+                (click)="toggleShowPassword()"
+                tabindex="-1"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                title="Toggle password visibility">
+                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div *ngIf="error" class="custom-alert-danger alert d-flex align-items-center mb-3 animate-fade-in" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-5 me-2 flex-shrink-0"></i>
+            <div class="small fw-semibold">{{ error }}</div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            id="login-submit-btn"
+            class="btn btn-login w-100 rounded-pill fw-bold text-white shadow-sm"
+            [disabled]="loading || !username || !password">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            <span *ngIf="!loading"><i class="bi bi-box-arrow-in-right me-2"></i></span>
+            {{ loading ? 'Signing in...' : 'Sign In to Console' }}
+          </button>
+        </form>
+
+        <!-- Demo Dispatcher Quick-Fill Helper -->
+        <div class="demo-account-box mt-4 p-3 rounded-3 border">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-key-fill text-primary"></i>
+              <span class="small fw-bold text-dark">Staff Dispatch Access:</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-0" style="font-size: 0.75rem;" (click)="fillDemoCredentials('admin', 'admin123')">
+              Auto-Fill
+            </button>
+          </div>
+          <div class="d-flex gap-3 mt-1 small text-muted font-monospace" style="font-size: 0.75rem;">
+            <span>User: <strong class="text-dark">admin</strong></span>
+            <span>•</span>
+            <span>Pass: <strong class="text-dark">admin123</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copyright Footer -->
+      <div class="login-footer text-center mt-4 pt-3 border-top">
+        <p class="copyright-text text-muted small mb-0">
+          © 2026 <strong>Anass dermaj</strong>. All rights reserved.
+        </p>
       </div>
     </div>
   </div>
