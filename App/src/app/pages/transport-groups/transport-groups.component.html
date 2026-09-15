@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1 class="fw-bold text-dark">Transport Groups Management</h1>
+  <h1 class="fw-bold text-dark">{{ 'Transport Groups Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Logistics & Packages</li>
-      <li class="breadcrumb-item active text-primary">Transport Groups</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Logistics & Packages' | translate }}</li>
+      <li class="breadcrumb-item active text-primary">{{ 'Transport Groups' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -18,7 +18,7 @@
           <i class="bi bi-truck-front-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Total Shuttles</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Total Shuttles' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ transportGroups.length }}</h2>
         </div>
       </div>
@@ -32,7 +32,7 @@
           <i class="bi bi-car-front-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Active Fleet Vehicles</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Active Fleet Vehicles' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ uniqueVehiclesCount }}</h2>
         </div>
       </div>
@@ -46,7 +46,7 @@
           <i class="bi bi-person-badge-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Designated Drivers</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Designated Drivers' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ uniqueDriversCount }}</h2>
         </div>
       </div>
@@ -65,7 +65,7 @@
         <input
           type="text"
           class="form-control bg-white border-0 py-2"
-          placeholder="Search by vehicle plate, driver name..."
+          [placeholder]="'Search' | translate"
           [(ngModel)]="searchTerm">
         <button
           *ngIf="searchTerm"
@@ -81,7 +81,7 @@
       <button
         class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold d-flex align-items-center"
         (click)="addTransportGroup()">
-        <i class="bi bi-plus-lg me-2"></i> Add Transport Group
+        <i class="bi bi-plus-lg me-2"></i> {{ 'Add Transport Group' | translate }}
       </button>
     </div>
   </div>
@@ -108,7 +108,7 @@
             <div class="departure-time-box p-3 rounded-3 mb-3 bg-light">
               <div class="d-flex align-items-center text-primary fw-bold mb-1">
                 <i class="bi bi-clock-fill me-2 fs-5"></i>
-                <span class="fs-6">{{ tg.departureTime | date:'HH:mm' }} Shuttle Departure</span>
+                <span class="fs-6">{{ tg.departureTime | date:'HH:mm' }} {{ 'Shuttle Departure' | translate }}</span>
               </div>
               <div class="text-muted small ps-4">
                 <i class="bi bi-calendar3 me-1"></i> {{ tg.departureTime | date:'EEEE, dd MMMM yyyy' }}
@@ -121,7 +121,7 @@
                 <i class="bi bi-person-fill"></i>
               </div>
               <div>
-                <span class="text-muted small d-block">Assigned Driver</span>
+                <span class="text-muted small d-block">{{ 'Assigned Driver' | translate }}</span>
                 <span class="fw-bold text-dark fs-6">{{ tg.driverName || 'Unassigned' }}</span>
               </div>
             </div>
@@ -130,14 +130,14 @@
           <!-- Bottom Action Buttons -->
           <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
             <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 small">
-              <i class="bi bi-shield-check me-1"></i> Mountain Transfer
+              <i class="bi bi-shield-check me-1"></i> {{ 'Mountain Transfer' | translate }}
             </span>
 
             <div class="btn-group shadow-sm rounded-3 overflow-hidden">
-              <button class="btn btn-sm btn-light border text-primary px-3" (click)="editTransportGroup(tg)" title="Edit Shuttle">
+              <button class="btn btn-sm btn-light border text-primary px-3" (click)="editTransportGroup(tg)" [title]="'Edit' | translate">
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteTransportGroup(tg.id!)" title="Delete Shuttle">
+              <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteTransportGroup(tg.id!)" [title]="'Delete' | translate">
                 <i class="bi bi-trash-fill"></i>
               </button>
             </div>
@@ -150,15 +150,12 @@
     <div class="col-12 text-center py-5" *ngIf="filteredTransportGroups.length === 0">
       <div class="p-5 bg-white rounded-4 shadow-sm border">
         <i class="bi bi-truck text-muted display-1 mb-4"></i>
-        <h3 class="fw-bold text-dark">No transport groups found</h3>
-        <p class="text-muted mb-4">
-          {{ searchTerm ? 'No matching shuttles found for your search.' : 'You haven\'t scheduled any mountain transfer shuttles yet.' }}
-        </p>
+        <h3 class="fw-bold text-dark">{{ 'No transport groups found' | translate }}</h3>
         <button *ngIf="!searchTerm" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm" (click)="addTransportGroup()">
-          <i class="bi bi-plus-lg me-2"></i> Schedule First Mountain Shuttle
+          <i class="bi bi-plus-lg me-2"></i> {{ 'Schedule First Mountain Shuttle' | translate }}
         </button>
         <button *ngIf="searchTerm" class="btn btn-outline-secondary px-4 py-2 rounded-pill" (click)="searchTerm = ''">
-          Clear Search
+          {{ 'Clear' | translate }}
         </button>
       </div>
     </div>
@@ -172,7 +169,7 @@
       <div class="modal-header bg-primary text-white border-0 py-3 px-4">
         <h5 class="modal-title fw-bold" id="transportGroupModalLabel">
           <i class="bi bi-truck-front-fill me-2"></i>
-          {{ isEditing ? 'Edit Transport Group' : 'New Transport Group' }}
+          {{ (isEditing ? 'Edit Transport Group' : 'New Transport Group') | translate }}
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
@@ -182,7 +179,7 @@
           <div class="bg-white p-4 rounded-4 border shadow-sm">
             <div class="mb-3">
               <label for="departureTime" class="form-label fw-bold small text-muted text-uppercase">
-                Departure Date & Time <span class="text-danger">*</span>
+                {{ 'Departure Date & Time' | translate }} <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-clock text-muted"></i></span>
@@ -198,7 +195,7 @@
 
             <div class="mb-3">
               <label for="vehiclePlate" class="form-label fw-bold small text-muted text-uppercase">
-                Vehicle Plate Number <span class="text-danger">*</span>
+                {{ 'Vehicle Plate Number' | translate }} <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-car-front text-muted"></i></span>
@@ -215,7 +212,7 @@
 
             <div class="mb-0">
               <label for="driverName" class="form-label fw-bold small text-muted text-uppercase">
-                Driver Full Name <span class="text-danger">*</span>
+                {{ 'Driver Full Name' | translate }} <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
@@ -233,12 +230,12 @@
         </div>
 
         <div class="modal-footer border-0 p-3 bg-light">
-          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">{{ 'Cancel' | translate }}</button>
           <button
             type="submit"
             class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm"
             [disabled]="!tgForm.form.valid">
-            {{ isEditing ? 'Save Changes' : 'Create Shuttle' }}
+            {{ (isEditing ? 'Save Changes' : 'Create') | translate }}
           </button>
         </div>
       </form>

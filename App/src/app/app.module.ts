@@ -82,6 +82,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { SafePipe } from './pipes/safe.pipe';
+import { TranslatePipe } from './pipes/translate.pipe';
 @NgModule({
     declarations: [
         AppComponent,
@@ -132,7 +133,8 @@ import { SafePipe } from './pipes/safe.pipe';
         LoginComponent,
         ProfileComponent,
         UserManagementComponent,
-        SafePipe
+        SafePipe,
+        TranslatePipe
     ],
     bootstrap: [AppComponent] // This is correct
     , imports: [BrowserModule,

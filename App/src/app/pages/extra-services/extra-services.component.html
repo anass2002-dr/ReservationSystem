@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1 class="fw-bold text-dark">Extra Services Management</h1>
+  <h1 class="fw-bold text-dark">{{ 'Extra Services Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Logistics & Packages</li>
-      <li class="breadcrumb-item active text-primary">Extra Services</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Logistics & Packages' | translate }}</li>
+      <li class="breadcrumb-item active text-primary">{{ 'Extra Services' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -18,7 +18,7 @@
           <i class="bi bi-camera-reels-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Total Services</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Total Services' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ extraServices.length }}</h2>
         </div>
       </div>
@@ -32,7 +32,7 @@
           <i class="bi bi-cash-coin fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Average Price</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Average Price' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ averagePrice | currency:'USD':'symbol':'1.0-0' }}</h2>
         </div>
       </div>
@@ -46,7 +46,7 @@
           <i class="bi bi-camera-video-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Photo & Video Add-ons</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Photo & Video Add-ons' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ mediaServicesCount }}</h2>
         </div>
       </div>
@@ -65,7 +65,7 @@
         <input
           type="text"
           class="form-control bg-white border-0 py-2"
-          placeholder="Search extra services..."
+          [placeholder]="'Search' | translate"
           [(ngModel)]="searchTerm">
         <button
           *ngIf="searchTerm"
@@ -81,7 +81,7 @@
       <button
         class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold d-flex align-items-center"
         (click)="addExtraService()">
-        <i class="bi bi-plus-lg me-2"></i> Add Extra Service
+        <i class="bi bi-plus-lg me-2"></i> {{ 'Add Extra Service' | translate }}
       </button>
     </div>
   </div>
@@ -110,15 +110,15 @@
 
           <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
             <div>
-              <span class="text-muted small d-block">Retail Price</span>
+              <span class="text-muted small d-block">{{ 'Retail Price' | translate }}</span>
               <span class="fs-4 fw-bold text-dark">{{ es.price | currency:'USD':'symbol':'1.2-2' }}</span>
             </div>
 
             <div class="btn-group shadow-sm rounded-3 overflow-hidden">
-              <button class="btn btn-sm btn-light border text-primary px-3" (click)="editExtraService(es)" title="Edit Service">
+              <button class="btn btn-sm btn-light border text-primary px-3" (click)="editExtraService(es)" [title]="'Edit' | translate">
                 <i class="bi bi-pencil-fill"></i>
               </button>
-              <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteExtraService(es.id!)" title="Delete Service">
+              <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteExtraService(es.id!)" [title]="'Delete' | translate">
                 <i class="bi bi-trash-fill"></i>
               </button>
             </div>
@@ -131,15 +131,12 @@
     <div class="col-12 text-center py-5" *ngIf="filteredExtraServices.length === 0">
       <div class="p-5 bg-white rounded-4 shadow-sm border">
         <i class="bi bi-camera-reels text-muted display-1 mb-4"></i>
-        <h3 class="fw-bold text-dark">No extra services found</h3>
-        <p class="text-muted mb-4">
-          {{ searchTerm ? 'No matching services found for your search.' : 'You haven\'t added any ancillary add-on services yet.' }}
-        </p>
+        <h3 class="fw-bold text-dark">{{ 'No extra services found' | translate }}</h3>
         <button *ngIf="!searchTerm" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm" (click)="addExtraService()">
-          <i class="bi bi-plus-lg me-2"></i> Add Your First Extra Service
+          <i class="bi bi-plus-lg me-2"></i> {{ 'Add Extra Service' | translate }}
         </button>
         <button *ngIf="searchTerm" class="btn btn-outline-secondary px-4 py-2 rounded-pill" (click)="searchTerm = ''">
-          Clear Search
+          {{ 'Clear' | translate }}
         </button>
       </div>
     </div>
@@ -153,7 +150,7 @@
       <div class="modal-header bg-primary text-white border-0 py-3 px-4">
         <h5 class="modal-title fw-bold" id="extraServiceModalLabel">
           <i class="bi bi-camera-reels-fill me-2"></i>
-          {{ isEditing ? 'Edit Extra Service' : 'Add New Extra Service' }}
+          {{ (isEditing ? 'Edit Extra Service' : 'Add New Extra Service') | translate }}
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
@@ -163,7 +160,7 @@
           <div class="bg-white p-4 rounded-4 border shadow-sm">
             <div class="mb-3">
               <label for="serviceName" class="form-label fw-bold small text-muted text-uppercase">
-                Service Name <span class="text-danger">*</span>
+                {{ 'Service Name' | translate }} <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-tag text-muted"></i></span>
@@ -180,7 +177,7 @@
 
             <div class="mb-0">
               <label for="servicePrice" class="form-label fw-bold small text-muted text-uppercase">
-                Price (USD) <span class="text-danger">*</span>
+                {{ 'Price' | translate }} (USD) <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-currency-dollar text-muted"></i></span>
@@ -199,12 +196,12 @@
         </div>
 
         <div class="modal-footer border-0 p-3 bg-light">
-          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">{{ 'Cancel' | translate }}</button>
           <button
             type="submit"
             class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm"
             [disabled]="!esForm.form.valid">
-            {{ isEditing ? 'Save Changes' : 'Create Service' }}
+            {{ (isEditing ? 'Save Changes' : 'Create') | translate }}
           </button>
         </div>
       </form>

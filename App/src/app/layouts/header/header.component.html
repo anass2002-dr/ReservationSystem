@@ -24,14 +24,14 @@
     <button *ngIf="authService.isAdmin()"
       class="btn btn-sm btn-outline-primary ms-3 rounded-pill px-3 shadow-sm d-flex align-items-center"
       data-bs-toggle="modal" data-bs-target="#updateRateModal" (click)="openRatesModal()">
-      <i class="bi bi-currency-exchange me-1"></i> Update Rate
+      <i class="bi bi-currency-exchange me-1"></i> {{ 'Update Rate' | translate }}
     </button>
   </div>
 
   <!-- Quick Converter -->
   <div class="quick-converter d-flex align-items-center ms-auto d-none d-xl-flex me-4">
     <i class="bi bi-calculator text-primary me-2"></i>
-    <input type="number" class="converter-input" [(ngModel)]="calcAmount" (input)="calculate()" placeholder="Amount">
+    <input type="number" class="converter-input" [(ngModel)]="calcAmount" (input)="calculate()" [placeholder]="'Amount' | translate">
 
     <select class="converter-select" [(ngModel)]="calcFrom" (change)="calculate()">
       <option *ngFor="let c of displayCurrencies" [value]="c">{{ c }}</option>
@@ -50,22 +50,49 @@
 
   <nav class="header-nav ms-auto ms-xl-0">
     <ul class="d-flex align-items-center">
-      <li class="nav-item dropdown">
-        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i *ngIf="lang=='En'" class="flag-united-kingdom flag m-0"></i>
-          <i *ngIf="lang=='Fr'" class="flag-france flag m-0"></i>
-          <i *ngIf="lang=='Ar'" class="flag-saudi-arabia flag m-0"></i>
+      <!-- Language Switcher Dropdown (English <-> Turkish) -->
+      <li class="nav-item dropdown pe-2">
+        <a class="nav-link nav-icon d-flex align-items-center gap-2 px-2 py-1 rounded-pill border bg-light text-dark fw-bold"
+           href="javascript:void(0)"
+           data-bs-toggle="dropdown"
+           style="font-size: 0.85rem; text-decoration: none;"
+           title="Switch Language / Dil Değiştir">
+          <span class="fs-6" *ngIf="currentLang === 'en'">🇬🇧</span>
+          <span class="fs-6" *ngIf="currentLang === 'tr'">🇹🇷</span>
+          <span class="d-none d-sm-inline">{{ currentLang === 'en' ? 'EN' : 'TR' }}</span>
+          <i class="bi bi-chevron-down small text-muted" style="font-size: 0.7rem;"></i>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-          <li><span class="dropdown-item" (click)="changeLangue('En')"><i
-                class="flag-united-kingdom flag me-2"></i>English</span></li>
-          <li><span class="dropdown-item" (click)="changeLangue('Fr')"><i
-                class="flag-france flag me-2"></i>Français</span></li>
-          <li><span class="dropdown-item" (click)="changeLangue('Ar')"><i
-                class="flag-saudi-arabia flag me-2"></i>Arabe</span></li>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 py-2 mt-2">
+          <li>
+            <a class="dropdown-item d-flex align-items-center justify-content-between py-2 px-3 cursor-pointer"
+               [class.active]="currentLang === 'en'"
+               [class.bg-primary]="currentLang === 'en'"
+               [class.text-white]="currentLang === 'en'"
+               (click)="changeLangue('en')">
+              <div class="d-flex align-items-center">
+                <span class="fs-5 me-2">🇬🇧</span>
+                <span class="fw-semibold">English</span>
+              </div>
+              <i class="bi bi-check-lg ms-3" *ngIf="currentLang === 'en'"></i>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center justify-content-between py-2 px-3 cursor-pointer"
+               [class.active]="currentLang === 'tr'"
+               [class.bg-primary]="currentLang === 'tr'"
+               [class.text-white]="currentLang === 'tr'"
+               (click)="changeLangue('tr')">
+              <div class="d-flex align-items-center">
+                <span class="fs-5 me-2">🇹🇷</span>
+                <span class="fw-semibold">Türkçe</span>
+              </div>
+              <i class="bi bi-check-lg ms-3" *ngIf="currentLang === 'tr'"></i>
+            </a>
+          </li>
         </ul>
       </li>
 
+      <!-- User Profile Dropdown -->
       <li class="nav-item dropdown pe-3 text-dark">
         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
           <img [src]="user?.profileImageUrl || 'assets/img/me.jpg'" alt="Profile" class="rounded-circle"
@@ -82,14 +109,14 @@
             <hr class="dropdown-divider">
           </li>
           <li><a class="dropdown-item d-flex align-items-center text-dark" routerLink="/profile"><i
-                class="bi bi-person"></i><span>My Profile</span></a></li>
+                class="bi bi-person"></i><span>{{ 'My Profile' | translate }}</span></a></li>
           <li *ngIf="authService.isAdmin()"><a class="dropdown-item d-flex align-items-center text-dark"
-              routerLink="/admin/users"><i class="bi bi-people"></i><span>Manage Users</span></a></li>
+              routerLink="/admin/users"><i class="bi bi-people"></i><span>{{ 'Manage Users' | translate }}</span></a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
           <li><a class="dropdown-item d-flex align-items-center text-danger cursor-pointer" (click)="logout()"><i
-                class="bi bi-box-arrow-right"></i><span>Sign Out</span></a></li>
+                class="bi bi-box-arrow-right"></i><span>{{ 'Sign Out' | translate }}</span></a></li>
         </ul>
       </li>
     </ul>
@@ -101,7 +128,7 @@
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content border-0 shadow-lg">
       <div class="modal-header bg-primary text-white border-0 py-3">
-        <h5 class="modal-title fw-bold"><i class="bi bi-currency-exchange me-2"></i>Update Exchange Rates</h5>
+        <h5 class="modal-title fw-bold"><i class="bi bi-currency-exchange me-2"></i>{{ 'Update Rate' | translate }}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" id="closeRatesModalBtn"
           aria-label="Close"></button>
       </div>
@@ -134,7 +161,7 @@
           <div class="d-grid mt-4">
             <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm"
               [disabled]="!rateForm.form.valid || isSavingRates">
-              <span *ngIf="!isSavingRates">Save Rates</span>
+              <span *ngIf="!isSavingRates">{{ 'Save' | translate }}</span>
               <div *ngIf="isSavingRates" class="spinner-border spinner-border-sm text-white" role="status"></div>
             </button>
           </div>

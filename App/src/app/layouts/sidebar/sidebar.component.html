@@ -4,25 +4,25 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileSidebar()">
         <i class="bi bi-grid"></i>
-        <span class="toggle-sidebar_text">Dashboard</span>
+        <span class="toggle-sidebar_text">{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-heading">Core</li>
+    <li class="nav-heading">{{ 'Core' | translate }}</li>
 
     <li class="nav-item">
       <a class="nav-link collapsed" routerLink="/reservations" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-calendar-check"></i>
-        <span class="toggle-sidebar_text">Reservations</span>
+        <span class="toggle-sidebar_text">{{ 'Reservations' | translate }}</span>
       </a>
     </li>
 
     <li class="nav-item">
-      <a class="nav-link collapsed" routerLink="/Customers" routerLinkActive="active"
+      <a class="nav-link collapsed" routerLink="/customers" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-people"></i>
-        <span class="toggle-sidebar_text">Customers</span>
+        <span class="toggle-sidebar_text">{{ 'Customers' | translate }}</span>
       </a>
     </li>
 
@@ -30,7 +30,7 @@
       <a class="nav-link collapsed" routerLink="/agencies" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-building"></i>
-        <span class="toggle-sidebar_text">Agencies</span>
+        <span class="toggle-sidebar_text">{{ 'Agencies' | translate }}</span>
       </a>
     </li>
 
@@ -38,7 +38,7 @@
       <a class="nav-link collapsed" routerLink="/payments" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-cash-stack"></i>
-        <span class="toggle-sidebar_text">Payments</span>
+        <span class="toggle-sidebar_text">{{ 'Payments' | translate }}</span>
       </a>
     </li>
 
@@ -46,65 +46,63 @@
       <a class="nav-link collapsed" routerLink="/exchange-rates" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: false}" (click)="closeMobileSidebar()">
         <i class="bi bi-currency-exchange"></i>
-        <span class="toggle-sidebar_text">Exchange Rates</span>
+        <span class="toggle-sidebar_text">{{ 'Exchange Rates' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-heading">Setup</li>
+    <li class="nav-heading">{{ 'Setup' | translate }}</li>
 
     <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#setup-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-gear"></i><span class="toggle-sidebar_text">Configuration</span>
+        <i class="bi bi-gear"></i><span class="toggle-sidebar_text">{{ 'Configuration' | translate }}</span>
         <i class="bi bi-chevron-down toggle-sidebar_text ms-auto"></i>
       </a>
       <ul id="setup-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-
         <li>
           <a routerLink="/pilots" routerLinkActive="active" (click)="closeMobileSidebar()">
-            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Pilots</span>
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">{{ 'Pilots' | translate }}</span>
           </a>
         </li>
         <li>
           <a routerLink="/transport-groups" routerLinkActive="active" (click)="closeMobileSidebar()">
-            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Transport Groups</span>
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">{{ 'Transport Groups' | translate }}</span>
           </a>
         </li>
         <li>
           <a routerLink="/flight-packages" routerLinkActive="active" (click)="closeMobileSidebar()">
-            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Packages</span>
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">{{ 'Flight Packages' | translate }}</span>
           </a>
         </li>
         <li>
           <a routerLink="/extra-services" routerLinkActive="active" (click)="closeMobileSidebar()">
-            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Extra Services</span>
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">{{ 'Extra Services' | translate }}</span>
           </a>
         </li>
         <li>
           <a routerLink="/flight-times" routerLinkActive="active" (click)="closeMobileSidebar()">
-            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">Flight Times</span>
+            <i class="bi bi-circle"></i><span class="toggle-sidebar_text">{{ 'Flight Times' | translate }}</span>
           </a>
         </li>
       </ul>
     </li>
 
-    <li class="nav-heading" *ngIf="authService.isAdmin()">Admin</li>
+    <li class="nav-heading" *ngIf="authService.isAdmin()">{{ 'Admin' | translate }}</li>
 
     <li class="nav-item" *ngIf="authService.isAdmin()">
       <a class="nav-link collapsed" routerLink="/admin/users" routerLinkActive="active" (click)="closeMobileSidebar()">
         <i class="bi bi-person-badge"></i>
-        <span class="toggle-sidebar_text">Manage Users</span>
+        <span class="toggle-sidebar_text">{{ 'Manage Users' | translate }}</span>
       </a>
     </li>
 
-    <li class="nav-heading">Help</li>
+    <li class="nav-heading">{{ 'Help' | translate }}</li>
 
     <li class="nav-item">
       <a class="nav-link collapsed" href="assets/manual/SYSTEM_USER_MANUAL.html" target="_blank" (click)="closeMobileSidebar()" title="System User Manual">
         <i class="bi bi-book"></i>
-        <span class="toggle-sidebar_text">User Manual</span>
+        <span class="toggle-sidebar_text">{{ 'User Manual' | translate }}</span>
         <i class="bi bi-box-arrow-up-right toggle-sidebar_text ms-auto small text-muted"></i>
       </a>
     </li>
   </ul>
-
 </aside>

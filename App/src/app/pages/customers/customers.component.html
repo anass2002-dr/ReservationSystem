@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1 class="fw-bold text-dark">Customers Management</h1>
+  <h1 class="fw-bold text-dark">{{ 'Customers Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Entities</li>
-      <li class="breadcrumb-item active text-primary">Customers</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Entities' | translate }}</li>
+      <li class="breadcrumb-item active text-primary">{{ 'Customers' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -18,7 +18,7 @@
           <i class="bi bi-people-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Total Customers</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Total Customers' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ customers.length }}</h2>
         </div>
       </div>
@@ -32,7 +32,7 @@
           <i class="bi bi-globe2 fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Nationalities</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'Nationalities' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ uniqueCountriesCount }}</h2>
         </div>
       </div>
@@ -46,7 +46,7 @@
           <i class="bi bi-person-check-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">With Contact Info</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">{{ 'With Contact Info' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ contactableCount }}</h2>
         </div>
       </div>
@@ -68,7 +68,7 @@
             <input
               type="text"
               class="form-control bg-light border-0 py-2"
-              placeholder="Search by customer name, phone, email, country..."
+              [placeholder]="'Search' | translate"
               [(ngModel)]="searchTerm">
             <button
               *ngIf="searchTerm"
@@ -84,7 +84,7 @@
           <button
             class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold d-flex align-items-center"
             (click)="addCustomer()">
-            <i class="bi bi-person-plus-fill me-2"></i> Add Customer
+            <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Customer' | translate }}
           </button>
         </div>
       </div>
@@ -95,12 +95,12 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th scope="col" class="ps-4 text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">Customer</th>
-              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">Date of Birth & Age</th>
-              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">Phone Number</th>
-              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">Email</th>
-              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">Country</th>
-              <th scope="col" class="text-muted text-uppercase text-end pe-4" style="font-size: 0.75rem; font-weight: 700;">Actions</th>
+              <th scope="col" class="ps-4 text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">{{ 'Customer' | translate }}</th>
+              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">{{ 'Date of Birth & Age' | translate }}</th>
+              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">{{ 'Phone Number' | translate }}</th>
+              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">{{ 'Email' | translate }}</th>
+              <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem; font-weight: 700;">{{ 'Country' | translate }}</th>
+              <th scope="col" class="text-muted text-uppercase text-end pe-4" style="font-size: 0.75rem; font-weight: 700;">{{ 'Actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -130,14 +130,14 @@
                   <i class="bi bi-telephone text-primary me-2"></i>
                   <span class="fw-medium text-dark">{{ c.phoneNumber }}</span>
                 </div>
-                <span *ngIf="!c.phoneNumber" class="text-muted small">No phone</span>
+                <span *ngIf="!c.phoneNumber" class="text-muted small">-</span>
               </td>
               <td>
                 <div *ngIf="c.email" class="d-flex align-items-center">
                   <i class="bi bi-envelope text-muted me-2"></i>
                   <span class="text-dark">{{ c.email }}</span>
                 </div>
-                <span *ngIf="!c.email" class="text-muted small">No email</span>
+                <span *ngIf="!c.email" class="text-muted small">-</span>
               </td>
               <td>
                 <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace" *ngIf="c.country">
@@ -147,10 +147,10 @@
               </td>
               <td class="text-end pe-4">
                 <div class="btn-group shadow-sm rounded-3 overflow-hidden">
-                  <button class="btn btn-sm btn-light border text-primary px-3" (click)="editCustomer(c)" title="Edit Customer">
+                  <button class="btn btn-sm btn-light border text-primary px-3" (click)="editCustomer(c)" [title]="'Edit' | translate">
                     <i class="bi bi-pencil-fill"></i>
                   </button>
-                  <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteCustomer(c.id!)" title="Delete Customer">
+                  <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteCustomer(c.id!)" [title]="'Delete' | translate">
                     <i class="bi bi-trash-fill"></i>
                   </button>
                 </div>
@@ -164,15 +164,12 @@
                   <div class="rounded-circle bg-light d-inline-flex p-4 mb-3">
                     <i class="bi bi-people text-muted display-6"></i>
                   </div>
-                  <h5 class="fw-bold text-dark">No customers found</h5>
-                  <p class="text-muted small mb-3">
-                    {{ searchTerm ? 'No matching customers found for your search query.' : 'You have not added any customer profiles yet.' }}
-                  </p>
+                  <h5 class="fw-bold text-dark">{{ 'No customers found' | translate }}</h5>
                   <button *ngIf="!searchTerm" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm" (click)="addCustomer()">
-                    <i class="bi bi-person-plus-fill me-2"></i> Add Your First Customer
+                    <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Your First Customer' | translate }}
                   </button>
                   <button *ngIf="searchTerm" class="btn btn-outline-secondary px-4 py-2 rounded-pill" (click)="searchTerm = ''">
-                    Clear Search Filter
+                    {{ 'Clear' | translate }}
                   </button>
                 </div>
               </td>
@@ -191,7 +188,7 @@
       <div class="modal-header bg-primary text-white border-0 py-3 px-4">
         <h5 class="modal-title fw-bold" id="customerModalLabel">
           <i class="bi bi-person-badge-fill me-2"></i>
-          {{ isEditing ? 'Edit Customer' : 'Add New Customer' }}
+          {{ (isEditing ? 'Edit Customer' : 'Add New Customer') | translate }}
         </h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
@@ -201,7 +198,7 @@
           <div class="bg-white p-4 rounded-4 border shadow-sm mb-3">
             <div class="mb-3">
               <label for="fullName" class="form-label fw-bold small text-muted text-uppercase">
-                Full Name <span class="text-danger">*</span>
+                {{ 'Full Name' | translate }} <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
@@ -219,7 +216,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="phoneNumber" class="form-label fw-bold small text-muted text-uppercase">
-                  Phone Number <span class="text-danger">*</span>
+                  {{ 'Phone Number' | translate }} <span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                   <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-muted"></i></span>
@@ -236,7 +233,7 @@
 
               <div class="col-md-6 mb-3">
                 <label for="dateOfBirth" class="form-label fw-bold small text-muted text-uppercase">
-                  Date of Birth <span class="text-danger">*</span>
+                  {{ 'Date of Birth' | translate }} <span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                   <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar text-muted"></i></span>
@@ -257,7 +254,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="email" class="form-label fw-bold small text-muted text-uppercase">Email Address</label>
+              <label for="email" class="form-label fw-bold small text-muted text-uppercase">{{ 'Email Address' | translate }}</label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
                 <input
@@ -271,7 +268,7 @@
             </div>
 
             <div class="mb-0">
-              <label class="form-label fw-bold small text-muted text-uppercase">Country / Nationality</label>
+              <label class="form-label fw-bold small text-muted text-uppercase">{{ 'Country / Nationality' | translate }}</label>
               <ng-select
                 [items]="countries"
                 bindLabel="name"
@@ -286,12 +283,12 @@
         </div>
 
         <div class="modal-footer border-0 p-3 bg-light">
-          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">{{ 'Cancel' | translate }}</button>
           <button
             type="submit"
             class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm"
             [disabled]="!customerForm.form.valid">
-            {{ isEditing ? 'Save Changes' : 'Create Customer' }}
+            {{ (isEditing ? 'Save Changes' : 'Create') | translate }}
           </button>
         </div>
       </form>

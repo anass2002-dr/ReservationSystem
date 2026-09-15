@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common'
+import { DOCUMENT } from '@angular/common';
 import { ReservationPG } from '../../../main';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyService } from '../../services/currency.service';
 import { AuthService, User } from '../../services/auth.service';
+import { LanguageService, SupportedLanguage } from '../../services/language.service';
 
 @Component({
   selector: 'app-header',
@@ -12,9 +13,8 @@ import { AuthService, User } from '../../services/auth.service';
   standalone: false
 })
 export class HeaderComponent implements OnInit {
-  public dossiers: Record<string, any>[] = []
+  public dossiers: Record<string, any>[] = [];
   public user: User | null = null;
-  lang: any = "En"
   rates: any = null;
   
   calcAmount: number = 0;
@@ -32,7 +32,8 @@ export class HeaderComponent implements OnInit {
     private route: ActivatedRoute, 
     private router: Router,
     private currencyService: CurrencyService,
-    public authService: AuthService
+    public authService: AuthService,
+    public languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +42,10 @@ export class HeaderComponent implements OnInit {
       this.rates = data;
       this.calculate();
     });
-    this.lang = window.localStorage.getItem('lang');
+  }
+
+  get currentLang(): SupportedLanguage {
+    return this.languageService.currentLanguage;
   }
 
   calculate(): void {
@@ -49,6 +53,7 @@ export class HeaderComponent implements OnInit {
       this.calcResult = this.currencyService.convert(this.calcAmount, this.calcFrom, this.calcTo);
     }
   }
+
   sidebarToggle() {
     if (window.innerWidth < 992) {
       document.body.classList.toggle('mobile-sidebar-open');
@@ -88,8 +93,7 @@ export class HeaderComponent implements OnInit {
   }
 
   changeLangue(lang: string) {
-    window.localStorage.setItem('lang', lang)
-    window.location.reload()
+    this.languageService.setLanguage(lang as SupportedLanguage);
   }
 
   logout() {
