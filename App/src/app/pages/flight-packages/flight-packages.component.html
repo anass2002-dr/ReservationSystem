@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1 class="fw-bold text-dark">Flight Packages</h1>
+  <h1 class="fw-bold text-dark">{{ 'Flight Packages' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Logistics & Packages</li>
-      <li class="breadcrumb-item active text-primary">Flight Packages</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Logistics & Packages' | translate }}</li>
+      <li class="breadcrumb-item active text-primary">{{ 'Flight Packages' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -12,10 +12,10 @@
 <section class="section">
   <div class="row mb-4">
     <div class="col-12 d-flex justify-content-between align-items-center">
-      <p class="text-muted mb-0">Manage your available flight packages and pricing tiers.</p>
+      <p class="text-muted mb-0">{{ 'Manage your available flight packages and pricing tiers.' | translate }}</p>
       <button class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold" data-bs-toggle="modal"
         data-bs-target="#flightPackageModal" (click)="addFlightPackage()">
-        <i class="bi bi-plus-lg me-2"></i> Add New Package
+        <i class="bi bi-plus-lg me-2"></i> {{ 'Add New Package' | translate }}
       </button>
     </div>
   </div>
@@ -31,23 +31,22 @@
         <h3 class="package-title">{{fp.title}}</h3>
         <div class="package-price">
           {{fp.price | currency:'USD':'symbol':'1.0-0'}}
-          <small>/ person</small>
+          <small>/ {{ 'person' | translate }}</small>
         </div>
       </div>
 
       <div class="package-body">
-        <p class="package-details" [title]="fp.details || 'No details provided'">
-          {{fp.details || 'Explore the skies with this premium paragliding experience. Perfect for thrill-seekers and
-          nature lovers alike.'}}
+        <p class="package-details" [title]="fp.details || ('No details provided' | translate)">
+          {{fp.details || ('Explore the skies with this premium paragliding experience. Perfect for thrill-seekers and nature lovers alike.' | translate)}}
         </p>
         <div class="d-flex gap-2">
           <span
             class="badge bg-light text-primary border border-primary border-opacity-10 px-3 py-2 rounded-pill small">
-            <i class="bi bi-clock me-1"></i> 20-30 min
+            <i class="bi bi-clock me-1"></i> {{ '20-30 min' | translate }}
           </span>
           <span
             class="badge bg-light text-success border border-success border-opacity-10 px-3 py-2 rounded-pill small">
-            <i class="bi bi-camera-video me-1"></i> Photos and videos
+            <i class="bi bi-camera-video me-1"></i> {{ 'Photos and videos' | translate }}
           </span>
         </div>
       </div>
@@ -56,10 +55,10 @@
         <span class="text-muted small">ID: #{{fp.id}}</span>
         <div class="d-flex gap-2">
           <button class="btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#flightPackageModal"
-            (click)="editFlightPackage(fp)" title="Edit Package">
+            (click)="editFlightPackage(fp)" [title]="'Edit' | translate">
             <i class="bi bi-pencil-fill"></i>
           </button>
-          <button class="btn-action btn-delete" (click)="deleteFlightPackage(fp.id!)" title="Delete Package">
+          <button class="btn-action btn-delete" (click)="deleteFlightPackage(fp.id!)" [title]="'Delete' | translate">
             <i class="bi bi-trash-fill"></i>
           </button>
         </div>
@@ -71,11 +70,11 @@
     <div class="col-12 text-center py-5">
       <div class="p-5 bg-white rounded-4 shadow-sm border">
         <i class="bi bi-inbox text-muted display-1 mb-4"></i>
-        <h3 class="fw-bold">No packages found</h3>
-        <p class="text-muted mb-4">You haven't created any flight packages yet. Start by adding one!</p>
+        <h3 class="fw-bold">{{ 'No packages found' | translate }}</h3>
+        <p class="text-muted mb-4">{{ 'You haven\'t created any flight packages yet. Start by adding one!' | translate }}</p>
         <button class="btn btn-primary px-5 py-3 rounded-pill" data-bs-toggle="modal"
           data-bs-target="#flightPackageModal" (click)="addFlightPackage()">
-          Create Your First Package
+          {{ 'Create Your First Package' | translate }}
         </button>
       </div>
     </div>
@@ -91,19 +90,19 @@
       <div class="modal-header">
         <h5 class="modal-title" id="flightPackageModalLabel">
           <i class="bi bi-box-seam me-2 text-primary"></i>
-          {{ isEditing ? 'Edit Flight Package' : 'Create New Package' }}
+          {{ (isEditing ? 'Edit Flight Package' : 'Create New Package') | translate }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #fpForm="ngForm">
           <div class="mb-4">
-            <label for="packageTitle" class="form-label">Package Title <span class="text-danger">*</span></label>
+            <label for="packageTitle" class="form-label">{{ 'Package Title' | translate }} <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="packageTitle" name="title" [(ngModel)]="currentPackage.title"
               required placeholder="e.g. Standard Flight, VIP Experience">
           </div>
           <div class="mb-4">
-            <label for="packagePrice" class="form-label">Price (USD) <span class="text-danger">*</span></label>
+            <label for="packagePrice" class="form-label">{{ 'Price' | translate }} (USD) <span class="text-danger">*</span></label>
             <div class="input-group">
               <span class="input-group-text bg-light border-end-0"
                 style="border: 2px solid #f1f3f5; border-radius: 12px 0 0 12px;"><i
@@ -114,17 +113,17 @@
             </div>
           </div>
           <div class="mb-2">
-            <label for="packageDetails" class="form-label">Package Description</label>
+            <label for="packageDetails" class="form-label">{{ 'Package Description' | translate }}</label>
             <textarea class="form-control" id="packageDetails" name="details" [(ngModel)]="currentPackage.details"
-              rows="4" placeholder="Describe what's included in this package..."></textarea>
+              rows="4" [placeholder]="'Describe what\'s included in this package...' | translate"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold" data-bs-dismiss="modal">{{ 'Cancel' | translate }}</button>
         <button type="button" class="btn btn-primary btn-save" (click)="saveFlightPackage()"
           [disabled]="!fpForm.form.valid">
-          {{ isEditing ? 'Save Changes' : 'Create Package' }}
+          {{ (isEditing ? 'Save Changes' : 'Create Package') | translate }}
         </button>
       </div>
     </div>

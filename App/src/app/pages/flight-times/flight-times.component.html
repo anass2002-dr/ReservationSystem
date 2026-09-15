@@ -1,9 +1,9 @@
 <div class="pagetitle">
-  <h1>Flight Time Management</h1>
+  <h1>{{ 'Flight Time Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item active">Flight Times</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item active">{{ 'Flight Times' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -14,7 +14,7 @@
     <div class="col-lg-8">
       <div class="card shadow-sm border-0">
         <div class="card-body">
-          <h5 class="card-title">Available Time Slots</h5>
+          <h5 class="card-title">{{ 'Available Time Slots' | translate }}</h5>
           
           <div *ngIf="isLoading" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
@@ -26,9 +26,9 @@
             <table class="table table-hover align-middle">
               <thead class="bg-light">
                 <tr>
-                  <th class="ps-4">Time Slot</th>
-                  <th>Status</th>
-                  <th class="text-end pe-4">Actions</th>
+                  <th class="ps-4">{{ 'Time Slot' | translate }}</th>
+                  <th>{{ 'Status' | translate }}</th>
+                  <th class="text-end pe-4">{{ 'Actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -36,20 +36,20 @@
                   <td class="ps-4 fw-bold text-primary">{{ item.time }}</td>
                   <td>
                     <span class="badge rounded-pill" [ngClass]="item.isActive ? 'bg-success' : 'bg-danger'">
-                      {{ item.isActive ? 'Active' : 'Inactive' }}
+                      {{ (item.isActive ? 'Active' : 'Inactive') | translate }}
                     </span>
                   </td>
                   <td class="text-end pe-4">
-                    <button class="btn btn-outline-primary btn-sm me-2" (click)="onEdit(item)">
+                    <button class="btn btn-outline-primary btn-sm me-2" (click)="onEdit(item)" [title]="'Edit' | translate">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-sm" (click)="delete(item.id!)">
+                    <button class="btn btn-outline-danger btn-sm" (click)="delete(item.id!)" [title]="'Delete' | translate">
                       <i class="bi bi-trash"></i>
                     </button>
                   </td>
                 </tr>
                 <tr *ngIf="flightTimes.length === 0">
-                  <td colspan="3" class="text-center py-4 text-muted">No flight times defined.</td>
+                  <td colspan="3" class="text-center py-4 text-muted">{{ 'No flight times defined.' | translate }}</td>
                 </tr>
               </tbody>
             </table>
@@ -62,27 +62,27 @@
     <div class="col-lg-4">
       <div class="card shadow-sm border-0">
         <div class="card-body">
-          <h5 class="card-title">{{ isEditing ? 'Edit Time Slot' : 'Add New Slot' }}</h5>
+          <h5 class="card-title">{{ (isEditing ? 'Edit Time Slot' : 'Add New Slot') | translate }}</h5>
           
           <form (ngSubmit)="save()" #timeForm="ngForm">
             <div class="mb-3">
-              <label class="form-label fw-bold small">Time (e.g. 08:30)</label>
+              <label class="form-label fw-bold small">{{ 'Time (e.g. 08:30)' | translate }}</label>
               <input type="text" class="form-control" name="time" [(ngModel)]="currentFlightTime.time" required placeholder="HH:mm">
             </div>
 
             <div class="mb-3">
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="isActive" name="isActive" [(ngModel)]="currentFlightTime.isActive">
-                <label class="form-check-label small" for="isActive">Active Status</label>
+                <label class="form-check-label small" for="isActive">{{ 'Active Status' | translate }}</label>
               </div>
             </div>
 
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary" [disabled]="!timeForm.form.valid">
-                {{ isEditing ? 'Update Slot' : 'Save Slot' }}
+                {{ (isEditing ? 'Update Slot' : 'Save Slot') | translate }}
               </button>
               <button type="button" class="btn btn-outline-secondary" *ngIf="isEditing" (click)="resetForm()">
-                Cancel Edit
+                {{ 'Cancel Edit' | translate }}
               </button>
             </div>
           </form>
@@ -93,9 +93,9 @@
       <div class="card bg-primary text-white border-0 shadow-sm mt-4">
         <div class="card-body p-4 text-center">
           <i class="bi bi-info-circle display-4 mb-3"></i>
-          <h6>Dynamic Scheduling</h6>
+          <h6>{{ 'Dynamic Scheduling' | translate }}</h6>
           <p class="small mb-0 opacity-75">
-            Changes made here will immediately appear in the reservation form and filtering options.
+            {{ 'Changes made here will immediately appear in the reservation form and filtering options.' | translate }}
           </p>
         </div>
       </div>

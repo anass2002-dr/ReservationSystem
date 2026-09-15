@@ -1,34 +1,34 @@
 <div class="loading-overlay" *ngIf="isLoading">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Loading reservations...</div>
+  <div class="loading-text">{{ 'Loading reservations...' | translate }}</div>
 </div>
 
 <div class="pagetitle d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
   <div>
-    <h1>Reservations Dashboard</h1>
+    <h1>{{ 'Reservations Dashboard' | translate }}</h1>
     <nav>
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item active">Reservations</li>
+        <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+        <li class="breadcrumb-item active">{{ 'Reservations' | translate }}</li>
       </ol>
     </nav>
   </div>
   <div class="d-flex flex-wrap flex-sm-nowrap gap-2 align-items-center w-100 w-md-auto justify-content-between justify-content-md-end">
     <div class="d-flex align-items-center bg-white rounded-pill px-2 py-1 py-sm-2 shadow-sm border date-picker-pill flex-grow-1 flex-sm-grow-0 justify-content-between">
-      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="previousDay()" title="Previous Day" style="width: 32px; height: 32px;">
+      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="previousDay()" [title]="'Previous Day' | translate" style="width: 32px; height: 32px;">
         <i class="bi bi-chevron-left"></i>
       </button>
       <div class="d-flex align-items-center mx-2 mx-sm-3">
-        <label class="fw-bold me-2 text-muted small text-uppercase mb-0 d-none d-xs-inline">Date:</label>
+        <label class="fw-bold me-2 text-muted small text-uppercase mb-0 d-none d-xs-inline">{{ 'Date' | translate }}:</label>
         <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control border-0 fw-bold text-primary p-0 bg-transparent text-center"
           [(ngModel)]="selectedDate" (change)="groupReservations()" style="outline: none; box-shadow: none; max-width: 110px;">
       </div>
-      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="nextDay()" title="Next Day" style="width: 32px; height: 32px;">
+      <button class="btn btn-sm btn-light rounded-circle p-1 d-flex align-items-center justify-content-center" (click)="nextDay()" [title]="'Next Day' | translate" style="width: 32px; height: 32px;">
         <i class="bi bi-chevron-right"></i>
       </button>
     </div>
     <button class="btn btn-primary rounded-pill px-3 px-sm-4 shadow-sm text-nowrap flex-grow-1 flex-sm-grow-0 d-flex align-items-center justify-content-center py-2" (click)="addReservation()">
-      <i class="bi bi-plus-lg me-1 me-sm-2"></i><span>New Reservation</span>
+      <i class="bi bi-plus-lg me-1 me-sm-2"></i><span>{{ 'New Reservation' | translate }}</span>
     </button>
   </div>
 </div>
@@ -39,13 +39,13 @@
       [class.btn-primary]="activeTab === 'schedule'"
       [class.btn-light]="activeTab !== 'schedule'"
       (click)="activeTab = 'schedule'">
-      <i class="bi bi-kanban me-2"></i><span>Schedule View</span>
+      <i class="bi bi-kanban me-2"></i><span>{{ 'Schedule View' | translate }}</span>
     </button>
     <button class="btn px-3 px-sm-4 py-2 fw-bold rounded-pill transition-all flex-fill flex-sm-grow-0 d-flex align-items-center justify-content-center"
       [class.btn-primary]="activeTab === 'list'"
       [class.btn-light]="activeTab !== 'list'"
       (click)="activeTab = 'list'">
-      <i class="bi bi-list-task me-2"></i><span>List View</span>
+      <i class="bi bi-list-task me-2"></i><span>{{ 'List View' | translate }}</span>
     </button>
   </div>
 </div>
@@ -63,12 +63,12 @@
             </h5>
             <div class="d-flex align-items-center gap-2">
               <button class="btn btn-sm btn-outline-danger border-0 d-flex align-items-center gap-1 rounded-pill px-2 py-1"
-                (click)="printSlotPdf(group)" title="Print PDF Manifest">
+                (click)="printSlotPdf(group)" [title]="'Print PDF Manifest' | translate">
                 <i class="bi bi-file-pdf text-danger fs-6"></i>
-                <span class="small fw-bold d-none d-sm-inline">Print PDF</span>
+                <span class="small fw-bold d-none d-sm-inline">{{ 'Print PDF' | translate }}</span>
               </button>
               <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2.5 py-1.5">
-                {{ group.reservations.length }} Slots
+                {{ group.reservations.length }} {{ 'Slots' | translate }}
               </span>
             </div>
           </div>
@@ -81,7 +81,7 @@
           <div class="d-flex flex-column gap-3">
             <div *ngIf="group.reservations.length === 0"
               class="text-center py-4 text-muted small bg-light rounded border border-dashed">
-              No reservations for this slot.
+              {{ 'No reservations for this slot.' | translate }}
             </div>
 
             <div *ngFor="let res of group.reservations" cdkDrag (click)="editReservation(res)"
@@ -91,11 +91,11 @@
 
               <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-2 mb-2">
                 <div class="w-100 w-sm-auto">
-                  <h6 class="fw-bold mb-0 text-dark text-break">{{ res.title || 'Untitled Reservation' }}</h6>
+                  <h6 class="fw-bold mb-0 text-dark text-break">{{ res.title || 'Standard Flight' }}</h6>
                   <div class="d-flex align-items-center flex-wrap gap-1 gap-sm-2 mt-1">
                     <span class="badge bg-secondary small">#{{ res.id }}</span>
                     <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small fw-bold">
-                      {{ getPassengersCount(res) }} PAX
+                      {{ getPassengersCount(res) }} {{ 'PAX' | translate }}
                     </span>
                     <span *ngIf="res.bookingSource" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 small">
                       <i class="bi bi-funnel me-1"></i> {{ formatSourceLabel(res.bookingSource) }}
@@ -107,17 +107,17 @@
                 </div>
                 <div class="d-flex flex-wrap gap-1 align-items-center align-self-start align-self-sm-auto">
                   <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(res.status)">
-                    {{ getStatusLabel(res.status) }}
+                    {{ getStatusLabel(res.status) | translate }}
                   </span>
                   <span *ngIf="hasRefund(res)" class="badge rounded-pill bg-danger text-white border border-danger">
-                    <i class="bi bi-arrow-counterclockwise me-1"></i> Refund
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> {{ 'Refund' | translate }}
                   </span>
                   <span *ngIf="!hasRefund(res) && isFullyPaid(res)" class="badge rounded-pill bg-success text-white border border-success">
-                    <i class="bi bi-check-circle-fill me-1"></i> Paid
+                    <i class="bi bi-check-circle-fill me-1"></i> {{ 'Paid' | translate }}
                   </span>
                   <span *ngIf="!hasRefund(res) && !isFullyPaid(res)"
                     class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
-                    <i class="bi bi-exclamation-circle me-1"></i> {{ getRemainingBalance(res) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} Due
+                    <i class="bi bi-exclamation-circle me-1"></i> {{ getRemainingBalance(res) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} {{ 'Rest to Pay' | translate }}
                   </span>
                 </div>
               </div>
@@ -131,25 +131,25 @@
                 <div class="fw-bold text-primary">
                   {{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}
                   <div *ngIf="res.deposit" class="x-small text-success mt-1">
-                    <i class="bi bi-cash-stack me-1"></i> Dep: {{ res.deposit | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}
+                    <i class="bi bi-cash-stack me-1"></i> {{ 'Deposit' | translate }}: {{ res.deposit | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}
                   </div>
                 </div>
                 <div class="d-flex flex-column align-items-end gap-1">
                   <div *ngIf="res.deposit && !isFullyPaid(res)" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small mb-1">
-                    <i class="bi bi-wallet2 me-1"></i> {{ (res.totalAmount || 0) - (res.deposit || 0) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} To Pay
+                    <i class="bi bi-wallet2 me-1"></i> {{ (res.totalAmount || 0) - (res.deposit || 0) | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }} {{ 'Rest to Pay' | translate }}
                   </div>
                   <div class="btn-group">
-                    <button class="btn btn-outline-success btn-sm border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
-                      Pay
+                    <button class="btn btn-outline-success btn-sm border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" [title]="'Pay' | translate">
+                      {{ 'Pay' | translate }}
                     </button>
-                    <button class="btn btn-outline-primary btn-sm border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" title="Print Voucher">
+                    <button class="btn btn-outline-primary btn-sm border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" [title]="'Print Voucher' | translate">
                       <i class="bi bi-printer"></i>
                     </button>
-                    <button class="btn btn-outline-info btn-sm border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
+                    <button class="btn btn-outline-info btn-sm border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" [title]="'Edit' | translate">
                       <i class="bi bi-pencil-square"></i>
                     </button>
                     <button class="btn btn-outline-danger btn-sm border-0 px-2" (click)="$event.stopPropagation(); deleteReservation(res.id!)"
-                      title="Delete">
+                      [title]="'Delete' | translate">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -177,44 +177,44 @@
   
   <div class="card shadow-sm border-0 mb-4 bg-white">
     <div class="card-body p-3 p-md-4">
-      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>{{ 'Filters' | translate }}</h5>
       <div class="row g-3 align-items-end">
         <div class="col-12 col-sm-6 col-lg-2">
-          <label class="form-label small fw-bold text-muted">Status</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Status' | translate }}</label>
           <select class="form-select" [(ngModel)]="filterStatus">
-            <option value="all">All Statuses</option>
-            <option value="0">Pending</option>
-            <option value="1">Confirmed</option>
-            <option value="2">Cancelled</option>
+            <option value="all">{{ 'All Statuses' | translate }}</option>
+            <option value="0">{{ 'Pending' | translate }}</option>
+            <option value="1">{{ 'Confirmed' | translate }}</option>
+            <option value="2">{{ 'Cancelled' | translate }}</option>
           </select>
         </div>
         <div class="col-12 col-sm-6 col-lg-2">
-          <label class="form-label small fw-bold text-muted">Flight Time</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Flight Times' | translate }}</label>
           <select class="form-select" [(ngModel)]="filterFlightTimeId">
-            <option value="all">All Times</option>
+            <option value="all">{{ 'All Times' | translate }}</option>
             <option *ngFor="let ft of flightTimes" [value]="ft.id">{{ ft.time }}</option>
           </select>
         </div>
         <div class="col-12 col-sm-6 col-lg-3">
-          <label class="form-label small fw-bold text-muted">Date Range</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Date Range' | translate }}</label>
           <select class="form-select" [(ngModel)]="filterDateRange">
-            <option value="day">Selected Day</option>
-            <option value="week">One Week</option>
-            <option value="month">One Month</option>
-            <option value="year">One Year</option>
-            <option value="all">All Time</option>
+            <option value="day">{{ 'Selected Day' | translate }}</option>
+            <option value="week">{{ 'One Week' | translate }}</option>
+            <option value="month">{{ 'One Month' | translate }}</option>
+            <option value="year">{{ 'One Year' | translate }}</option>
+            <option value="all">{{ 'All Time' | translate }}</option>
           </select>
         </div>
         <div class="col-12 col-sm-6 col-lg-3">
-          <label class="form-label small fw-bold text-muted">Search</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Search' | translate }}</label>
           <div class="input-group mb-0">
             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search ID, Title, Passenger..." [(ngModel)]="filterSearch">
+            <input type="text" class="form-control border-start-0 ps-0" [placeholder]="'Search ID, Title, Passenger...' | translate" [(ngModel)]="filterSearch">
           </div>
         </div>
         <div class="col-12 col-lg-2">
           <button class="btn btn-secondary w-100 py-2 rounded d-flex align-items-center justify-content-center" (click)="filterStatus='all'; filterFlightTimeId='all'; filterSearch=''; filterDateRange='day'">
-            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+            <i class="bi bi-arrow-counterclockwise me-1"></i> {{ 'Reset' | translate }}
           </button>
         </div>
       </div>
@@ -224,10 +224,10 @@
   <div class="card shadow-sm border-0 bg-white">
     <div class="card-body p-3 p-md-4">
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Reservations ({{ filteredListReservations.length }})</h5>
+        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>{{ 'Reservations' | translate }} ({{ filteredListReservations.length }})</h5>
         <button class="btn btn-success rounded-pill px-3 shadow-sm btn-sm fw-bold d-flex align-items-center gap-2" (click)="exportToExcel()" [disabled]="filteredListReservations.length === 0">
           <i class="bi bi-file-earmark-excel-fill text-white fs-6"></i>
-          <span>Export Excel</span>
+          <span>{{ 'Export Excel' | translate }}</span>
         </button>
       </div>
       
@@ -235,20 +235,20 @@
         <table class="table table-hover align-middle border-0 reservations-data-table mb-0">
           <thead class="table-light">
             <tr>
-              <th class="border-0">ID</th>
-              <th class="border-0">Time</th>
-              <th class="border-0">Title / Type</th>
-              <th class="border-0">Passengers</th>
-              <th class="border-0">Amount / Paid</th>
-              <th class="border-0 text-center">Status</th>
-              <th class="border-0 text-center">Actions</th>
+              <th class="border-0">{{ 'ID' | translate }}</th>
+              <th class="border-0">{{ 'Time' | translate }}</th>
+              <th class="border-0">{{ 'Title / Type' | translate }}</th>
+              <th class="border-0">{{ 'Passengers' | translate }}</th>
+              <th class="border-0">{{ 'Amount / Paid' | translate }}</th>
+              <th class="border-0 text-center">{{ 'Status' | translate }}</th>
+              <th class="border-0 text-center">{{ 'Actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="filteredListReservations.length === 0">
               <td colspan="7" class="text-center py-5 text-muted bg-light rounded border border-dashed">
                 <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
-                No reservations found matching your criteria.
+                {{ 'No reservations found matching your criteria.' | translate }}
               </td>
             </tr>
             <tr *ngFor="let res of filteredListReservations" (click)="editReservation(res)" style="cursor: pointer;">
@@ -261,7 +261,7 @@
                 </ng-container>
               </td>
               <td>
-                <div class="fw-bold text-break">{{ res.title || 'Untitled Reservation' }}</div>
+                <div class="fw-bold text-break">{{ res.title || 'Standard Flight' }}</div>
                 <div *ngIf="res.isAgencyBooking" class="small text-purple mt-1"><i class="bi bi-building me-1"></i>{{ res.agencyName }}</div>
               </td>
               <td>
@@ -270,27 +270,27 @@
               </td>
               <td class="text-nowrap">
                  <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyLabel(res.preferredCurrency || 0) }}</div>
-                 <div *ngIf="hasRefund(res)" class="badge bg-danger text-white mt-1"><i class="bi bi-arrow-counterclockwise me-1"></i>Refund</div>
-                 <div *ngIf="!hasRefund(res) && isFullyPaid(res)" class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>Paid</div>
-                 <div *ngIf="!hasRefund(res) && !isFullyPaid(res)" class="small text-danger"><i class="bi bi-exclamation-circle me-1"></i>{{ getRemainingBalance(res) | number:'1.2-2' }} Due</div>
+                 <div *ngIf="hasRefund(res)" class="badge bg-danger text-white mt-1"><i class="bi bi-arrow-counterclockwise me-1"></i>{{ 'Refund' | translate }}</div>
+                 <div *ngIf="!hasRefund(res) && isFullyPaid(res)" class="small text-success"><i class="bi bi-check-circle-fill me-1"></i>{{ 'Paid' | translate }}</div>
+                 <div *ngIf="!hasRefund(res) && !isFullyPaid(res)" class="small text-danger"><i class="bi bi-exclamation-circle me-1"></i>{{ getRemainingBalance(res) | number:'1.2-2' }} {{ 'Rest to Pay' | translate }}</div>
               </td>
               <td class="text-center text-nowrap">
                 <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(res.status)">
-                  {{ getStatusLabel(res.status) }}
+                  {{ getStatusLabel(res.status) | translate }}
                 </span>
               </td>
               <td class="text-center text-nowrap">
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-success border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" title="Pay">
-                    Pay
+                  <button class="btn btn-sm btn-outline-success border-0 fw-bold px-2" (click)="$event.stopPropagation(); openPayment(res)" [disabled]="isFullyPaid(res)" [title]="'Pay' | translate">
+                    {{ 'Pay' | translate }}
                   </button>
-                  <button class="btn btn-sm btn-outline-primary border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" title="Print">
+                  <button class="btn btn-sm btn-outline-primary border-0 px-2" (click)="$event.stopPropagation(); printReservation(res)" [title]="'Print Voucher' | translate">
                     <i class="bi bi-printer"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-info border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" title="Edit">
+                  <button class="btn btn-sm btn-outline-info border-0 px-2" (click)="$event.stopPropagation(); editReservation(res)" [title]="'Edit' | translate">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger border-0 px-2" (click)="$event.stopPropagation(); deleteReservation(res.id!)" title="Delete">
+                  <button class="btn btn-sm btn-outline-danger border-0 px-2" (click)="$event.stopPropagation(); deleteReservation(res.id!)" [title]="'Delete' | translate">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -306,15 +306,15 @@
     <div class="col-xl-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
         <div class="card-body p-3 p-md-4">
-          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Financial Summary</h5>
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>{{ 'Financial Summary' | translate }}</h5>
           <div class="table-responsive">
             <table class="table align-middle table-sm border-0 mb-0">
               <thead>
                 <tr>
-                  <th>Currency</th>
-                  <th class="text-end text-muted small">Total Price</th>
-                  <th class="text-end text-success small">Total Paid</th>
-                  <th class="text-end text-danger small">Remaining Due</th>
+                  <th>{{ 'Currency' | translate }}</th>
+                  <th class="text-end text-muted small">{{ 'Total Price' | translate }}</th>
+                  <th class="text-end text-success small">{{ 'Total Paid' | translate }}</th>
+                  <th class="text-end text-danger small">{{ 'Remaining Due' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -334,12 +334,12 @@
     <div class="col-xl-3 col-md-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
         <div class="card-body p-3 p-md-4">
-          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Booking Channels</h5>
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>{{ 'Booking Channels' | translate }}</h5>
           <div class="d-flex flex-column gap-3">
-            <div *ngIf="analytics.sources.length === 0" class="text-muted small">No channel data available</div>
+            <div *ngIf="analytics.sources.length === 0" class="text-muted small">{{ 'No channel data available' | translate }}</div>
             <div *ngFor="let src of analytics.sources" class="d-flex justify-content-between align-items-center">
               <span class="text-muted small text-break">{{ formatSourceLabel(src.name) }}</span>
-              <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold text-nowrap">{{ src.count }} PAX</span>
+              <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold text-nowrap">{{ src.count }} {{ 'PAX' | translate }}</span>
             </div>
           </div>
         </div>
@@ -349,29 +349,29 @@
     <div class="col-xl-3 col-md-6 col-12">
       <div class="card shadow-sm border-0 h-100 bg-white">
         <div class="card-body p-3 p-md-4">
-          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Booking Overview</h5>
+          <h5 class="fw-bold mb-3 mb-md-4 text-dark"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>{{ 'Booking Overview' | translate }}</h5>
           <div class="d-flex flex-column gap-3">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted small">Total Reservations</span>
+              <span class="text-muted small">{{ 'Total Reservations' | translate }}</span>
               <span class="fw-bold text-dark h5 mb-0">{{ analytics.totalBookings }}</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted small">Total PAX (Passengers)</span>
+              <span class="text-muted small">{{ 'Total PAX (Passengers)' | translate }}</span>
               <span class="fw-bold text-dark h5 mb-0">{{ analytics.totalPassengers }}</span>
             </div>
             <hr class="my-2">
             <div class="d-flex gap-2 justify-content-between text-center mt-1">
               <div>
                 <div class="small text-warning fw-bold">{{ analytics.statusCounts.pending }}</div>
-                <div class="x-small text-muted">Pending</div>
+                <div class="x-small text-muted">{{ 'Pending' | translate }}</div>
               </div>
               <div>
                 <div class="small text-success fw-bold">{{ analytics.statusCounts.confirmed }}</div>
-                <div class="x-small text-muted">Confirmed</div>
+                <div class="x-small text-muted">{{ 'Confirmed' | translate }}</div>
               </div>
               <div>
                 <div class="small text-danger fw-bold">{{ analytics.statusCounts.cancelled }}</div>
-                <div class="x-small text-muted">Cancelled</div>
+                <div class="x-small text-muted">{{ 'Cancelled' | translate }}</div>
               </div>
             </div>
           </div>

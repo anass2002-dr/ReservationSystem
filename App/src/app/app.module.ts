@@ -133,8 +133,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
         LoginComponent,
         ProfileComponent,
         UserManagementComponent,
-        SafePipe,
-        TranslatePipe
+        SafePipe
     ],
     bootstrap: [AppComponent] // This is correct
     , imports: [BrowserModule,
@@ -161,7 +160,8 @@ import { TranslatePipe } from './pipes/translate.pipe';
         MatDialogModule,
         NgSelectModule,
         DragDropModule,
-        FlatpickrModule.forRoot()
+        FlatpickrModule.forRoot(),
+        TranslatePipe
     ], providers: [
         { provide: LOCALE_ID, useValue: 'en-GB' },
         provideHttpClient(withInterceptorsFromDi()),

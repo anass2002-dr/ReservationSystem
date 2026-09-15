@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1 class="fw-bold text-dark">Agencies Management</h1>
+  <h1 class="fw-bold text-dark">{{ 'Agencies Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Settings</li>
-      <li class="breadcrumb-item active text-primary">Agencies</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Settings' | translate }}</li>
+      <li class="breadcrumb-item active text-primary">{{ 'Agencies' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -12,9 +12,9 @@
 <section class="section">
   <div class="row mb-4">
     <div class="col-12 d-flex justify-content-between align-items-center">
-      <p class="text-muted mb-0">Manage your partner agencies and their contact information.</p>
+      <p class="text-muted mb-0">{{ 'Manage your partner agencies and their contact information.' | translate }}</p>
       <button class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="addAgency()">
-        <i class="bi bi-plus-lg me-2"></i> Add New Agency
+        <i class="bi bi-plus-lg me-2"></i> {{ 'Add New Agency' | translate }}
       </button>
     </div>
   </div>
@@ -34,14 +34,14 @@
                 <i class="bi bi-three-dots-vertical"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                <li><a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="editAgency(agency)"><i class="bi bi-pencil me-2"></i> Edit</a></li>
+                <li><a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="editAgency(agency)"><i class="bi bi-pencil me-2"></i> {{ 'Edit' | translate }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" (click)="deleteAgency(agency.id!)"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" (click)="deleteAgency(agency.id!)"><i class="bi bi-trash me-2"></i> {{ 'Delete' | translate }}</a></li>
               </ul>
             </div>
           </div>
           <h5 class="fw-bold text-dark mb-1">{{agency.name}}</h5>
-          <p class="text-muted small mb-3"><i class="bi bi-person me-1"></i> {{agency.contactPerson || 'No contact person'}}</p>
+          <p class="text-muted small mb-3"><i class="bi bi-person me-1"></i> {{agency.contactPerson || ('No contact person' | translate)}}</p>
           
           <div class="d-flex flex-column gap-2 border-top pt-3">
             <div class="d-flex align-items-center text-muted small">
@@ -54,7 +54,7 @@
             </div>
             <div class="d-flex align-items-center text-muted small">
               <i class="bi bi-geo-alt me-2 text-primary"></i>
-              {{agency.address || 'No address provided'}}
+              {{agency.address || ('No address provided' | translate)}}
             </div>
           </div>
         </div>
@@ -66,10 +66,10 @@
     <div class="col-12 text-center py-5">
       <div class="p-5 bg-white rounded-4 shadow-sm border">
         <i class="bi bi-building-slash text-muted display-1 mb-4"></i>
-        <h3 class="fw-bold">No agencies found</h3>
-        <p class="text-muted mb-4">You haven't added any partner agencies yet.</p>
+        <h3 class="fw-bold">{{ 'No agencies found' | translate }}</h3>
+        <p class="text-muted mb-4">{{ 'You haven\'t added any partner agencies yet.' | translate }}</p>
         <button class="btn btn-primary px-5 py-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="addAgency()">
-          Add Your First Agency
+          {{ 'Add Your First Agency' | translate }}
         </button>
       </div>
     </div>
@@ -83,40 +83,40 @@
     <div class="modal-content border-0 rounded-5 shadow-lg">
       <div class="modal-header border-0 p-4 pb-0">
         <h5 class="modal-title fw-bold" id="agencyModalLabel">
-          {{ isEditing ? 'Edit Agency' : 'New Agency' }}
+          {{ (isEditing ? 'Edit Agency' : 'New Agency') | translate }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
         <form #agencyForm="ngForm">
           <div class="mb-3">
-            <label class="form-label fw-bold small text-muted">Agency Name *</label>
+            <label class="form-label fw-bold small text-muted">{{ 'Agency Name' | translate }} *</label>
             <input type="text" class="form-control rounded-3 p-2" name="name" [(ngModel)]="currentAgency.name" required placeholder="e.g. Sky Travel Agency">
           </div>
           <div class="mb-3">
-            <label class="form-label fw-bold small text-muted">Contact Person</label>
+            <label class="form-label fw-bold small text-muted">{{ 'Contact Person' | translate }}</label>
             <input type="text" class="form-control rounded-3 p-2" name="contactPerson" [(ngModel)]="currentAgency.contactPerson" placeholder="Full name">
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold small text-muted">Phone Number</label>
+              <label class="form-label fw-bold small text-muted">{{ 'Phone Number' | translate }}</label>
               <input type="text" class="form-control rounded-3 p-2" name="phoneNumber" [(ngModel)]="currentAgency.phoneNumber" placeholder="+00 000 000">
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold small text-muted">Email Address</label>
+              <label class="form-label fw-bold small text-muted">{{ 'Email Address' | translate }}</label>
               <input type="email" class="form-control rounded-3 p-2" name="email" [(ngModel)]="currentAgency.email" placeholder="agency@example.com">
             </div>
           </div>
           <div class="mb-0">
-            <label class="form-label fw-bold small text-muted">Office Address</label>
+            <label class="form-label fw-bold small text-muted">{{ 'Office Address' | translate }}</label>
             <textarea class="form-control rounded-3 p-2" name="address" [(ngModel)]="currentAgency.address" rows="3" placeholder="Full address details..."></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer border-0 p-4 pt-0">
-        <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold" data-bs-dismiss="modal">{{ 'Cancel' | translate }}</button>
         <button type="button" class="btn btn-primary px-4 py-2 rounded-3 fw-bold" (click)="saveAgency()" [disabled]="!agencyForm.form.valid">
-          {{ isEditing ? 'Update Agency' : 'Save Agency' }}
+          {{ (isEditing ? 'Update Agency' : 'Save Agency') | translate }}
         </button>
       </div>
     </div>

@@ -1,16 +1,16 @@
 <div class="pagetitle d-flex justify-content-between align-items-center">
   <div>
-    <h1>Exchange Rates</h1>
+    <h1>{{ 'Exchange Rates' | translate }}</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item active">Exchange Rates</li>
+        <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+        <li class="breadcrumb-item active">{{ 'Exchange Rates' | translate }}</li>
       </ol>
     </nav>
   </div>
   <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="refresh()" [disabled]="isRefreshing">
     <i class="bi bi-arrow-clockwise me-2" [class.spin]="isRefreshing"></i>
-    {{ isRefreshing ? 'Refreshing...' : 'Refresh Rates' }}
+    {{ (isRefreshing ? 'Refreshing...' : 'Refresh Rates') | translate }}
   </button>
 </div>
 
@@ -19,7 +19,7 @@
     <div class="col-md-6 col-lg-3" *ngFor="let code of displayCurrencies">
       <div class="card info-card sales-card shadow-sm border-0">
         <div class="card-body p-4">
-          <h5 class="card-title text-muted small text-uppercase mb-3">{{ getRateLabel(code) }}</h5>
+          <h5 class="card-title text-muted small text-uppercase mb-3">{{ getRateLabel(code) | translate }}</h5>
           <div class="d-flex align-items-center">
             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary me-3" style="width: 60px; height: 60px;">
               <i class="bi {{ getIcon(code) }} fs-3"></i>
@@ -36,14 +36,14 @@
 
   <div class="card shadow-sm border-0 mt-4 overflow-hidden" style="border-left: 5px solid var(--bs-success) !important;">
     <div class="card-body p-4">
-      <h5 class="card-title mb-4 fw-bold text-dark"><i class="bi bi-calculator me-2"></i>Currency Converter</h5>
+      <h5 class="card-title mb-4 fw-bold text-dark"><i class="bi bi-calculator me-2"></i>{{ 'Currency Converter' | translate }}</h5>
       
       <div class="calculator-wrapper">
         <div class="row align-items-center g-4">
           <!-- Amount -->
           <div class="col-lg-4">
             <div class="calc-input-group">
-              <label class="form-label small fw-bold text-muted text-uppercase mb-2">Amount to Convert</label>
+              <label class="form-label small fw-bold text-muted text-uppercase mb-2">{{ 'Amount to Convert' | translate }}</label>
               <div class="input-group">
                 <span class="input-group-text bg-white border-end-0" style="border: 2px solid #e9ecef; border-radius: 12px 0 0 12px;"><i class="bi bi-cash-stack text-success"></i></span>
                 <input type="number" class="form-control border-start-0" [(ngModel)]="calcAmount" (input)="calculate()" placeholder="0.00" style="border: 2px solid #e9ecef; border-radius: 0 12px 12px 0;">
@@ -54,7 +54,7 @@
           <!-- From -->
           <div class="col-lg-2">
             <div class="calc-input-group">
-              <label class="form-label small fw-bold text-muted text-uppercase mb-2">From</label>
+              <label class="form-label small fw-bold text-muted text-uppercase mb-2">{{ 'From' | translate }}</label>
               <select class="form-select" [(ngModel)]="calcFrom" (change)="calculate()">
                 <option *ngFor="let c of displayCurrencies" [value]="c">{{ c }}</option>
               </select>
@@ -71,7 +71,7 @@
           <!-- To -->
           <div class="col-lg-2">
             <div class="calc-input-group">
-              <label class="form-label small fw-bold text-muted text-uppercase mb-2">To</label>
+              <label class="form-label small fw-bold text-muted text-uppercase mb-2">{{ 'To' | translate }}</label>
               <select class="form-select" [(ngModel)]="calcTo" (change)="calculate()">
                 <option *ngFor="let c of displayCurrencies" [value]="c">{{ c }}</option>
               </select>
@@ -81,7 +81,7 @@
           <!-- Result -->
           <div class="col-lg-3">
             <div class="result-box">
-              <div class="result-label">Converted Amount</div>
+              <div class="result-label">{{ 'Converted Amount' | translate }}</div>
               <div class="result-value">{{ calcResult | number:'1.2-2' }} <small class="fs-6 text-muted">{{ calcTo }}</small></div>
             </div>
           </div>
@@ -92,21 +92,21 @@
 
   <div class="card shadow-sm border-0 mt-4">
     <div class="card-body p-4">
-      <h5 class="card-title border-bottom pb-3 mb-4">Detailed Conversion Table (Base: 1 USD)</h5>
+      <h5 class="card-title border-bottom pb-3 mb-4">{{ 'Detailed Conversion Table (Base: 1 USD)' | translate }}</h5>
       <div class="table-responsive">
         <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
-              <th>Currency Code</th>
-              <th>Currency Name</th>
-              <th>Rate to 1 USD</th>
-              <th>Rate to 1 TRY</th>
+              <th>{{ 'Currency Code' | translate }}</th>
+              <th>{{ 'Currency Name' | translate }}</th>
+              <th>{{ 'Rate to 1 USD' | translate }}</th>
+              <th>{{ 'Rate to 1 TRY' | translate }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let code of displayCurrencies">
               <td><span class="badge bg-light text-dark border px-3 py-2 fw-bold">{{ code }}</span></td>
-              <td>{{ getRateLabel(code) }}</td>
+              <td>{{ getRateLabel(code) | translate }}</td>
               <td class="fw-bold">{{ rates[code] | number:'1.2-4' }}</td>
               <td class="text-primary fw-bold">{{ (rates[code] / rates['TRY']) | number:'1.2-4' }}</td>
             </tr>
@@ -114,7 +114,7 @@
         </table>
       </div>
       <div class="text-end text-muted small mt-3 italic" *ngIf="lastUpdated">
-        <i class="bi bi-clock-history me-1"></i> Last updated: {{ lastUpdated | date:'dd/MM/yyyy HH:mm:ss' }}
+        <i class="bi bi-clock-history me-1"></i> {{ 'Last updated:' | translate }} {{ lastUpdated | date:'dd/MM/yyyy HH:mm:ss' }}
       </div>
     </div>
   </div>

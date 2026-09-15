@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1>User Management</h1>
+  <h1>{{ 'User Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item active">Admin</li>
-      <li class="breadcrumb-item active">Users</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item active">{{ 'Admin' | translate }}</li>
+      <li class="breadcrumb-item active">{{ 'Users' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -15,9 +15,9 @@
       <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body pt-3">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="card-title fw-bold mb-0">System Users</h5>
+            <h5 class="card-title fw-bold mb-0">{{ 'System Users' | translate }}</h5>
             <button class="btn btn-primary rounded-pill px-4" (click)="openRegisterModal()">
-              <i class="bi bi-person-plus me-2"></i>Add New User
+              <i class="bi bi-person-plus me-2"></i>{{ 'Add New User' | translate }}
             </button>
           </div>
 
@@ -25,11 +25,11 @@
             <table class="table table-hover align-middle">
               <thead class="bg-light">
                 <tr>
-                  <th class="border-0 rounded-start">User</th>
-                  <th class="border-0">Email</th>
-                  <th class="border-0">Roles</th>
-                  <th class="border-0 text-center">Status</th>
-                  <th class="border-0 rounded-end text-end">Actions</th>
+                  <th class="border-0 rounded-start">{{ 'User' | translate }}</th>
+                  <th class="border-0">{{ 'Email' | translate }}</th>
+                  <th class="border-0">{{ 'Roles' | translate }}</th>
+                  <th class="border-0 text-center">{{ 'Status' | translate }}</th>
+                  <th class="border-0 rounded-end text-end">{{ 'Actions' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -50,16 +50,16 @@
                     </span>
                   </td>
                   <td class="text-center">
-                    <span class="badge bg-success rounded-pill px-3">Active</span>
+                    <span class="badge bg-success rounded-pill px-3">{{ 'Active' | translate }}</span>
                   </td>
                   <td class="text-end">
-                    <button class="btn btn-outline-warning btn-sm rounded-circle me-2" (click)="resetPassword(u)" title="Reset Password">
+                    <button class="btn btn-outline-warning btn-sm rounded-circle me-2" (click)="resetPassword(u)" [title]="'Reset Password' | translate">
                       <i class="bi bi-key"></i>
                     </button>
-                    <button class="btn btn-outline-primary btn-sm rounded-circle me-2" (click)="editUser(u)" title="Edit">
+                    <button class="btn btn-outline-primary btn-sm rounded-circle me-2" (click)="editUser(u)" [title]="'Edit' | translate">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-sm rounded-circle" (click)="deleteUser(u)" title="Delete">
+                    <button class="btn btn-outline-danger btn-sm rounded-circle" (click)="deleteUser(u)" [title]="'Delete' | translate">
                       <i class="bi bi-trash"></i>
                     </button>
                   </td>

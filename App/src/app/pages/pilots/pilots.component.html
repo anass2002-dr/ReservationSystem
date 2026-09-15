@@ -1,10 +1,10 @@
 <div class="pagetitle">
-  <h1>Pilots Management</h1>
+  <h1>{{ 'Pilots Management' | translate }}</h1>
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-      <li class="breadcrumb-item">Entities</li>
-      <li class="breadcrumb-item active">Pilots</li>
+      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+      <li class="breadcrumb-item">{{ 'Entities' | translate }}</li>
+      <li class="breadcrumb-item active">{{ 'Pilots' | translate }}</li>
     </ol>
   </nav>
 </div>
@@ -18,7 +18,7 @@
           <i class="bi bi-people-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Total Pilots</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">{{ 'Total Pilots' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ pilots.length }}</h2>
         </div>
       </div>
@@ -31,7 +31,7 @@
           <i class="bi bi-diagram-3-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Pilot Groups</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">{{ 'Pilot Groups' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ pilotGroups.length }}</h2>
         </div>
       </div>
@@ -44,7 +44,7 @@
           <i class="bi bi-airplane-fill fs-3"></i>
         </div>
         <div>
-          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">Total Flights Flown</h6>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.8rem;">{{ 'Total Flights Flown' | translate }}</h6>
           <h2 class="mb-0 fw-bold">{{ getTotalFlightsFlown() }}</h2>
         </div>
       </div>
@@ -59,21 +59,21 @@
         <ul class="nav nav-tabs nav-tabs-bordered border-0" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link fs-6" [class.active]="activeTab === 'directory'" (click)="setActiveTab('directory')">
-              <i class="bi bi-person-lines-fill me-2"></i> Pilots Directory
+              <i class="bi bi-person-lines-fill me-2"></i> {{ 'Pilots Directory' | translate }}
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link fs-6" [class.active]="activeTab === 'roster'" (click)="setActiveTab('roster')">
-              <i class="bi bi-list-check me-2"></i> Flight Roster
+              <i class="bi bi-list-check me-2"></i> {{ 'Flight Roster' | translate }}
             </button>
           </li>
         </ul>
         <div *ngIf="activeTab === 'directory'">
           <button class="btn btn-outline-primary btn-sm me-2 shadow-sm rounded-pill px-3" (click)="openGroupModal()">
-            <i class="bi bi-people"></i> Manage Groups
+            <i class="bi bi-people"></i> {{ 'Manage Groups' | translate }}
           </button>
           <button class="btn btn-primary btn-sm shadow-sm rounded-pill px-3" (click)="addPilot()">
-            <i class="bi bi-plus-lg"></i> Add Pilot
+            <i class="bi bi-plus-lg"></i> {{ 'Add Pilot' | translate }}
           </button>
         </div>
       </div>
@@ -86,12 +86,12 @@
           <table class="table table-hover align-middle">
             <thead class="table-light">
               <tr>
-                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Full Name</th>
-                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Group</th>
-                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">Flights Assigned</th>
-                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">Flights Flown</th>
-                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">Status</th>
-                <th scope="col" class="text-muted text-uppercase text-end" style="font-size: 0.75rem;">Actions</th>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">{{ 'Full Name' | translate }}</th>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">{{ 'Group' | translate }}</th>
+                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">{{ 'Flights Assigned' | translate }}</th>
+                <th scope="col" class="text-muted text-uppercase text-center" style="font-size: 0.75rem;">{{ 'Flights Flown' | translate }}</th>
+                <th scope="col" class="text-muted text-uppercase" style="font-size: 0.75rem;">{{ 'Status' | translate }}</th>
+                <th scope="col" class="text-muted text-uppercase text-end" style="font-size: 0.75rem;">{{ 'Actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -99,7 +99,7 @@
                 <!-- Group Header Row -->
                 <tr *ngIf="idx === 0 || getGroupName(p.pilotGroupId) !== getGroupName(pilots[idx - 1].pilotGroupId)" class="table-group-header bg-light">
                   <td colspan="6" class="fw-bold text-primary py-2 ps-3" style="font-size: 0.9rem; background-color: #f1f5f9;">
-                    <i class="bi bi-diagram-3-fill me-2"></i> {{ getGroupName(p.pilotGroupId) === '-' ? 'No Group / Independent' : getGroupName(p.pilotGroupId) }}
+                    <i class="bi bi-diagram-3-fill me-2"></i> {{ getGroupName(p.pilotGroupId) === '-' ? ('No Group / Independent' | translate) : getGroupName(p.pilotGroupId) }}
                   </td>
                 </tr>
                 <tr class="transition-all">
@@ -125,13 +125,13 @@
                   </td>
                   <td>
                     <span class="badge rounded-pill px-3 py-2 {{getStatusBadgeClass(p.status)}}">
-                      {{getStatusLabel(p.status)}}
+                      {{ (p.status === 1 ? 'Active' : (p.status === 0 ? 'Inactive' : getStatusLabel(p.status))) | translate }}
                     </span>
                   </td>
                   <td class="text-end">
                     <div class="btn-group">
-                      <button class="btn btn-sm btn-light border text-primary" (click)="editPilot(p)" title="Edit"><i class="bi bi-pencil-fill"></i></button>
-                      <button class="btn btn-sm btn-light border text-danger" (click)="deletePilot(p.id!)" title="Delete"><i class="bi bi-trash-fill"></i></button>
+                      <button class="btn btn-sm btn-light border text-primary" (click)="editPilot(p)" [title]="'Edit' | translate"><i class="bi bi-pencil-fill"></i></button>
+                      <button class="btn btn-sm btn-light border text-danger" (click)="deletePilot(p.id!)" [title]="'Delete' | translate"><i class="bi bi-trash-fill"></i></button>
                     </div>
                   </td>
                 </tr>
@@ -139,7 +139,7 @@
               <tr *ngIf="pilots.length === 0">
                 <td colspan="6" class="text-center py-5 text-muted">
                   <i class="bi bi-person-x fs-1 d-block mb-2"></i>
-                  No pilots found. Click "Add Pilot" to create one.
+                  {{ 'No pilots found. Click "Add Pilot" to create one.' | translate }}
                 </td>
               </tr>
             </tbody>
@@ -154,7 +154,7 @@
           <div class="col-12" *ngIf="rosterItems.length === 0">
             <div class="text-center py-5 text-muted bg-white rounded border border-dashed">
               <i class="bi bi-clipboard-check fs-1 d-block mb-2"></i>
-              No pilot flight assignments found. Add pilots to reservations to see them here!
+              {{ 'No pilot flight assignments found. Add pilots to reservations to see them here!' | translate }}
             </div>
           </div>
           
@@ -176,7 +176,7 @@
                       'bi-check-circle-fill': item.attendance === 1,
                       'bi-x-circle-fill': item.attendance === 2
                     }"></i>
-                    {{ item.attendance === 0 ? 'Pending' : (item.attendance === 1 ? 'Confirmed' : 'No-Show') }}
+                    {{ (item.attendance === 0 ? 'Pending' : (item.attendance === 1 ? 'Confirmed' : 'No-Show')) | translate }}
                   </span>
                   <span class="small text-muted"><i class="bi bi-calendar me-1"></i> {{ item.flightDate | date:'dd/MM/yyyy' }}</span>
                 </div>
@@ -185,15 +185,15 @@
                 <div class="small text-muted mb-3"><i class="bi bi-journal-text me-1"></i> Res #{{ item.reservationId }}: {{ item.reservationTitle }}</div>
                 
                 <div *ngIf="item.attendance === 2 && item.note" class="alert alert-danger bg-danger bg-opacity-10 border-0 small p-2 mb-3">
-                  <strong>Note:</strong> {{ item.note }}
+                  <strong>{{ 'Note' | translate }}:</strong> {{ item.note }}
                 </div>
                 
                 <div *ngIf="item.attendance === 0" class="d-flex gap-2 mt-auto">
                   <button class="btn btn-sm btn-success flex-grow-1 shadow-sm fw-bold" (click)="confirmFlight(item)">
-                    <i class="bi bi-check2-all me-1"></i> Confirmed
+                    <i class="bi bi-check2-all me-1"></i> {{ 'Confirmed' | translate }}
                   </button>
                   <button class="btn btn-sm btn-danger flex-grow-1 shadow-sm fw-bold" (click)="markNoShow(item)">
-                    <i class="bi bi-x-lg me-1"></i> Did Not Come
+                    <i class="bi bi-x-lg me-1"></i> {{ 'Did Not Come' | translate }}
                   </button>
                 </div>
               </div>
@@ -211,58 +211,58 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
       <div class="modal-header bg-primary text-white border-0">
-        <h5 class="modal-title"><i class="bi bi-person-badge me-2"></i>{{ isEditing ? 'Edit Pilot' : 'Add Pilot' }}</h5>
+        <h5 class="modal-title"><i class="bi bi-person-badge me-2"></i>{{ (isEditing ? 'Edit Pilot' : 'Add Pilot') | translate }}</h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
       <form (ngSubmit)="savePilot()">
         <div class="modal-body p-4 bg-light">
           <div class="bg-white p-3 rounded border shadow-sm mb-3">
             <div class="mb-3">
-              <label for="fullName" class="form-label fw-bold">Full Name <span class="text-danger">*</span></label>
+              <label for="fullName" class="form-label fw-bold">{{ 'Full Name' | translate }} <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="fullName" name="fullName" [(ngModel)]="currentPilot.fullName" required>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="licenseNumber" class="form-label fw-bold">License Number <span class="text-danger">*</span></label>
+                <label for="licenseNumber" class="form-label fw-bold">{{ 'License Number' | translate }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="licenseNumber" name="licenseNumber" [(ngModel)]="currentPilot.licenseNumber" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="status" class="form-label fw-bold">Status <span class="text-danger">*</span></label>
+                <label for="status" class="form-label fw-bold">{{ 'Status' | translate }} <span class="text-danger">*</span></label>
                 <select class="form-select" id="status" name="status" [(ngModel)]="currentPilot.status" required>
-                  <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                  <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
                 </select>
               </div>
             </div>
             <div class="mb-2">
-              <label for="pilotGroupId" class="form-label fw-bold">Pilot Group</label>
+              <label for="pilotGroupId" class="form-label fw-bold">{{ 'Pilot Group' | translate }}</label>
               <select class="form-select" id="pilotGroupId" name="pilotGroupId" [(ngModel)]="currentPilot.pilotGroupId">
-                <option [ngValue]="undefined">No Group</option>
+                <option [ngValue]="undefined">{{ 'No Group' | translate }}</option>
                 <option *ngFor="let group of pilotGroups" [ngValue]="group.id">{{ group.name }}</option>
               </select>
             </div>
           </div>
 
           <div class="bg-white p-3 rounded border shadow-sm">
-            <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-bar-chart-fill me-2"></i>Flight Metrics Override</h6>
+            <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-bar-chart-fill me-2"></i>{{ 'Flight Metrics Override' | translate }}</h6>
             <div class="alert alert-info py-2 small d-flex align-items-center">
               <i class="bi bi-info-circle-fill fs-4 me-2"></i>
-              These numbers automatically increment via the Flight Roster. You can manually adjust them here if needed.
+              {{ 'These numbers automatically increment via the Flight Roster. You can manually adjust them here if needed.' | translate }}
             </div>
             <div class="row">
               <div class="col-6">
-                <label class="form-label fw-bold small text-muted text-uppercase">Flights Assigned</label>
+                <label class="form-label fw-bold small text-muted text-uppercase">{{ 'Flights Assigned' | translate }}</label>
                 <input type="number" class="form-control text-center fw-bold fs-5" name="flightsAssigned" [(ngModel)]="currentPilot.flightsAssigned">
               </div>
               <div class="col-6">
-                <label class="form-label fw-bold small text-muted text-uppercase">Flights Flown</label>
+                <label class="form-label fw-bold small text-muted text-uppercase">{{ 'Flights Flown' | translate }}</label>
                 <input type="number" class="form-control text-center fw-bold fs-5 text-success" name="flightsFlown" [(ngModel)]="currentPilot.flightsFlown">
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer border-0 p-3 bg-light">
-          <button type="button" class="btn btn-secondary px-4" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4 shadow-sm">Save Pilot</button>
+          <button type="button" class="btn btn-secondary px-4" (click)="closeModal()">{{ 'Cancel' | translate }}</button>
+          <button type="submit" class="btn btn-primary px-4 shadow-sm">{{ 'Save Pilot' | translate }}</button>
         </div>
       </form>
     </div>
@@ -274,30 +274,30 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
       <div class="modal-header bg-dark text-white border-0">
-        <h5 class="modal-title"><i class="bi bi-diagram-3 me-2"></i>Pilot Groups Management</h5>
+        <h5 class="modal-title"><i class="bi bi-diagram-3 me-2"></i>{{ 'Pilot Groups Management' | translate }}</h5>
         <button type="button" class="btn-close btn-close-white" (click)="closeGroupModal()"></button>
       </div>
       <div class="modal-body p-4 bg-light">
         <div class="bg-white p-4 rounded shadow-sm border mb-4">
-          <h6 class="fw-bold mb-3 text-primary">{{ isEditingGroup ? 'Edit Group' : 'Create New Group' }}</h6>
+          <h6 class="fw-bold mb-3 text-primary">{{ (isEditingGroup ? 'Edit Group' : 'Create New Group') | translate }}</h6>
           <div class="input-group shadow-sm">
             <span class="input-group-text bg-light"><i class="bi bi-bookmark-fill text-muted"></i></span>
-            <input type="text" class="form-control" placeholder="Enter group name..." [(ngModel)]="currentGroup.name">
+            <input type="text" class="form-control" [placeholder]="'Enter group name...' | translate" [(ngModel)]="currentGroup.name">
             <button class="btn btn-primary px-4" (click)="saveGroup()">
-              {{ isEditingGroup ? 'Update Group' : 'Create Group' }}
+              {{ (isEditingGroup ? 'Update Group' : 'Create Group') | translate }}
             </button>
-            <button class="btn btn-outline-secondary px-3" *ngIf="isEditingGroup" (click)="openGroupModal()">Cancel</button>
+            <button class="btn btn-outline-secondary px-3" *ngIf="isEditingGroup" (click)="openGroupModal()">{{ 'Cancel' | translate }}</button>
           </div>
         </div>
 
-        <h6 class="fw-bold text-dark mb-3">Existing Groups</h6>
+        <h6 class="fw-bold text-dark mb-3">{{ 'Existing Groups' | translate }}</h6>
         <div class="table-responsive bg-white rounded shadow-sm border">
           <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
               <tr>
-                <th class="ps-4">Group Name</th>
-                <th class="text-center">Active Pilots</th>
-                <th class="text-end pe-4">Actions</th>
+                <th class="ps-4">{{ 'Group Name' | translate }}</th>
+                <th class="text-center">{{ 'Active Pilots' | translate }}</th>
+                <th class="text-end pe-4">{{ 'Actions' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -309,12 +309,12 @@
                   </span>
                 </td>
                 <td class="text-end pe-4">
-                  <button class="btn btn-sm btn-light border text-primary me-2" (click)="openGroupModal(g)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="btn btn-sm btn-light border text-primary me-2" (click)="openGroupModal(g)"><i class="bi bi-pencil-fill"></i> {{ 'Edit' | translate }}</button>
                   <button class="btn btn-sm btn-light border text-danger" (click)="deleteGroup(g.id!)"><i class="bi bi-trash-fill"></i></button>
                 </td>
               </tr>
               <tr *ngIf="pilotGroups.length === 0">
-                <td colspan="3" class="text-center py-4 text-muted">No pilot groups created yet.</td>
+                <td colspan="3" class="text-center py-4 text-muted">{{ 'No pilot groups created yet.' | translate }}</td>
               </tr>
             </tbody>
           </table>

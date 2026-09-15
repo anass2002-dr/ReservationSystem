@@ -1,16 +1,16 @@
 <div class="loading-overlay" *ngIf="isLoading">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Saving reservation...</div>
+  <div class="loading-text">{{ 'Saving reservation...' | translate }}</div>
 </div>
 
 <div class="reservation-container">
   <div class="pagetitle mb-3 mb-md-4">
-    <h1 class="fw-bold text-dark">{{ isEditing ? 'Edit Reservation' : 'New Reservation' }}</h1>
+    <h1 class="fw-bold text-dark">{{ (isEditing ? 'Edit Reservation' : 'New Reservation') | translate }}</h1>
     <nav>
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item"><a routerLink="/reservations">Reservations</a></li>
-        <li class="breadcrumb-item active text-primary">{{ isEditing ? 'Edit' : 'New' }}</li>
+        <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+        <li class="breadcrumb-item"><a routerLink="/reservations">{{ 'Reservations' | translate }}</a></li>
+        <li class="breadcrumb-item active text-primary">{{ (isEditing ? 'Edit' : 'New Reservation') | translate }}</li>
       </ol>
     </nav>
   </div>
@@ -25,19 +25,19 @@
               class="form-select form-select-sm border-0 bg-white text-primary fw-bold rounded-pill px-3 py-1 cursor-pointer"
               style="width: auto; outline: none; box-shadow: none;" name="paxDropdown"
               [ngModel]="reservation.details.length" (ngModelChange)="onPaxChange($event)">
-              <option *ngFor="let n of paxOptions" [value]="n" class="text-dark">{{ n }} PAX</option>
+              <option *ngFor="let n of paxOptions" [value]="n" class="text-dark">{{ n }} {{ 'PAX' | translate }}</option>
             </select>
             <span class="mx-1 d-none d-sm-inline">|</span>
-            <span>{{ isEditing ? 'Update Flight Details' : 'Book a New Flight' }}</span>
+            <span>{{ (isEditing ? 'Update Flight Details' : 'Book a New Flight') | translate }}</span>
           </h5>
-          <p class="mb-0 text-white-50 small mt-1">Please provide the flight and passenger details below.</p>
+          <p class="mb-0 text-white-50 small mt-1">{{ 'Please provide the flight and passenger details below.' | translate }}</p>
         </div>
         <div *ngIf="isEditing">
           <span *ngIf="isFullyPaid()" class="badge bg-white text-success px-3 px-sm-4 py-2 rounded-pill shadow-sm fw-bold">
-            <i class="bi bi-check-circle-fill me-1"></i> PAID IN FULL
+            <i class="bi bi-check-circle-fill me-1"></i> {{ 'Paid in Full' | translate }}
           </span>
           <span *ngIf="!isFullyPaid()" class="badge bg-white text-danger px-3 px-sm-4 py-2 rounded-pill shadow-sm fw-bold">
-            <i class="bi bi-exclamation-circle me-1"></i> {{ remainingBalance | currency:'USD' }} DUE
+            <i class="bi bi-exclamation-circle me-1"></i> {{ remainingBalance | currency:'USD' }} {{ 'Rest to Pay' | translate }}
           </span>
         </div>
       </div>
@@ -45,31 +45,31 @@
       <div class="card-body p-3 p-sm-4 p-md-5">
         
         <div class="section-title">
-          <i class="bi bi-info-circle-fill"></i> General Information
+          <i class="bi bi-info-circle-fill"></i> {{ 'General Information' | translate }}
         </div>
 
         <div class="row g-3 g-md-4 mb-4 mb-md-5">
           <div class="col-12 col-md-8">
-            <label class="form-label">Reservation Title</label>
+            <label class="form-label">{{ 'Reservation Title' | translate }}</label>
             <input type="text" class="form-control" name="title" [(ngModel)]="reservation.title"
               placeholder="e.g. Anniversary Trip, VIP Group">
           </div>
           <div class="col-12 col-md-4">
-            <label class="form-label">Booking Source <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'Booking Source' | translate }} <span class="text-danger">*</span></label>
             <select class="form-select p-2 height-60" name="bookingSource" [(ngModel)]="reservation.bookingSource"
               required>
-              <option value="" disabled selected>Select Source</option>
-              <option *ngFor="let opt of bookingSourceOptions" [value]="opt.value">{{ opt.label }}</option>
+              <option value="" disabled selected>{{ 'Booking Source' | translate }}</option>
+              <option *ngFor="let opt of bookingSourceOptions" [value]="opt.value">{{ opt.label | translate }}</option>
             </select>
           </div>
           <div class="col-12 col-sm-6">
-            <label class="form-label">Flight Date <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'Flight Date' | translate }} <span class="text-danger">*</span></label>
             <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d"
               class="form-control p-2 height-60" name="flightDate" [(ngModel)]="reservation.flightDate" required>
           </div>
 
           <div class="col-12 col-sm-6">
-            <label class="form-label">Time Slot <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'Flight Times' | translate }} <span class="text-danger">*</span></label>
             <select class="form-select p-2 height-60" name="flightTimeId" [(ngModel)]="reservation.flightTimeId"
               required>
               <option *ngFor="let slot of flightTimes" [value]="slot.id">{{ slot.time }}</option>
@@ -79,39 +79,39 @@
 
         <div class="row g-3 g-md-4 mb-4 mb-md-5 align-items-end">
           <div class="col-12 col-sm-6 col-lg-3">
-            <label class="form-label">Booking Status <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'Booking Status' | translate }} <span class="text-danger">*</span></label>
             <select class="form-select p-2 height-60" name="status" [(ngModel)]="reservation.status" required>
-              <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+              <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
             </select>
           </div>
 
           <div class="col-12 col-sm-6 col-lg-3">
-            <label class="form-label">Booking Channel</label>
+            <label class="form-label">{{ 'Booking Channel' | translate }}</label>
             <select class="form-select p-2 height-60" name="isAgencyBooking" [(ngModel)]="reservation.isAgencyBooking"
               (change)="onAgencyPriceChange()">
-              <option [ngValue]="false">Direct Booking (Us)</option>
-              <option [ngValue]="true">Agency Booking</option>
+              <option [ngValue]="false">{{ 'Direct Booking (Us)' | translate }}</option>
+              <option [ngValue]="true">{{ 'Agency Booking' | translate }}</option>
             </select>
           </div>
 
           <div class="col-12 col-sm-6 col-lg-3" *ngIf="reservation.isAgencyBooking">
-            <label class="form-label">Agency <span class="text-danger">*</span></label>
+            <label class="form-label">{{ 'Agency' | translate }} <span class="text-danger">*</span></label>
             <div class="height-60">
               <ng-select [items]="agencies" bindLabel="name" bindValue="id" name="agencyId"
-                [(ngModel)]="reservation.agencyId" [required]="reservation.isAgencyBooking" placeholder="Select Agency"
+                [(ngModel)]="reservation.agencyId" [required]="reservation.isAgencyBooking" [placeholder]="'Select Agency' | translate"
                 class="custom-ng-select">
               </ng-select>
             </div>
           </div>
 
           <div class="col-12 col-sm-6 col-lg-3" *ngIf="reservation.isAgencyBooking">
-            <label class="form-label">Billet Number</label>
+            <label class="form-label">{{ 'Billet Number' | translate }}</label>
             <input type="text" class="form-control p-2 height-60" name="billetNumber"
-              [(ngModel)]="reservation.billetNumber" placeholder="Billet / Ticket Number">
+              [(ngModel)]="reservation.billetNumber" [placeholder]="'Billet / Ticket Number' | translate">
           </div>
 
           <div class="col-12 col-sm-6 col-lg-3">
-            <label class="form-label">Preferred Currency</label>
+            <label class="form-label">{{ 'Preferred Currency' | translate }}</label>
             <select class="form-select p-2 height-60" name="preferredCurrency"
               [(ngModel)]="reservation.preferredCurrency">
               <option *ngFor="let opt of currencyOptions" [ngValue]="opt.value">{{ opt.label }}</option>
@@ -120,7 +120,7 @@
 
           <div class="col-12 col-sm-6 col-lg-3">
             <label class="form-label">
-              Total Amount ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})
+              {{ 'Total Amount' | translate }} ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})
               <span class="text-danger" *ngIf="!isAnyPackageSelected()">*</span>
             </label>
             <div class="input-group height-60">
@@ -132,21 +132,21 @@
           </div>
 
           <div class="col-12 col-lg-6">
-            <label class="form-label">Deposit ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})</label>
+            <label class="form-label">{{ 'Deposit' | translate }} ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})</label>
             <div class="input-group deposit-input-group height-60">
               <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
                   class="bi bi-cash-stack"></i></span>
               <input type="number" class="form-control p-2 border-start-0 fw-bold text-success deposit-input-amount" name="deposit"
                 [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="onManualTotalChange()">
               <select class="form-select p-2 deposit-input-method" name="depositMethod" [(ngModel)]="reservation.depositMethod">
-                <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
               </select>
             </div>
           </div>
 
           <div class="col-12 col-lg-4 text-start text-lg-end ms-auto mt-2 mt-lg-0">
             <div class="p-2 p-sm-3 bg-light rounded-4 border d-flex flex-column justify-content-center h-100" style="min-height: 60px;">
-              <label class="small mb-0 text-muted line-height-1">Rest to Pay</label>
+              <label class="small mb-0 text-muted line-height-1">{{ 'Rest to Pay' | translate }}</label>
               <div class="h4 mb-0 text-danger fw-bold">
                 {{ remainingBalance | number:'1.2-2' }} {{ getCurrencyLabel(reservation.preferredCurrency || 0) }}
               </div>
@@ -155,18 +155,18 @@
         </div>
 
         <div class="section-title mt-2">
-          <i class="bi bi-people-fill"></i> Passenger Information
+          <i class="bi bi-people-fill"></i> {{ 'Passenger Information' | translate }}
         </div>
 
         <div *ngFor="let detail of reservation.details; let i = index" class="passenger-card">
           <div class="passenger-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="d-flex align-items-center">
               <span class="passenger-number">{{ i + 1 }}</span>
-              <span class="fw-bold text-dark">Passenger Details</span>
+              <span class="fw-bold text-dark">{{ 'Passenger Details' | translate }}</span>
             </div>
             <button type="button" class="btn btn-sm btn-link text-danger text-decoration-none fw-bold p-0"
               (click)="removeDetail(i)" *ngIf="reservation.details.length > 1">
-              <i class="bi bi-person-dash me-1"></i> Remove
+              <i class="bi bi-person-dash me-1"></i> {{ 'Remove' | translate }}
             </button>
           </div>
 
@@ -175,37 +175,37 @@
               
               <div class="col-12 col-lg-6 border-end-lg pe-lg-4">
                 <div class="mb-3 mb-md-4">
-                  <label class="form-label">Search Existing Customer</label>
+                  <label class="form-label">{{ 'Search Existing Customer' | translate }}</label>
                   <ng-select [items]="customers" bindLabel="fullName" bindValue="id" [(ngModel)]="detail.customerId"
-                    [name]="'customerId_' + i" (change)="onCustomerSelect(i)" placeholder="Start typing name...">
+                    [name]="'customerId_' + i" (change)="onCustomerSelect(i)" [placeholder]="'Start typing name...' | translate">
                   </ng-select>
                 </div>
 
                 <div *ngIf="detail.customer" class="row g-3">
                   <div class="col-12">
-                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ 'Full Name' | translate }} <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" [name]="'custName_' + i"
                       [(ngModel)]="detail.customer.fullName" required>
                   </div>
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Phone Number</label>
+                    <label class="form-label">{{ 'Phone Number' | translate }}</label>
                     <input type="text" class="form-control" [name]="'custPhone_' + i"
                       [(ngModel)]="detail.customer.phoneNumber">
                   </div>
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ 'Date of Birth' | translate }} <span class="text-danger">*</span></label>
                     <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d"
                       class="form-control" [name]="'custDob_' + i" [(ngModel)]="detail.customer.dateOfBirth" required>
                   </div>
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">{{ 'Email' | translate }}</label>
                     <input type="email" class="form-control" [name]="'custEmail_' + i"
                       [(ngModel)]="detail.customer.email">
                   </div>
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Nationality</label>
+                    <label class="form-label">{{ 'Nationality' | translate }}</label>
                     <ng-select [items]="countries" bindLabel="name" bindValue="name"
-                      [(ngModel)]="detail.customer.country" [name]="'custCountry_' + i" placeholder="Select Country">
+                      [(ngModel)]="detail.customer.country" [name]="'custCountry_' + i" [placeholder]="'Select Country' | translate">
                     </ng-select>
                   </div>
                 </div>
@@ -217,17 +217,17 @@
                     <div class="p-3 bg-light rounded-4 mb-3 border border-dashed border-2">
                       <div class="row g-3">
                         <div class="col-12 col-sm-6">
-                          <label class="form-label">Pilot Group</label>
+                          <label class="form-label">{{ 'Pilot Group' | translate }}</label>
                           <ng-select [items]="pilotGroups" bindLabel="name" bindValue="id"
-                            [(ngModel)]="selectedGroupIds[i]" [name]="'pilotGroupId_' + i" placeholder="Filter by Group"
+                            [(ngModel)]="selectedGroupIds[i]" [name]="'pilotGroupId_' + i" [placeholder]="'Filter by Group' | translate"
                             (change)="onPilotGroupChange(i)">
                           </ng-select>
                         </div>
                         <div class="col-12 col-sm-6">
-                          <label class="form-label">Assigned Pilot</label>
+                          <label class="form-label">{{ 'Assigned Pilot' | translate }}</label>
                           <ng-select [items]="filteredPilots[i] || pilots" bindLabel="fullName" bindValue="id"
                             groupBy="groupName" [(ngModel)]="detail.pilotId" [name]="'pilotId_' + i"
-                            placeholder="Select Pilot">
+                            [placeholder]="'Select Pilot' | translate">
                             <ng-template ng-option-tmp let-item="item">
                               {{ item.fullName }}
                               <span class="text-muted small ms-1" style="font-size: 0.75rem;">
@@ -241,25 +241,25 @@
                   </div>
 
                   <div class="col-12">
-                    <label class="form-label">Flight Package</label>
+                    <label class="form-label">{{ 'Flight Package' | translate }}</label>
                     <ng-select [items]="flightPackages" bindLabel="title" bindValue="id"
-                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i" placeholder="Choose Package"
+                      [(ngModel)]="detail.flightPackageId" [name]="'flightPackageId_' + i" [placeholder]="'Choose Package' | translate"
                       (change)="calculateBalances()">
                     </ng-select>
                   </div>
 
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Transport</label>
+                    <label class="form-label">{{ 'Transport' | translate }}</label>
                     <ng-select [items]="transportGroups" bindLabel="driverName" bindValue="id"
                       [(ngModel)]="detail.transportGroupId" [name]="'transportGroupId_' + i"
-                      placeholder="Select Service">
+                      [placeholder]="'Select Service' | translate">
                     </ng-select>
                   </div>
 
                   <div class="col-12 col-sm-6">
-                    <label class="form-label">Extra Services</label>
+                    <label class="form-label">{{ 'Extra Services' | translate }}</label>
                     <ng-select [items]="extraServices" bindLabel="name" bindValue="id" [multiple]="true"
-                      [(ngModel)]="detail.extraServiceIds" [name]="'extraServiceIds_' + i" placeholder="Select Extras"
+                      [(ngModel)]="detail.extraServiceIds" [name]="'extraServiceIds_' + i" [placeholder]="'Select Extras' | translate"
                       (change)="calculateBalances()">
                     </ng-select>
                   </div>
@@ -268,8 +268,9 @@
                     <div class="form-check form-switch custom-switch p-3 bg-white rounded-3 shadow-sm border d-flex align-items-center">
                       <input class="form-check-input ms-0 me-3 flex-shrink-0" type="checkbox" [id]="'weightLimitStatus_' + i"
                         [name]="'weightLimitStatus_' + i" [(ngModel)]="detail.weightLimitStatus" style="width: 2.2em; height: 1.2em;">
-                      <label class="form-check-label fw-bold text-dark mb-0" [for]="'weightLimitStatus_' + i">Passenger
-                        Weight Limit Verified</label>
+                      <label class="form-check-label fw-bold text-dark mb-0" [for]="'weightLimitStatus_' + i">
+                        {{ 'Passenger Weight Limit Verified' | translate }}
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -280,32 +281,32 @@
 
         <div class="text-center mb-4 mb-md-5">
           <button type="button" class="add-passenger-btn" (click)="addDetail()">
-            <i class="bi bi-person-plus-fill me-2"></i> Add Another Passenger to this Reservation
+            <i class="bi bi-person-plus-fill me-2"></i> {{ 'Add Another Passenger to this Reservation' | translate }}
           </button>
         </div>
 
         <div class="section-title">
-          <i class="bi bi-geo-alt-fill"></i> Pickup & Logistics
+          <i class="bi bi-geo-alt-fill"></i> {{ 'Pickup & Logistics' | translate }}
         </div>
 
         <div class="row g-3 g-md-4 mb-4">
           <div class="col-12 col-md-4">
-            <label class="form-label">Pickup Service</label>
+            <label class="form-label">{{ 'Pickup Service' | translate }}</label>
             <select class="form-select p-2 height-60" name="pickupStatus" [(ngModel)]="reservation.pickupStatus"
               (change)="onPickupStatusChange()">
-              <option *ngFor="let opt of pickupStatusOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+              <option *ngFor="let opt of pickupStatusOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
             </select>
           </div>
           <div class="col-12 col-md-8" [hidden]="reservation.pickupStatus === PickupStatus.NotRequired"
             style="position: relative;">
-            <label class="form-label">Pickup Location / Hotel Name</label>
+            <label class="form-label">{{ 'Pickup Location / Hotel Name' | translate }}</label>
             <div class="input-group input-group-premium height-60">
               <input type="text" class="form-control p-2 height-60" name="pickupLocation"
-                [(ngModel)]="reservation.pickupLocation" placeholder="Enter hotel or location name"
+                [(ngModel)]="reservation.pickupLocation" [placeholder]="'Enter hotel or location name' | translate"
                 (input)="onPickupLocationInput($event)" (blur)="onPickupLocationBlur()" (keyup.enter)="searchLocation()"
                 autocomplete="off">
               <button class="btn btn-primary px-3 px-sm-4 d-flex align-items-center" type="button" (click)="searchLocation()">
-                <i class="bi bi-search me-1"></i> <span class="d-none d-sm-inline">Search</span>
+                <i class="bi bi-search me-1"></i> <span class="d-none d-sm-inline">{{ 'Search' | translate }}</span>
               </button>
             </div>
 
@@ -324,26 +325,26 @@
         </div>
 
         <div class="section-title mt-4 mt-md-5">
-          <i class="bi bi-pencil-square"></i> Additional Information
+          <i class="bi bi-pencil-square"></i> {{ 'Additional Information' | translate }}
         </div>
         <div class="mb-4">
-          <label class="form-label">Special Requests or Notes</label>
+          <label class="form-label">{{ 'Special Requests or Notes' | translate }}</label>
           <textarea class="form-control" name="notes" style="height: 120px; border-radius: 18px;"
             [(ngModel)]="reservation.notes"
-            placeholder="Any dietary requirements, health issues, or special occasions?"></textarea>
+            [placeholder]="'Any dietary requirements, health issues, or special occasions?' | translate"></textarea>
         </div>
 
         <div class="section-title mt-4 mt-md-5">
-          <i class="bi bi-camera-fill"></i> Reservation Photos / Documents
+          <i class="bi bi-camera-fill"></i> {{ 'Reservation Photos / Documents' | translate }}
         </div>
         <div class="mb-4">
-          <label class="form-label">Upload Photos (e.g. payment receipt, passport copy, ticket files)</label>
+          <label class="form-label">{{ 'Upload Photos (e.g. payment receipt, passport copy, ticket files)' | translate }}</label>
           <div class="photo-upload-zone p-3 p-md-4 bg-light rounded-4 border border-dashed text-center">
             <i class="bi bi-cloud-upload display-4 text-muted mb-2 d-block"></i>
-            <p class="mb-2 text-muted">Drag & drop files here, or click to browse</p>
+            <p class="mb-2 text-muted">{{ 'Drag & drop files here, or click to browse' | translate }}</p>
             <input type="file" (change)="onPhotosSelected($event)" multiple accept="image/*" class="d-none" #fileInput>
             <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-2" (click)="fileInput.click()">
-              <i class="bi bi-file-earmark-image me-1"></i> Choose Photos
+              <i class="bi bi-file-earmark-image me-1"></i> {{ 'Choose Photos' | translate }}
             </button>
           </div>
 
@@ -370,12 +371,12 @@
 
         <div class="row mt-4 mt-md-5 pt-3 pt-md-4 border-top">
           <div class="col-12 d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2 gap-sm-3">
-            <button type="button" class="btn btn-secondary-premium w-100 w-sm-auto" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn btn-secondary-premium w-100 w-sm-auto" (click)="cancel()">{{ 'Cancel' | translate }}</button>
             <button type="button" class="btn btn-info-premium w-100 w-sm-auto" (click)="printReservation()" *ngIf="isEditing">
-              <i class="bi bi-printer me-2"></i> Print Voucher
+              <i class="bi bi-printer me-2"></i> {{ 'Print Voucher' | translate }}
             </button>
             <button type="submit" class="btn btn-primary-premium w-100 w-sm-auto" [disabled]="!reservationForm.form.valid">
-              <i class="bi bi-save me-2"></i> {{ isEditing ? 'Update Reservation' : 'Complete Booking' }}
+              <i class="bi bi-save me-2"></i> {{ (isEditing ? 'Update Reservation' : 'Complete Booking') | translate }}
             </button>
           </div>
         </div>

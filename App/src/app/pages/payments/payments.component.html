@@ -1,16 +1,16 @@
 <div class="pagetitle d-flex justify-content-between align-items-center">
   <div>
-    <h1>Payments Management</h1>
+    <h1>{{ 'Payments Management' | translate }}</h1>
     <nav>
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item">Reservations</li>
-        <li class="breadcrumb-item active">Payments</li>
+        <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+        <li class="breadcrumb-item">{{ 'Reservations' | translate }}</li>
+        <li class="breadcrumb-item active">{{ 'Payments' | translate }}</li>
       </ol>
     </nav>
   </div>
   <div *ngIf="activeTab === 'collect'" class="d-flex align-items-center bg-white rounded-pill px-4 py-2 shadow-sm border">
-    <label class="fw-bold me-3 text-muted small text-uppercase mb-0">Select Date:</label>
+    <label class="fw-bold me-3 text-muted small text-uppercase mb-0">{{ 'Select Date:' | translate }}</label>
     <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control border-0 fw-bold text-primary p-0 bg-transparent" [(ngModel)]="selectedDate" style="outline: none; box-shadow: none;">
   </div>
 </div>
@@ -21,13 +21,13 @@
       [class.btn-primary]="activeTab === 'collect'"
       [class.btn-light]="activeTab !== 'collect'"
       (click)="activeTab = 'collect'">
-      <i class="bi bi-wallet2 me-2"></i>Collect Payments
+      <i class="bi bi-wallet2 me-2"></i>{{ 'Collect Payments' | translate }}
     </button>
     <button class="btn px-4 py-2 fw-bold rounded-pill transition-all"
       [class.btn-primary]="activeTab === 'records'"
       [class.btn-light]="activeTab !== 'records'"
       (click)="activeTab = 'records'">
-      <i class="bi bi-journal-text me-2"></i>Payment Records
+      <i class="bi bi-journal-text me-2"></i>{{ 'Payment Records' | translate }}
     </button>
   </div>
 </div>
@@ -44,7 +44,7 @@
               <i class="bi bi-clock me-2 text-primary"></i>{{ group.flightTime.time }}
             </h5>
             <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
-              {{ group.reservations.length }} Reservations
+              {{ group.reservations.length }} {{ 'Reservations' | translate }}
             </span>
           </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="card-body pt-3">
           <div class="d-flex flex-column gap-3">
             <div *ngIf="group.reservations.length === 0" class="text-center py-4 text-muted small bg-light rounded border border-dashed">
-              No flights scheduled for this slot.
+              {{ 'No flights scheduled for this slot.' | translate }}
             </div>
             
             <div *ngFor="let res of group.reservations; trackBy: trackByReservation" 
@@ -62,30 +62,30 @@
                  style="cursor: pointer;">
                  
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <h6 class="fw-bold mb-0 text-dark">{{ res.title || 'Untitled Reservation' }}</h6>
+                <h6 class="fw-bold mb-0 text-dark">{{ res.title || 'Standard Flight' }}</h6>
                 <span class="badge bg-secondary">#{{ res.id }}</span>
               </div>
               
               <div class="d-flex justify-content-between align-items-center small text-muted">
-                <div><i class="bi bi-people-fill me-1"></i> {{ getPassengersCount(res) }} Passengers</div>
+                <div><i class="bi bi-people-fill me-1"></i> {{ getPassengersCount(res) }} {{ 'Passengers' | translate }}</div>
                 <div class="fw-bold text-primary">{{ res.totalAmount | number:'1.2-2' }} {{ getCurrencyCode(res.preferredCurrency) }}</div>
               </div>
               
               <div class="mt-2 d-flex justify-content-between align-items-center">
                 <div>
                   <span *ngIf="res.status === 2" class="badge bg-danger text-white">
-                    <i class="bi bi-x-circle-fill me-1"></i> Cancelled
+                    <i class="bi bi-x-circle-fill me-1"></i> {{ 'Cancelled' | translate }}
                   </span>
                 </div>
                 <div>
                   <span *ngIf="res.status !== 2 && isFullyPaid(res)" class="badge bg-success text-white border border-success py-1 px-2">
-                    <i class="bi bi-check-circle-fill me-1"></i> Paid
+                    <i class="bi bi-check-circle-fill me-1"></i> {{ 'Paid' | translate }}
                   </span>
                   <button *ngIf="res.status !== 2 && !isFullyPaid(res)" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-1 px-2" (click)="openPaymentModal(res); $event.stopPropagation()" style="cursor: pointer;">
-                    <i class="bi bi-wallet2 me-1"></i> Make Payment
+                    <i class="bi bi-wallet2 me-1"></i> {{ 'Make Payment' | translate }}
                   </button>
                   <button *ngIf="res.status === 2 && getAmountPaidForRes(res) > 0" class="badge bg-warning text-dark py-1 px-2 border-0" (click)="openPaymentModal(res); $event.stopPropagation()" style="cursor: pointer;">
-                    <i class="bi bi-arrow-counterclockwise me-1"></i> Issue Refund
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> {{ 'Issue Refund' | translate }}
                   </button>
                 </div>
               </div>
@@ -102,25 +102,25 @@
   <div class="row g-4 mb-4">
     <div class="col-md-3">
       <div class="card shadow-sm border-0 border-start border-primary border-4 p-3 bg-white h-100">
-        <div class="text-muted small fw-bold text-uppercase">TRY Collected</div>
+        <div class="text-muted small fw-bold text-uppercase">{{ 'TRY Collected' | translate }}</div>
         <div class="h2 fw-bold text-primary mt-2 mb-0">{{ getFilteredTotal(0) | number:'1.2-2' }} ₺</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card shadow-sm border-0 border-start border-success border-4 p-3 bg-white h-100">
-        <div class="text-muted small fw-bold text-uppercase">USD Collected</div>
+        <div class="text-muted small fw-bold text-uppercase">{{ 'USD Collected' | translate }}</div>
         <div class="h2 fw-bold text-success mt-2 mb-0">{{ getFilteredTotal(1) | number:'1.2-2' }} $</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card shadow-sm border-0 border-start border-warning border-4 p-3 bg-white h-100">
-        <div class="text-muted small fw-bold text-uppercase">EUR Collected</div>
+        <div class="text-muted small fw-bold text-uppercase">{{ 'EUR Collected' | translate }}</div>
         <div class="h2 fw-bold text-warning mt-2 mb-0">{{ getFilteredTotal(2) | number:'1.2-2' }} €</div>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card shadow-sm border-0 border-start border-info border-4 p-3 bg-white h-100">
-        <div class="text-muted small fw-bold text-uppercase">GBP Collected</div>
+        <div class="text-muted small fw-bold text-uppercase">{{ 'GBP Collected' | translate }}</div>
         <div class="h2 fw-bold text-info mt-2 mb-0">{{ getFilteredTotal(3) | number:'1.2-2' }} £</div>
       </div>
     </div>
@@ -128,29 +128,29 @@
 
   <div class="card shadow-sm border-0 mb-4 bg-white">
     <div class="card-body p-4">
-      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>Filters</h5>
+      <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-funnel-fill me-2 text-primary"></i>{{ 'Filters' | translate }}</h5>
       <div class="row g-3 align-items-end">
         <div class="col-md-3">
-          <label class="form-label small fw-bold text-muted">Start Date</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Start Date' | translate }}</label>
           <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control" [(ngModel)]="filterStartDate">
         </div>
         <div class="col-md-3">
-          <label class="form-label small fw-bold text-muted">End Date</label>
+          <label class="form-label small fw-bold text-muted">{{ 'End Date' | translate }}</label>
           <input type="text" mwlFlatpickr [altInput]="true" altFormat="d/m/Y" dateFormat="Y-m-d" class="form-control" [(ngModel)]="filterEndDate">
         </div>
         <div class="col-md-2">
-          <label class="form-label small fw-bold text-muted">Payment Method</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Payment Method' | translate }}</label>
           <select class="form-select" [(ngModel)]="filterMethod">
-            <option value="all">All Methods</option>
-            <option value="0">Cash</option>
-            <option value="1">Card</option>
-            <option value="2">Transfer/IBAN</option>
+            <option value="all">{{ 'All Methods' | translate }}</option>
+            <option value="0">{{ 'Cash' | translate }}</option>
+            <option value="1">{{ 'Card' | translate }}</option>
+            <option value="2">{{ 'Transfer/IBAN' | translate }}</option>
           </select>
         </div>
         <div class="col-md-2">
-          <label class="form-label small fw-bold text-muted">Currency</label>
+          <label class="form-label small fw-bold text-muted">{{ 'Currency' | translate }}</label>
           <select class="form-select" [(ngModel)]="filterCurrency">
-            <option value="all">All Currencies</option>
+            <option value="all">{{ 'All Currencies' | translate }}</option>
             <option value="0">TRY (₺)</option>
             <option value="1">USD ($)</option>
             <option value="2">EUR (€)</option>
@@ -159,7 +159,7 @@
         </div>
         <div class="col-md-2 d-flex gap-2">
           <button class="btn btn-secondary w-100 py-2 rounded" (click)="filterStartDate=''; filterEndDate=''; filterMethod='all'; filterCurrency='all'; filterSearch=''">
-            <i class="bi bi-arrow-counterclockwise"></i> Reset
+            <i class="bi bi-arrow-counterclockwise"></i> {{ 'Reset' | translate }}
           </button>
         </div>
       </div>
@@ -167,7 +167,7 @@
         <div class="col-12">
           <div class="input-group mb-0">
             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search by Reservation ID, Title, or Passenger Name..." [(ngModel)]="filterSearch">
+            <input type="text" class="form-control border-start-0 ps-0" [placeholder]="'Search by Reservation ID, Title, or Passenger Name...' | translate" [(ngModel)]="filterSearch">
           </div>
         </div>
       </div>
@@ -177,41 +177,41 @@
   <div class="card shadow-sm border-0 bg-white">
     <div class="card-body p-4">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>Transactions ({{ filteredTransactions.length }})</h5>
+        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars me-2 text-primary"></i>{{ 'Transactions' | translate }} ({{ filteredTransactions.length }})</h5>
       </div>
       
       <div class="table-responsive">
         <table class="table table-hover align-middle border-0">
           <thead class="table-light">
             <tr>
-              <th class="border-0">Date</th>
-              <th class="border-0">Reservation</th>
-              <th class="border-0">Passengers</th>
-              <th class="border-0">Amount Paid</th>
-              <th class="border-0">Method</th>
-              <th class="border-0">Notes</th>
-              <th class="border-0 text-center">Actions</th>
+              <th class="border-0">{{ 'Date' | translate }}</th>
+              <th class="border-0">{{ 'Reservation' | translate }}</th>
+              <th class="border-0">{{ 'Passengers' | translate }}</th>
+              <th class="border-0">{{ 'Amount Paid' | translate }}</th>
+              <th class="border-0">{{ 'Method' | translate }}</th>
+              <th class="border-0">{{ 'Notes' | translate }}</th>
+              <th class="border-0 text-center">{{ 'Actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="filteredTransactions.length === 0">
               <td colspan="7" class="text-center py-5 text-muted bg-light rounded border border-dashed">
                 <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i>
-                No transaction records found matching your filters.
+                {{ 'No transaction records found matching your filters.' | translate }}
               </td>
             </tr>
             <tr *ngFor="let record of filteredTransactions; trackBy: trackByTransaction" [ngClass]="{'bg-danger bg-opacity-10': record.isUnpaid}">
               <td class="fw-bold">{{ record.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
               <td>
                 <div class="fw-bold text-dark">
-                  <a href="javascript:void(0)" (click)="editReservation(record.reservationId)" class="text-decoration-none text-dark" title="Edit Reservation">
+                  <a href="javascript:void(0)" (click)="editReservation(record.reservationId)" class="text-decoration-none text-dark" [title]="'Edit' | translate">
                     {{ getReservationTitle(record.reservationId) }} <i class="bi bi-box-arrow-up-right ms-1 small text-primary"></i>
                   </a>
                 </div>
-                <span class="badge bg-secondary" style="cursor: pointer;" (click)="editReservation(record.reservationId)" title="Edit Reservation">#{{ record.reservationId }}</span>
-                <span *ngIf="getReservationAgency(record.reservationId)" class="badge bg-primary ms-1" title="Agency"><i class="bi bi-building me-1"></i>{{ getReservationAgency(record.reservationId) }}</span>
-                <span *ngIf="record.isDeposit" class="badge bg-info text-dark ms-1">Deposit</span>
-                <span *ngIf="record.isUnpaid" class="badge bg-danger text-white ms-1">Non Paid</span>
+                <span class="badge bg-secondary" style="cursor: pointer;" (click)="editReservation(record.reservationId)" [title]="'Edit' | translate">#{{ record.reservationId }}</span>
+                <span *ngIf="getReservationAgency(record.reservationId)" class="badge bg-primary ms-1" [title]="'Agency' | translate"><i class="bi bi-building me-1"></i>{{ getReservationAgency(record.reservationId) }}</span>
+                <span *ngIf="record.isDeposit" class="badge bg-info text-dark ms-1">{{ 'Deposit' | translate }}</span>
+                <span *ngIf="record.isUnpaid" class="badge bg-danger text-white ms-1">{{ 'Non Paid' | translate }}</span>
               </td>
               <td class="text-muted small">{{ getReservationPassengers(record.reservationId) || 'N/A' }}</td>
               <td class="fw-bold fs-6" [ngClass]="{
@@ -222,24 +222,24 @@
                 'text-primary': !record.isUnpaid && record.amount >= 0 && record.currency === 0
               }">
                 <span *ngIf="record.amount < 0">-</span>{{ (record.amount < 0 ? -record.amount : record.amount) | number:'1.2-2' }} {{ getCurrencyCode(record.currency) }}
-                <span *ngIf="record.amount < 0" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small ms-1">Refund</span>
+                <span *ngIf="record.amount < 0" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 small ms-1">{{ 'Refund' | translate }}</span>
               </td>
               <td>
                 <span *ngIf="record.isDeposit" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill">
-                  💰 Deposit ({{ record.method === 1 ? 'Card' : (record.method === 2 ? 'Transfer' : 'Cash') }})
+                  💰 {{ 'Deposit' | translate }} ({{ (record.method === 1 ? 'Card' : (record.method === 2 ? 'Transfer' : 'Cash')) | translate }})
                 </span>
                 <span *ngIf="record.isUnpaid" class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill">
-                  ❌ Non Paid
+                  ❌ {{ 'Non Paid' | translate }}
                 </span>
                 <span *ngIf="!record.isDeposit && !record.isUnpaid">
                   <span *ngIf="record.method === 0" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
-                    💵 Cash
+                    💵 {{ 'Cash' | translate }}
                   </span>
                   <span *ngIf="record.method === 1" class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
-                    💳 Card
+                    💳 {{ 'Card' | translate }}
                   </span>
                   <span *ngIf="record.method === 2" class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill">
-                    🏦 Transfer
+                    🏦 {{ 'Transfer' | translate }}
                   </span>
                 </span>
               </td>
@@ -247,13 +247,13 @@
                 {{ record.notes || '-' }}
               </td>
               <td class="text-center">
-                <button class="btn btn-sm btn-outline-success border-0 fw-bold me-1" (click)="openPaymentForRecord(record)" [disabled]="isRecordFullyPaid(record)" title="Pay">
-                  Pay
+                <button class="btn btn-sm btn-outline-success border-0 fw-bold me-1" (click)="openPaymentForRecord(record)" [disabled]="isRecordFullyPaid(record)" [title]="'Pay' | translate">
+                  {{ 'Pay' | translate }}
                 </button>
-                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle me-1" (click)="printThermalBill(record.reservationId)" title="Print Thermal Bill (80mm)">
+                <button class="btn btn-sm btn-outline-primary border-0 rounded-circle me-1" (click)="printThermalBill(record.reservationId)" [title]="'Print Thermal Bill (80mm)' | translate">
                   <i class="bi bi-printer fs-5"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" (click)="deletePaymentRecord(record.id!)" *ngIf="!record.isDeposit && !record.isUnpaid" title="Delete Payment">
+                <button class="btn btn-sm btn-outline-danger border-0 rounded-circle" (click)="deletePaymentRecord(record.id!)" *ngIf="!record.isDeposit && !record.isUnpaid" [title]="'Delete' | translate">
                   <i class="bi bi-trash fs-5"></i>
                 </button>
               </td>
@@ -270,7 +270,7 @@
     <div class="modal-content border-0 shadow-lg" *ngIf="selectedReservation">
       <div class="modal-header text-white border-0" [ngClass]="{'bg-danger': isRefundMode, 'bg-primary': !isRefundMode}">
         <h5 class="modal-title">
-          {{ isRefundMode ? 'Issue Refund' : 'Payment' }} for #{{ selectedReservation.id }} - {{ selectedReservation.title || 'Untitled' }}
+          {{ (isRefundMode ? 'Issue Refund' : 'Payment') | translate }} #{{ selectedReservation.id }} - {{ selectedReservation.title || 'Standard Flight' }}
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -281,32 +281,32 @@
           <div *ngIf="isRefundMode" class="alert alert-danger d-flex align-items-center mb-3">
             <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
             <div>
-              This reservation is <strong>CANCELLED</strong>. You can issue a refund for up to <strong>{{ amountPaid | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</strong>.
+              {{ 'Cancelled' | translate }}: {{ amountPaid | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}.
             </div>
           </div>
 
           <div class="row text-center mb-4 g-2">
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
-                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Total</div>
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">{{ 'Total' | translate }}</div>
                 <div class="fw-bold text-dark fs-6">{{ totalAmountDue | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
-                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Deposit</div>
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">{{ 'Deposit' | translate }}</div>
                 <div class="fw-bold text-info fs-6">{{ selectedReservation.deposit || 0 | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
-                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Paid</div>
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">{{ 'Paid' | translate }}</div>
                 <div class="fw-bold text-success fs-6">{{ amountPaid | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
             <div class="col-3">
               <div class="bg-white p-2 rounded shadow-sm border">
-                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Rest</div>
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">{{ 'Rest' | translate }}</div>
                 <div class="fw-bold text-danger fs-6">{{ remainingBalance | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</div>
               </div>
             </div>
@@ -316,8 +316,8 @@
             <div class="row">
               <div class="col-md-7 mb-3">
                 <label class="form-label fw-bold d-flex justify-content-between">
-                  <span>{{ isRefundMode ? 'Refund Amount' : 'Amount' }} ({{ getCurrencyCode(currentPayment.currency) }}) <span class="text-danger">*</span></span>
-                  <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">{{ isRefundMode ? 'Refund All' : 'Pay All' }}</a>
+                  <span>{{ (isRefundMode ? 'Refund Amount' : 'Amount') | translate }} ({{ getCurrencyCode(currentPayment.currency) }}) <span class="text-danger">*</span></span>
+                  <a href="javascript:void(0)" class="small text-primary text-decoration-none" (click)="setPayAll()">{{ (isRefundMode ? 'Refund All' : 'Pay All') | translate }}</a>
                 </label>
                 <div class="input-group">
                   <span class="input-group-text"><i class="bi" [ngClass]="{'bi-arrow-counterclockwise text-danger': isRefundMode, 'bi-wallet2': !isRefundMode}"></i></span>
@@ -325,7 +325,7 @@
                 </div>
               </div>
               <div class="col-md-5 mb-3">
-                <label class="form-label fw-bold">Pay in Currency</label>
+                <label class="form-label fw-bold">{{ 'Pay in Currency' | translate }}</label>
                 <select class="form-select" [(ngModel)]="currentPayment.currency" name="currency" (ngModelChange)="onCurrencyChange($event)">
                   <option *ngFor="let opt of currencyOptions" [ngValue]="opt.value">{{ opt.label }}</option>
                 </select>
@@ -334,7 +334,7 @@
 
             <div class="row g-2 mb-3 p-3 rounded border bg-light" *ngIf="selectedReservation && currentPayment.currency !== (selectedReservation.preferredCurrency !== undefined && selectedReservation.preferredCurrency !== null ? selectedReservation.preferredCurrency : 1)">
               <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">Exchange Rate</label>
+                <label class="form-label fw-bold small text-muted">{{ 'Exchange Rate' | translate }}</label>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white">1 {{ getCurrencyCode(selectedReservation.preferredCurrency) }} =</span>
                   <input type="number" class="form-control" [(ngModel)]="exchangeRate" (ngModelChange)="onExchangeRateChange()" name="exchangeRate" step="0.0001" min="0.0001" required>
@@ -342,45 +342,41 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold small text-muted">Equivalent in {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</label>
+                <label class="form-label fw-bold small text-muted">{{ 'Equivalent in' | translate }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }}</label>
                 <div class="input-group input-group-sm">
                   <input type="number" class="form-control" [(ngModel)]="convertedAmount" (ngModelChange)="onConvertedAmountChange()" name="convertedAmount" required>
                   <span class="input-group-text bg-white">{{ getCurrencyCode(selectedReservation.preferredCurrency) }}</span>
                 </div>
               </div>
-              <div class="col-12 text-center mt-2 small text-muted">
-                Conversion: {{ amountInPayCurrency || 0 | number:'1.2-2' }} {{ getCurrencyCode(currentPayment.currency) }} pays off {{ convertedAmount || 0 | number:'1.2-2' }} {{ getCurrencyCode(selectedReservation.preferredCurrency) }} of reservation balance.
-              </div>
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Method</label>
+                <label class="form-label fw-bold">{{ 'Method' | translate }}</label>
                 <select class="form-select" [(ngModel)]="currentPayment.method" name="method">
-                  <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label }}</option>
+                  <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
                 </select>
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Date</label>
+                <label class="form-label fw-bold">{{ 'Date' | translate }}</label>
                 <input type="datetime-local" class="form-control" [(ngModel)]="currentPayment.paymentDate" name="paymentDate" required>
               </div>
             </div>
 
             <div class="mb-2">
-              <label class="form-label fw-bold">Notes</label>
-              <textarea class="form-control" [(ngModel)]="currentPayment.notes" name="notes" rows="2" placeholder="Add any extra payment details..."></textarea>
+              <label class="form-label fw-bold">{{ 'Notes' | translate }}</label>
+              <textarea class="form-control" [(ngModel)]="currentPayment.notes" name="notes" rows="2" [placeholder]="'Notes' | translate"></textarea>
             </div>
           </div>
           
         </div>
         <div class="modal-footer border-0 p-4 pt-0 bg-light">
-          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">{{ 'Cancel' | translate }}</button>
           <button type="submit" class="btn px-4 shadow-sm" [ngClass]="{'btn-danger': isRefundMode, 'btn-primary': !isRefundMode}" [disabled]="!paymentForm.form.valid || amountInPayCurrency <= 0 || (isRefundMode && convertedAmount > amountPaid)">
-            {{ isRefundMode ? 'Confirm Refund' : 'Confirm Payment' }}
+            {{ (isRefundMode ? 'Confirm Refund' : 'Confirm Payment') | translate }}
           </button>
         </div>
       </form>
     </div>
   </div>
 </div>
-
