@@ -30,12 +30,6 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  fillDemoCredentials(user: string = 'admin', pass: string = 'admin123'): void {
-    this.username = user;
-    this.password = pass;
-    this.error = '';
-  }
-
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
