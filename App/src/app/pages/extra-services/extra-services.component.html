@@ -1,52 +1,146 @@
 <div class="pagetitle">
-  <h1>Extra Services Management</h1>
+  <h1 class="fw-bold text-dark">Extra Services Management</h1>
   <nav>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
       <li class="breadcrumb-item">Logistics & Packages</li>
-      <li class="breadcrumb-item active">Extra Services</li>
+      <li class="breadcrumb-item active text-primary">Extra Services</li>
     </ol>
   </nav>
 </div>
 
-<section class="section dashboard">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Extra Services List
-            <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#extraServiceModal" (click)="addExtraService()"><i class="bi bi-plus-lg"></i> Add Service</button>
-          </h5>
-          
-          <table class="table table-striped table-hover datatable">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (es of extraServices; track es.id) {
-              <tr>
-                <th scope="row">{{es.id}}</th>
-                <td>{{es.name}}</td>
-                <td>{{es.price | currency}}</td>
-                <td>
-                  <button class="btn btn-sm btn-info me-2" data-bs-toggle="modal" data-bs-target="#extraServiceModal" (click)="editExtraService(es)"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-sm btn-danger" (click)="deleteExtraService(es.id!)"><i class="bi bi-trash"></i></button>
-                </td>
-              </tr>
-              }
-              @empty {
-              <tr>
-                <td colspan="4" class="text-center">No extra services found.</td>
-              </tr>
-              }
-            </tbody>
-          </table>
+<!-- KPI Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card info-card bg-primary text-white h-100 mb-0 shadow-sm border-0 rounded-4">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px;">
+          <i class="bi bi-camera-reels-fill fs-3"></i>
         </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Total Services</h6>
+          <h2 class="mb-0 fw-bold">{{ extraServices.length }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card info-card text-white h-100 mb-0 shadow-sm border-0 rounded-4" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px;">
+          <i class="bi bi-cash-coin fs-3"></i>
+        </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Average Price</h6>
+          <h2 class="mb-0 fw-bold">{{ averagePrice | currency:'USD':'symbol':'1.0-0' }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card info-card text-white h-100 mb-0 shadow-sm border-0 rounded-4" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+      <div class="card-body d-flex align-items-center p-4">
+        <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px;">
+          <i class="bi bi-camera-video-fill fs-3"></i>
+        </div>
+        <div>
+          <h6 class="text-white text-opacity-75 mb-1 fw-bold text-uppercase" style="font-size: 0.78rem; letter-spacing: 0.5px;">Photo & Video Add-ons</h6>
+          <h2 class="mb-0 fw-bold">{{ mediaServicesCount }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls & Add Button -->
+<section class="section">
+  <div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-md-6 col-lg-5">
+      <div class="input-group search-bar-input">
+        <span class="input-group-text bg-white border-0 ps-3">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input
+          type="text"
+          class="form-control bg-white border-0 py-2"
+          placeholder="Search extra services..."
+          [(ngModel)]="searchTerm">
+        <button
+          *ngIf="searchTerm"
+          class="btn bg-white border-0 text-muted"
+          type="button"
+          (click)="searchTerm = ''">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-7 d-flex justify-content-md-end">
+      <button
+        class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold d-flex align-items-center"
+        (click)="addExtraService()">
+        <i class="bi bi-plus-lg me-2"></i> Add Extra Service
+      </button>
+    </div>
+  </div>
+
+  <!-- Extra Services Cards Grid -->
+  <div class="row g-4">
+    <div class="col-xl-4 col-md-6" *ngFor="let es of filteredExtraServices">
+      <div class="card service-card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-accent-bar"></div>
+        <div class="card-body p-4 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div class="service-icon-box">
+                <i class="bi {{ getServiceIcon(es.name) }} fs-4 text-primary"></i>
+              </div>
+              <span class="badge bg-light text-secondary border rounded-pill px-3 py-1 font-monospace">
+                #{{ es.id }}
+              </span>
+            </div>
+
+            <h5 class="fw-bold text-dark mb-2">{{ es.name }}</h5>
+            <p class="text-muted small mb-3">
+              Optional flight add-on service attached to passenger reservations during checkout or dispatch.
+            </p>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-2">
+            <div>
+              <span class="text-muted small d-block">Retail Price</span>
+              <span class="fs-4 fw-bold text-dark">{{ es.price | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+
+            <div class="btn-group shadow-sm rounded-3 overflow-hidden">
+              <button class="btn btn-sm btn-light border text-primary px-3" (click)="editExtraService(es)" title="Edit Service">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+              <button class="btn btn-sm btn-light border text-danger px-3" (click)="deleteExtraService(es.id!)" title="Delete Service">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="col-12 text-center py-5" *ngIf="filteredExtraServices.length === 0">
+      <div class="p-5 bg-white rounded-4 shadow-sm border">
+        <i class="bi bi-camera-reels text-muted display-1 mb-4"></i>
+        <h3 class="fw-bold text-dark">No extra services found</h3>
+        <p class="text-muted mb-4">
+          {{ searchTerm ? 'No matching services found for your search.' : 'You haven\'t added any ancillary add-on services yet.' }}
+        </p>
+        <button *ngIf="!searchTerm" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm" (click)="addExtraService()">
+          <i class="bi bi-plus-lg me-2"></i> Add Your First Extra Service
+        </button>
+        <button *ngIf="searchTerm" class="btn btn-outline-secondary px-4 py-2 rounded-pill" (click)="searchTerm = ''">
+          Clear Search
+        </button>
       </div>
     </div>
   </div>
@@ -55,27 +149,65 @@
 <!-- Extra Service Modal -->
 <div class="modal fade" id="extraServiceModal" tabindex="-1" aria-labelledby="extraServiceModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="extraServiceModalLabel">{{ isEditing ? 'Edit Extra Service' : 'New Extra Service' }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+      <div class="modal-header bg-primary text-white border-0 py-3 px-4">
+        <h5 class="modal-title fw-bold" id="extraServiceModalLabel">
+          <i class="bi bi-camera-reels-fill me-2"></i>
+          {{ isEditing ? 'Edit Extra Service' : 'Add New Extra Service' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeModal()" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <form #esForm="ngForm">
-          <div class="mb-3">
-            <label for="serviceName" class="form-label">Service Name <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="serviceName" name="name" [(ngModel)]="currentService.name" required>
+
+      <form #esForm="ngForm" (ngSubmit)="saveExtraService()">
+        <div class="modal-body p-4 bg-light">
+          <div class="bg-white p-4 rounded-4 border shadow-sm">
+            <div class="mb-3">
+              <label for="serviceName" class="form-label fw-bold small text-muted text-uppercase">
+                Service Name <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-tag text-muted"></i></span>
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  id="serviceName"
+                  name="name"
+                  [(ngModel)]="currentService.name"
+                  placeholder="e.g. 4K GoPro Video & Photos"
+                  required>
+              </div>
+            </div>
+
+            <div class="mb-0">
+              <label for="servicePrice" class="form-label fw-bold small text-muted text-uppercase">
+                Price (USD) <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="bi bi-currency-dollar text-muted"></i></span>
+                <input
+                  type="number"
+                  step="0.01"
+                  class="form-control border-start-0"
+                  id="servicePrice"
+                  name="price"
+                  [(ngModel)]="currentService.price"
+                  placeholder="0.00"
+                  required>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="servicePrice" class="form-label">Price <span class="text-danger">*</span></label>
-            <input type="number" step="0.01" class="form-control" id="servicePrice" name="price" [(ngModel)]="currentService.price" required>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveExtraService()" [disabled]="!esForm.form.valid">Save changes</button>
-      </div>
+        </div>
+
+        <div class="modal-footer border-0 p-3 bg-light">
+          <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold" (click)="closeModal()">Cancel</button>
+          <button
+            type="submit"
+            class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm"
+            [disabled]="!esForm.form.valid">
+            {{ isEditing ? 'Save Changes' : 'Create Service' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

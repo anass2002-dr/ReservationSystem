@@ -28,6 +28,7 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
       { path: 'admin/users', component: UserManagementComponent, data: { roles: ['Admin'] } },
       { path: 'Customers', component: CustomersComponent },
+      { path: 'customers', component: CustomersComponent },
       { path: 'pilots', component: PilotsComponent },
       { path: 'agencies', component: AgenciesComponent },
       { path: 'transport-groups', component: TransportGroupsComponent },

@@ -16,6 +16,8 @@ export class CustomersComponent implements OnInit {
   countries: Country[] = [];
   currentCustomer: Customer = { id: 0, fullName: '', dateOfBirth: '', phoneNumber: '', email: '', country: undefined };
   isEditing = false;
+  searchTerm: string = '';
+  selectedCountryFilter: string = '';
   private modalInstance: any;
 
   constructor(
@@ -30,16 +32,58 @@ export class CustomersComponent implements OnInit {
 
   loadCustomers(): void {
     this.customerService.getCustomers().subscribe({
-      next: (data) => this.customers = data,
+      next: (data) => this.customers = data || [],
       error: (err) => console.error('Error fetching customers', err)
     });
   }
 
   loadCountries(): void {
     this.http.get<Country[]>('/assets/js/Countries/countries.json').subscribe({
-      next: (data) => this.countries = data,
+      next: (data) => this.countries = data || [],
       error: (err) => console.error('Error fetching countries', err)
     });
+  }
+
+  get filteredCustomers(): Customer[] {
+    return this.customers.filter(c => {
+      const matchesSearch = !this.searchTerm ||
+        (c.fullName && c.fullName.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (c.phoneNumber && c.phoneNumber.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (c.email && c.email.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (c.country && c.country.toLowerCase().includes(this.searchTerm.toLowerCase()));
+
+      const matchesCountry = !this.selectedCountryFilter || c.country === this.selectedCountryFilter;
+
+      return matchesSearch && matchesCountry;
+    });
+  }
+
+  get uniqueCountriesCount(): number {
+    const set = new Set(this.customers.map(c => c.country).filter(Boolean));
+    return set.size;
+  }
+
+  get contactableCount(): number {
+    return this.customers.filter(c => c.phoneNumber || c.email).length;
+  }
+
+  getAge(dateOfBirth: string | Date | undefined): string {
+    if (!dateOfBirth) return '-';
+    const dob = new Date(dateOfBirth);
+    if (isNaN(dob.getTime())) return '-';
+    const diffMs = Date.now() - dob.getTime();
+    const ageDt = new Date(diffMs);
+    const age = Math.abs(ageDt.getUTCFullYear() - 1970);
+    return `${age} yrs`;
+  }
+
+  getInitials(name: string): string {
+    if (!name) return 'C';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   }
 
   getCountryName(country?: string): string {
@@ -72,7 +116,6 @@ export class CustomersComponent implements OnInit {
     this.isEditing = true;
     this.currentCustomer = { ...c };
     
-    // Format date for the input type="date"
     if (this.currentCustomer.dateOfBirth) {
       this.currentCustomer.dateOfBirth = new Date(this.currentCustomer.dateOfBirth).toISOString().split('T')[0];
     }
@@ -91,7 +134,6 @@ export class CustomersComponent implements OnInit {
       });
     } else {
       const newCustomer = { ...this.currentCustomer };
-      // Backend creates ID
       this.customerService.addCustomer(newCustomer).subscribe({
         next: () => {
           this.loadCustomers();

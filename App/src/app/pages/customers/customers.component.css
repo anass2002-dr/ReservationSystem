@@ -1,0 +1,43 @@
+.search-bar-input {
+  border-radius: 50px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.search-bar-input input:focus {
+  box-shadow: none;
+  background-color: #ffffff !important;
+}
+
+.customer-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+  flex-shrink: 0;
+}
+
+.customer-row {
+  transition: all 0.2s ease;
+}
+
+.customer-row:hover {
+  background-color: #f8fafc;
+}
+
+.custom-ng-select ::ng-deep .ng-select-container {
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  min-height: 44px;
+}
+
+.modal-content {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+}

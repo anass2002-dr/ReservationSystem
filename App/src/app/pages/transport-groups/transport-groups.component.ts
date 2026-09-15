@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { TransportGroup } from '../../models/models';
 import { TransportGroupService } from '../../services/transport-group.service';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-transport-groups',
@@ -12,6 +12,10 @@ import { TransportGroupService } from '../../services/transport-group.service';
 })
 export class TransportGroupsComponent implements OnInit {
   transportGroups: TransportGroup[] = [];
+  currentGroup: Partial<TransportGroup> = { departureTime: '', vehiclePlate: '', driverName: '' };
+  isEditing = false;
+  searchTerm: string = '';
+  private modalInstance: any;
 
   constructor(private transportGroupService: TransportGroupService) {}
 
@@ -21,17 +25,50 @@ export class TransportGroupsComponent implements OnInit {
 
   loadTransportGroups(): void {
     this.transportGroupService.getTransportGroups().subscribe({
-      next: (data) => this.transportGroups = data,
+      next: (data) => this.transportGroups = data || [],
       error: (err) => console.error('Error fetching transport groups', err)
     });
   }
 
-  currentGroup: Partial<TransportGroup> = { departureTime: '', vehiclePlate: '', driverName: '' };
-  isEditing = false;
+  get filteredTransportGroups(): TransportGroup[] {
+    if (!this.searchTerm) return this.transportGroups;
+    const term = this.searchTerm.toLowerCase();
+    return this.transportGroups.filter(tg =>
+      (tg.vehiclePlate && tg.vehiclePlate.toLowerCase().includes(term)) ||
+      (tg.driverName && tg.driverName.toLowerCase().includes(term))
+    );
+  }
+
+  get uniqueVehiclesCount(): number {
+    const plates = new Set(this.transportGroups.map(tg => tg.vehiclePlate).filter(Boolean));
+    return plates.size;
+  }
+
+  get uniqueDriversCount(): number {
+    const drivers = new Set(this.transportGroups.map(tg => tg.driverName).filter(Boolean));
+    return drivers.size;
+  }
+
+  openModal(): void {
+    const modalElement = document.getElementById('transportGroupModal');
+    if (modalElement) {
+      if (!this.modalInstance) {
+        this.modalInstance = new bootstrap.Modal(modalElement);
+      }
+      this.modalInstance.show();
+    }
+  }
+
+  closeModal(): void {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
 
   addTransportGroup(): void {
     this.isEditing = false;
     this.currentGroup = { departureTime: '', vehiclePlate: '', driverName: '' };
+    this.openModal();
   }
 
   editTransportGroup(tg: TransportGroup): void {
@@ -40,29 +77,28 @@ export class TransportGroupsComponent implements OnInit {
     if (this.currentGroup.departureTime) {
       this.currentGroup.departureTime = new Date(this.currentGroup.departureTime).toISOString().slice(0, 16);
     }
+    this.openModal();
   }
 
   saveTransportGroup(): void {
     if (this.currentGroup.departureTime && this.currentGroup.vehiclePlate && this.currentGroup.driverName) {
       if (this.isEditing && this.currentGroup.id) {
-        this.transportGroupService.updateTransportGroup(this.currentGroup.id, this.currentGroup as TransportGroup).subscribe(() => {
-          this.loadTransportGroups();
-          this.closeModal();
+        this.transportGroupService.updateTransportGroup(this.currentGroup.id, this.currentGroup as TransportGroup).subscribe({
+          next: () => {
+            this.loadTransportGroups();
+            this.closeModal();
+          },
+          error: (err) => console.error('Error updating transport group', err)
         });
       } else {
-        this.transportGroupService.addTransportGroup(this.currentGroup as TransportGroup).subscribe(() => {
-          this.loadTransportGroups();
-          this.closeModal();
+        this.transportGroupService.addTransportGroup(this.currentGroup as TransportGroup).subscribe({
+          next: () => {
+            this.loadTransportGroups();
+            this.closeModal();
+          },
+          error: (err) => console.error('Error adding transport group', err)
         });
       }
-    }
-  }
-
-  closeModal(): void {
-    const modalElement = document.getElementById('transportGroupModal');
-    if (modalElement) {
-      const closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]') as HTMLElement;
-      if (closeBtn) closeBtn.click();
     }
   }
 
@@ -75,5 +111,3 @@ export class TransportGroupsComponent implements OnInit {
     }
   }
 }
-
-
