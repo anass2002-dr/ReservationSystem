@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './layouts/header/header.component';
-import { SidebarComponent } from './layouts/sidebar/sidebar.component';
-import { FooterComponent } from './layouts/footer/footer.component';
-
 import { AuthService } from './services/auth.service';
+import { SidebarService } from './services/sidebar.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +11,15 @@ import { AuthService } from './services/auth.service';
 export class AppComponent {
   title = 'ReservationSystemApp';
 
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    public sidebarService: SidebarService
+  ) {}
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 }
+
 
 

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyService } from '../../services/currency.service';
 import { AuthService, User } from '../../services/auth.service';
 import { LanguageService, SupportedLanguage } from '../../services/language.service';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -33,7 +34,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private currencyService: CurrencyService,
     public authService: AuthService,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    public sidebarService: SidebarService
   ) { }
 
   ngOnInit(): void {
@@ -55,35 +57,9 @@ export class HeaderComponent implements OnInit {
   }
 
   sidebarToggle() {
-    if (window.innerWidth < 992) {
-      document.body.classList.toggle('mobile-sidebar-open');
-      const sidebar = document.getElementById('sidebar');
-      sidebar?.classList.toggle('mobile-open');
-      const backdrop = document.querySelector('.sidebar-backdrop');
-      backdrop?.classList.toggle('show');
-    } else {
-      const sidebar = document.getElementById('sidebar');
-      sidebar?.classList.toggle('toggle-sidebar2');
-      const main = document.getElementById('main');
-      main?.classList.toggle('main_toggele');
-      document.body.classList.toggle('sidebar-collapsed');
-
-      this.document.querySelectorAll('.nav-item span').forEach((e: any) => {
-        e.classList.toggle('toggle-sidebar_text');
-      });
-      this.document.querySelectorAll('.nav-item ul').forEach((e: any) => {
-        if (e.classList.contains('show'))
-          e.classList.remove('show');
-      });
-
-      this.document.querySelectorAll('.bi-chevron-down').forEach((e: any) => {
-        e.classList.toggle('toggle-sidebar_text');
-      });
-
-      this.document.querySelector('.prf')?.classList.toggle('d-md-block');
-      this.document.querySelector('.prf')?.classList.toggle('d-none');
-    }
+    this.sidebarService.toggleSidebar();
   }
+
 
   onSelected(value: string): void {
     if (ReservationPG) {

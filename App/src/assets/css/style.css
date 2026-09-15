@@ -41,17 +41,16 @@ h6 {
 .main {
   margin-top: 70px;
   padding: 24px 30px;
-  transition: all 0.3s ease-in-out;
+  transition: margin-left 0.3s ease-in-out, padding 0.3s ease-in-out;
   min-height: calc(100vh - 70px);
 }
 
 @media (min-width: 992px) {
   .main {
-    margin-left: 97px;
-  }
-  .main.main_toggele,
-  body.sidebar-expanded .main {
     margin-left: 260px;
+  }
+  .main.sidebar-collapsed {
+    margin-left: 80px;
   }
 }
 
@@ -636,7 +635,7 @@ main.login-mode {
   bottom: 0;
   width: 260px;
   z-index: 996;
-  transition: all 0.3s ease-in-out;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
   padding: 20px 10px;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -656,23 +655,27 @@ main.login-mode {
 }
 
 @media (min-width: 992px) {
-  .sidebar.toggle-sidebar2 {
-    width: 97px;
-  }
-  .sidebar.toggle-sidebar2 .toggle-sidebar_text,
-  .sidebar.toggle-sidebar2 .nav-heading {
-    display: none;
-  }
-  .sidebar.toggle-sidebar2 .sidebar-nav .nav-link {
-    justify-content: center;
-    padding: 10px;
-  }
-  .sidebar.toggle-sidebar2 .sidebar-nav .nav-link i {
-    margin-right: 0;
-    font-size: 18px;
-  }
-  .sidebar:not(.toggle-sidebar2) {
+  .sidebar {
     width: 260px;
+  }
+  .sidebar.collapsed {
+    width: 80px;
+  }
+  .sidebar.collapsed .toggle-sidebar_text,
+  .sidebar.collapsed .nav-heading,
+  .sidebar.collapsed .bi-chevron-down {
+    display: none !important;
+  }
+  .sidebar.collapsed .sidebar-nav .nav-link {
+    justify-content: center;
+    padding: 12px 10px;
+  }
+  .sidebar.collapsed .sidebar-nav .nav-link i {
+    margin-right: 0;
+    font-size: 20px;
+  }
+  .sidebar.collapsed .sidebar-nav .nav-content {
+    display: none !important;
   }
 }
 
@@ -684,8 +687,7 @@ main.login-mode {
     z-index: 1050;
     box-shadow: 6px 0 25px rgba(0, 0, 0, 0.15);
   }
-  .sidebar.mobile-open,
-  body.mobile-sidebar-open .sidebar {
+  .sidebar.mobile-open {
     left: 0 !important;
   }
   .sidebar-backdrop {
@@ -701,8 +703,7 @@ main.login-mode {
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  .sidebar-backdrop.show,
-  body.mobile-sidebar-open .sidebar-backdrop {
+  .sidebar-backdrop.show {
     display: block;
     opacity: 1;
   }
@@ -1289,8 +1290,23 @@ main.login-mode {
 .footer {
   padding: 20px 0;
   font-size: 14px;
-  transition: all 0.3s;
+  transition: margin-left 0.3s ease-in-out;
   border-top: 1px solid #cddfff;
+}
+
+@media (min-width: 992px) {
+  .footer {
+    margin-left: 260px;
+  }
+  .footer.sidebar-collapsed {
+    margin-left: 80px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .footer {
+    margin-left: 0 !important;
+  }
 }
 
 .footer .copyright {

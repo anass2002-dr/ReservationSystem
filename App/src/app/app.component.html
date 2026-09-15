@@ -1,6 +1,11 @@
 <app-header *ngIf="isLoggedIn"></app-header>
 <app-sidebar *ngIf="isLoggedIn"></app-sidebar>
-<main id="main" [class.main]="isLoggedIn" [class.login-mode]="!isLoggedIn">
+<main id="main"
+      [class.main]="isLoggedIn"
+      [class.sidebar-collapsed]="isLoggedIn && (sidebarService.isCollapsed$ | async)"
+      [class.login-mode]="!isLoggedIn">
   <router-outlet></router-outlet>
 </main>
-<app-footer *ngIf="isLoggedIn"></app-footer>
+<app-footer *ngIf="isLoggedIn"
+            [class.sidebar-collapsed]="isLoggedIn && (sidebarService.isCollapsed$ | async)"></app-footer>
+

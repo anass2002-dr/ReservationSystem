@@ -1,5 +1,7 @@
-<div class="sidebar-backdrop" (click)="closeMobileSidebar()"></div>
-<aside id="sidebar" class="sidebar toggle-sidebar2" (mousedown)="sidebar_mouse_event()">
+<div class="sidebar-backdrop" [class.show]="sidebarService.isMobileOpen$ | async" (click)="closeMobileSidebar()"></div>
+<aside id="sidebar" class="sidebar"
+       [class.collapsed]="sidebarService.isCollapsed$ | async"
+       [class.mobile-open]="sidebarService.isMobileOpen$ | async">
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
       <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileSidebar()">
