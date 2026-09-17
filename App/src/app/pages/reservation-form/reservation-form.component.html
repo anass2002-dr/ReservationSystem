@@ -141,12 +141,11 @@
 
           <div class="col-12 col-sm-6 col-lg-3">
             <label class="form-label">{{ 'Deposit' | translate }} ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})</label>
-            <div class="input-group deposit-input-group height-60">
-              <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
-                  class="bi bi-cash-stack"></i></span>
-              <input type="number" class="form-control p-2 border-start-0 border-end-0 fw-bold text-success deposit-input-amount" name="deposit"
+            <div class="deposit-input-wrapper">
+              <span class="deposit-icon"><i class="bi bi-cash-stack"></i></span>
+              <input type="number" class="deposit-amount-input" name="deposit"
                 [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="onManualTotalChange()">
-              <select class="form-select p-2 deposit-input-method" name="depositMethod" [(ngModel)]="reservation.depositMethod">
+              <select class="form-select deposit-method-select" name="depositMethod" [(ngModel)]="reservation.depositMethod">
                 <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
               </select>
             </div>

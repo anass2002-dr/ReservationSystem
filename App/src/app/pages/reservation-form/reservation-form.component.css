@@ -360,44 +360,68 @@
   border-left: none;
 }
 
-.deposit-input-group {
+.deposit-input-wrapper {
   display: flex !important;
-  flex-wrap: nowrap !important;
+  flex-direction: row !important;
   align-items: stretch !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  border: 2px solid #f1f3f5 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s ease;
   width: 100%;
 }
 
-.deposit-input-group .input-group-text {
-  border: 2px solid #f1f3f5;
-  border-right: none;
-  border-radius: 12px 0 0 12px;
-  background-color: #fafbfc;
+.deposit-input-wrapper:focus-within {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important;
 }
 
-.deposit-input-amount {
+.deposit-icon {
+  background-color: #fafbfc;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #f1f3f5;
+  color: #198754;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.deposit-amount-input {
   flex: 1 1 auto !important;
   min-width: 60px !important;
-  height: 60px !important;
-  border: 2px solid #f1f3f5 !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-radius: 0 !important;
+  height: 100% !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 12px !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  color: #198754 !important;
+  background: transparent !important;
 }
 
-.deposit-input-method {
-  flex: 0 0 105px !important;
+.deposit-method-select {
+  flex: 0 0 115px !important;
   min-width: 95px !important;
-  max-width: 120px !important;
-  height: 60px !important;
-  border: 2px solid #f1f3f5 !important;
+  max-width: 130px !important;
+  height: 100% !important;
+  border: none !important;
   border-left: 1px solid #dee2e6 !important;
-  border-radius: 0 12px 12px 0 !important;
-  font-size: 0.82rem !important;
-  font-weight: 600;
-  padding-left: 6px !important;
-  padding-right: 20px !important;
-  cursor: pointer;
-  background-color: #fafbfc;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 24px 0 10px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  background-color: #fafbfc !important;
+  cursor: pointer !important;
+  margin: 0 !important;
 }
 
 .rest-to-pay-card {
