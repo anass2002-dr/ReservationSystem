@@ -23,6 +23,12 @@ namespace ReservationSystem_backend.Controllers
             return Ok(_service.GetAgencies());
         }
 
+        [HttpGet("GetAgenciesAnalytics")]
+        public ActionResult<IEnumerable<ReservationSystem_backend.DTOs.AgencyAnalyticsDto>> GetAgenciesAnalytics()
+        {
+            return Ok(_service.GetAgenciesAnalytics());
+        }
+
         [HttpGet("GetAgencyById/{id}")]
         public ActionResult<Agency> GetAgencyById(int id)
         {

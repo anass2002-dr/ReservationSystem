@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Agency } from '../models/models';
+import { Agency, AgencyAnalytics } from '../models/models';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -14,6 +14,10 @@ export class AgencyService {
 
   getAgencies(): Observable<Agency[]> {
     return this.http.get<Agency[]>(`${this.apiUrl}/GetAgencies`);
+  }
+
+  getAgenciesAnalytics(): Observable<AgencyAnalytics[]> {
+    return this.http.get<AgencyAnalytics[]>(`${this.apiUrl}/GetAgenciesAnalytics`);
   }
 
   getAgencyById(id: number): Observable<Agency> {

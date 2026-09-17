@@ -1,0 +1,109 @@
+/* Agencies Analytics & Directory Styling */
+
+.transition-all {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #4154f1 0%, #2937cd 100%);
+}
+
+.bg-gradient-info {
+  background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
+}
+
+.bg-gradient-teal {
+  background: linear-gradient(135deg, #20c997 0%, #179b73 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #198754 0%, #11653e 100%);
+}
+
+.bg-gradient-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+}
+
+.stat-icon-wrapper {
+  backdrop-filter: blur(4px);
+}
+
+.agency-avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 1.15rem;
+  background: linear-gradient(135deg, #6610f2, #0d6efd);
+  flex-shrink: 0;
+}
+
+.custom-agency-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.custom-agency-table tbody tr:hover {
+  background-color: #f8faff;
+}
+
+.pulse-badge {
+  animation: subtle-pulse 2s infinite ease-in-out;
+}
+
+@keyframes subtle-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.25);
+  }
+}
+
+.agency-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.agency-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Print Styling for Financial Statements */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #statementModal,
+  #statementModal * {
+    visibility: visible;
+  }
+  #statementModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .modal-header .btn-close,
+  .modal-header .btn,
+  .modal-footer {
+    display: none !important;
+  }
+}

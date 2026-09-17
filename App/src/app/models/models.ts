@@ -85,6 +85,41 @@ export interface Agency {
   address?: string;
 }
 
+export interface AgencyBookingItem {
+  reservationId: number;
+  title?: string;
+  flightDate: string;
+  flightTime?: string;
+  billetNumber?: string;
+  passengerCount: number;
+  passengerNames: string[];
+  agreedPrice: number;
+  totalAmount: number;
+  paidAmount: number;
+  restToPay: number;
+  status: number;
+  preferredCurrency: number;
+  notes?: string;
+}
+
+export interface AgencyAnalytics {
+  agencyId: number;
+  agencyName: string;
+  contactPerson?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: string;
+  totalReservations: number;
+  totalPassengers: number;
+  totalAgreedAmount: number;
+  totalPaidAmount: number;
+  remainingBalance: number;
+  confirmedCount: number;
+  pendingCount: number;
+  cancelledCount: number;
+  bookings: AgencyBookingItem[];
+}
+
 export interface Reservation {
   id?: number;
   flightDate: string;

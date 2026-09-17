@@ -1,28 +1,298 @@
-<div class="pagetitle">
-  <h1 class="fw-bold text-dark">{{ 'Agencies Management' | translate }}</h1>
-  <nav>
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
-      <li class="breadcrumb-item">{{ 'Settings' | translate }}</li>
-      <li class="breadcrumb-item active text-primary">{{ 'Agencies' | translate }}</li>
-    </ol>
-  </nav>
+<div class="pagetitle d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <div>
+    <h1 class="fw-bold text-dark mb-1">{{ 'Agencies Management' | translate }}</h1>
+    <nav>
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a routerLink="/">{{ 'Home' | translate }}</a></li>
+        <li class="breadcrumb-item">{{ 'Settings' | translate }}</li>
+        <li class="breadcrumb-item active text-primary">{{ 'Agencies' | translate }}</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <!-- View Switcher Tabs -->
+    <div class="btn-group bg-white p-1 rounded-pill shadow-sm border" role="group">
+      <button type="button" class="btn rounded-pill px-3 py-2 fw-bold text-nowrap transition-all"
+        [class.btn-primary]="activeTab === 'analytics'"
+        [class.btn-light]="activeTab !== 'analytics'"
+        [class.text-muted]="activeTab !== 'analytics'"
+        (click)="activeTab = 'analytics'">
+        <i class="bi bi-graph-up-arrow me-1"></i> {{ 'Analytics & Balances' | translate }}
+      </button>
+      <button type="button" class="btn rounded-pill px-3 py-2 fw-bold text-nowrap transition-all"
+        [class.btn-primary]="activeTab === 'directory'"
+        [class.btn-light]="activeTab !== 'directory'"
+        [class.text-muted]="activeTab !== 'directory'"
+        (click)="activeTab = 'directory'">
+        <i class="bi bi-grid-fill me-1"></i> {{ 'Directory' | translate }}
+      </button>
+    </div>
+
+    <!-- Add Agency Button -->
+    <button class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold text-nowrap" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="addAgency()">
+      <i class="bi bi-plus-lg me-1"></i> {{ 'Add New Agency' | translate }}
+    </button>
+  </div>
 </div>
 
-<section class="section">
-  <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-      <p class="text-muted mb-0">{{ 'Manage your partner agencies and their contact information.' | translate }}</p>
-      <button class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="addAgency()">
-        <i class="bi bi-plus-lg me-2"></i> {{ 'Add New Agency' | translate }}
-      </button>
+<!-- ==================== TAB 1: ANALYTICS & FINANCIAL OVERVIEW ==================== -->
+@if (activeTab === 'analytics') {
+<section class="section analytics-section">
+
+  <!-- KPI Metrics Cards -->
+  <div class="row g-3 mb-4">
+    <!-- Total Agencies -->
+    <div class="col-xl col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3 stat-card bg-gradient-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-white-50 small fw-bold text-uppercase tracking-wider">{{ 'Total Agencies' | translate }}</span>
+            <h3 class="fw-bold mb-0 mt-1">{{ totalAgenciesCount }}</h3>
+          </div>
+          <div class="stat-icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+            <i class="bi bi-building fs-3"></i>
+          </div>
+        </div>
+        <span class="small text-white-50 mt-2 d-block"><i class="bi bi-check-circle me-1"></i> {{ 'Active Partners' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Agency Bookings -->
+    <div class="col-xl col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3 stat-card bg-gradient-info text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-white-50 small fw-bold text-uppercase tracking-wider">{{ 'Agency Bookings' | translate }}</span>
+            <h3 class="fw-bold mb-0 mt-1">{{ totalAgencyBookings }}</h3>
+          </div>
+          <div class="stat-icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+            <i class="bi bi-journal-bookmark-fill fs-3"></i>
+          </div>
+        </div>
+        <span class="small text-white-50 mt-2 d-block"><i class="bi bi-calendar2-check me-1"></i> {{ 'Reservations created' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Total Clients Sent -->
+    <div class="col-xl col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3 stat-card bg-gradient-teal text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-white-50 small fw-bold text-uppercase tracking-wider">{{ 'Total Clients Sent' | translate }}</span>
+            <h3 class="fw-bold mb-0 mt-1">{{ totalClientsSent }}</h3>
+          </div>
+          <div class="stat-icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+            <i class="bi bi-people-fill fs-3"></i>
+          </div>
+        </div>
+        <span class="small text-white-50 mt-2 d-block"><i class="bi bi-person-check me-1"></i> {{ 'Total Passengers (Pax)' | translate }}</span>
+      </div>
+    </div>
+
+    <!-- Total Agreed Volume -->
+    <div class="col-xl col-md-6 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3 stat-card bg-gradient-success text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-white-50 small fw-bold text-uppercase tracking-wider">{{ 'Total Turnover' | translate }}</span>
+            <h3 class="fw-bold mb-0 mt-1">${{ totalTurnoverAmount | number:'1.2-2' }}</h3>
+          </div>
+          <div class="stat-icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+            <i class="bi bi-cash-stack fs-3"></i>
+          </div>
+        </div>
+        <span class="small text-white-50 mt-2 d-block"><i class="bi bi-wallet2 me-1"></i> {{ 'Total Paid' | translate }}: ${{ totalPaidAmount | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Total Outstanding / Rest to Pay -->
+    <div class="col-xl col-md-6 col-sm-12">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3 stat-card bg-gradient-danger text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span class="text-white-50 small fw-bold text-uppercase tracking-wider">{{ 'Total Outstanding' | translate }}</span>
+            <h3 class="fw-bold mb-0 mt-1">${{ totalRemainingBalance | number:'1.2-2' }}</h3>
+          </div>
+          <div class="stat-icon-wrapper bg-white bg-opacity-20 rounded-circle p-3">
+            <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+          </div>
+        </div>
+        <span class="small text-white-50 mt-2 d-block">
+          @if (totalRemainingBalance > 0) {
+            <i class="bi bi-hourglass-split me-1"></i> {{ 'Unsettled balance to collect' | translate }}
+          } @else {
+            <i class="bi bi-check-all me-1"></i> {{ 'All accounts fully settled' | translate }}
+          }
+        </span>
+      </div>
     </div>
   </div>
 
+  <!-- Filter & Search Toolbar -->
+  <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+    <div class="row g-3 align-items-center">
+      <div class="col-lg-5 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0 rounded-start-pill ps-3">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input type="text" class="form-control bg-light border-0 rounded-end-pill py-2"
+            [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+            [placeholder]="'Search agencies...' | translate">
+        </div>
+      </div>
+
+      <div class="col-lg-7 col-md-6 d-flex justify-content-md-end gap-2 flex-wrap">
+        <div class="btn-group rounded-pill border p-1" role="group">
+          <button type="button" class="btn btn-sm rounded-pill px-3 fw-bold"
+            [class.btn-primary]="statusFilter === 'ALL'"
+            [class.btn-light]="statusFilter !== 'ALL'"
+            (click)="setStatusFilter('ALL')">
+            {{ 'All Balances' | translate }}
+          </button>
+          <button type="button" class="btn btn-sm rounded-pill px-3 fw-bold"
+            [class.btn-danger]="statusFilter === 'DUE'"
+            [class.btn-light]="statusFilter !== 'DUE'"
+            (click)="setStatusFilter('DUE')">
+            {{ 'Has Balance Due' | translate }}
+          </button>
+          <button type="button" class="btn btn-sm rounded-pill px-3 fw-bold"
+            [class.btn-success]="statusFilter === 'SETTLED'"
+            [class.btn-light]="statusFilter !== 'SETTLED'"
+            (click)="setStatusFilter('SETTLED')">
+            {{ 'Fully Settled' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Table -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0 custom-agency-table">
+        <thead class="bg-light text-muted small text-uppercase fw-bold">
+          <tr>
+            <th class="ps-4 py-3">{{ 'Agency Name & Contact' | translate }}</th>
+            <th class="text-center py-3">{{ 'Bookings' | translate }}</th>
+            <th class="text-center py-3">{{ 'Clients Sent' | translate }}</th>
+            <th class="text-end py-3">{{ 'Total Agreed' | translate }}</th>
+            <th class="text-end py-3">{{ 'Paid Amount' | translate }}</th>
+            <th class="text-end py-3">{{ 'Rest to Pay' | translate }}</th>
+            <th class="text-center py-3">{{ 'Balance Status' | translate }}</th>
+            <th class="text-center pe-4 py-3">{{ 'Statement' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredAnalytics; track item.agencyId) {
+          <tr>
+            <!-- Agency Info -->
+            <td class="ps-4 py-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="agency-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm">
+                  {{ item.agencyName.charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0 text-dark">{{ item.agencyName }}</h6>
+                  <div class="small text-muted d-flex align-items-center gap-2 mt-1">
+                    @if (item.contactPerson) {
+                      <span><i class="bi bi-person text-primary"></i> {{ item.contactPerson }}</span>
+                    }
+                    @if (item.phoneNumber) {
+                      <span><i class="bi bi-telephone text-primary"></i> {{ item.phoneNumber }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Bookings Count -->
+            <td class="text-center py-3">
+              <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 rounded-pill fs-7">
+                <i class="bi bi-journal-check me-1"></i> {{ item.totalReservations }} {{ 'bookings' | translate }}
+              </span>
+            </td>
+
+            <!-- Total Passengers Sent -->
+            <td class="text-center py-3">
+              <span class="badge bg-info-subtle text-info fw-bold px-3 py-2 rounded-pill fs-7">
+                <i class="bi bi-person-fill me-1"></i> {{ item.totalPassengers }} {{ 'pax' | translate }}
+              </span>
+            </td>
+
+            <!-- Total Agreed Amount -->
+            <td class="text-end py-3 fw-bold text-dark fs-6">
+              ${{ item.totalAgreedAmount | number:'1.2-2' }}
+            </td>
+
+            <!-- Total Paid Amount -->
+            <td class="text-end py-3 fw-bold text-success fs-6">
+              ${{ item.totalPaidAmount | number:'1.2-2' }}
+            </td>
+
+            <!-- Rest to Pay -->
+            <td class="text-end py-3">
+              @if (item.remainingBalance > 0) {
+                <span class="fw-bold text-danger fs-6">${{ item.remainingBalance | number:'1.2-2' }}</span>
+              } @else {
+                <span class="text-muted fw-bold">$0.00</span>
+              }
+            </td>
+
+            <!-- Balance Status Badge -->
+            <td class="text-center py-3">
+              @if (item.totalReservations === 0) {
+                <span class="badge bg-light text-muted px-3 py-2 rounded-pill fw-bold border">
+                  {{ 'No Bookings Yet' | translate }}
+                </span>
+              } @else if (item.remainingBalance > 0) {
+                <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold border border-danger-subtle pulse-badge">
+                  <i class="bi bi-exclamation-circle-fill me-1"></i> ${{ item.remainingBalance | number:'1.2-2' }} {{ 'Due' | translate }}
+                </span>
+              } @else {
+                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold border border-success-subtle">
+                  <i class="bi bi-check-circle-fill me-1"></i> {{ 'Settled' | translate }}
+                </span>
+              }
+            </td>
+
+            <!-- View Statement Button -->
+            <td class="text-center pe-4 py-3">
+              <button class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold shadow-sm d-inline-flex align-items-center gap-1"
+                data-bs-toggle="modal" data-bs-target="#statementModal"
+                (click)="openStatement(item)">
+                <i class="bi bi-receipt"></i> {{ 'View Statement' | translate }}
+              </button>
+            </td>
+          </tr>
+          }
+
+          @empty {
+          <tr>
+            <td colspan="8" class="text-center py-5">
+              <div class="py-4">
+                <i class="bi bi-building-slash text-muted display-4 mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark">{{ 'No agency bookings found' | translate }}</h5>
+                <p class="text-muted small">{{ 'No bookings found matching the selected filter.' | translate }}</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+}
+
+<!-- ==================== TAB 2: DIRECTORY / MANAGEMENT ==================== -->
+@if (activeTab === 'directory') {
+<section class="section directory-section">
   <div class="row">
     @for (agency of agencies; track agency.id) {
     <div class="col-xl-4 col-md-6 mb-4">
-      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden agency-card">
         <div style="height: 6px; background: linear-gradient(90deg, #6610f2, #6f42c1);"></div>
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-start mb-3">
@@ -31,12 +301,20 @@
             </div>
             <div class="dropdown">
               <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
-                <i class="bi bi-three-dots-vertical"></i>
+                <i class="bi bi-three-dots-vertical fs-5"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                <li><a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="editAgency(agency)"><i class="bi bi-pencil me-2"></i> {{ 'Edit' | translate }}</a></li>
+                <li>
+                  <a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#agencyModal" (click)="editAgency(agency)">
+                    <i class="bi bi-pencil me-2 text-primary"></i> {{ 'Edit' | translate }}
+                  </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" (click)="deleteAgency(agency.id!)"><i class="bi bi-trash me-2"></i> {{ 'Delete' | translate }}</a></li>
+                <li>
+                  <a class="dropdown-item py-2 text-danger" href="javascript:void(0)" (click)="deleteAgency(agency.id!)">
+                    <i class="bi bi-trash me-2"></i> {{ 'Delete' | translate }}
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -76,8 +354,151 @@
     }
   </div>
 </section>
+}
 
-<!-- Agency Modal -->
+<!-- ==================== STATEMENT MODAL ==================== -->
+<div class="modal fade" id="statementModal" tabindex="-1" aria-labelledby="statementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 rounded-5 shadow-lg overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="modal-header bg-light border-0 p-4 pb-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-primary text-white p-3 rounded-4">
+            <i class="bi bi-receipt-cutoff fs-3"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-dark mb-0" id="statementModalLabel">
+              {{ 'Agency Financial Statement' | translate }}
+            </h5>
+            <span class="text-muted small">{{ selectedAgency?.agencyName }} • {{ 'Statement of Account' | translate }}</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1 fw-bold" (click)="printStatement()">
+            <i class="bi bi-printer me-1"></i> {{ 'Print Statement' | translate }}
+          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4" *ngIf="selectedAgency">
+        <!-- Agency Details & Summary Cards -->
+        <div class="row g-3 mb-4">
+          <!-- Agency Details -->
+          <div class="col-md-5">
+            <div class="p-3 bg-light rounded-4 h-100 border">
+              <h6 class="fw-bold text-dark mb-2"><i class="bi bi-building text-primary me-2"></i>{{ selectedAgency.agencyName }}</h6>
+              <p class="small text-muted mb-1"><i class="bi bi-person me-2"></i>{{ selectedAgency.contactPerson || 'N/A' }}</p>
+              <p class="small text-muted mb-1"><i class="bi bi-telephone me-2"></i>{{ selectedAgency.phoneNumber || 'N/A' }}</p>
+              <p class="small text-muted mb-1"><i class="bi bi-envelope me-2"></i>{{ selectedAgency.email || 'N/A' }}</p>
+              <p class="small text-muted mb-0"><i class="bi bi-geo-alt me-2"></i>{{ selectedAgency.address || 'N/A' }}</p>
+            </div>
+          </div>
+
+          <!-- Statement Financial Summary Cards -->
+          <div class="col-md-7">
+            <div class="row g-2 h-100">
+              <div class="col-sm-4">
+                <div class="p-3 bg-primary bg-opacity-10 border border-primary-subtle rounded-4 h-100 text-center">
+                  <span class="small text-primary fw-bold text-uppercase d-block">{{ 'Total Agreed' | translate }}</span>
+                  <h4 class="fw-bold text-primary mb-0 mt-2">${{ selectedAgency.totalAgreedAmount | number:'1.2-2' }}</h4>
+                  <span class="badge bg-primary mt-1">{{ selectedAgency.totalReservations }} {{ 'bookings' | translate }}</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="p-3 bg-success bg-opacity-10 border border-success-subtle rounded-4 h-100 text-center">
+                  <span class="small text-success fw-bold text-uppercase d-block">{{ 'Total Paid' | translate }}</span>
+                  <h4 class="fw-bold text-success mb-0 mt-2">${{ selectedAgency.totalPaidAmount | number:'1.2-2' }}</h4>
+                  <span class="badge bg-success mt-1">{{ 'Collected' | translate }}</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="p-3 bg-danger bg-opacity-10 border border-danger-subtle rounded-4 h-100 text-center">
+                  <span class="small text-danger fw-bold text-uppercase d-block">{{ 'Rest to Pay' | translate }}</span>
+                  <h4 class="fw-bold text-danger mb-0 mt-2">${{ selectedAgency.remainingBalance | number:'1.2-2' }}</h4>
+                  <span class="badge bg-danger mt-1">{{ 'Balance Due' | translate }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bookings List Table -->
+        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-list-check text-primary me-2"></i>{{ 'Booking History & Breakdown' | translate }}</h6>
+        <div class="table-responsive border rounded-4 overflow-hidden">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light small text-muted text-uppercase fw-bold">
+              <tr>
+                <th class="ps-3 py-3">{{ 'Booking Reference / Title' | translate }}</th>
+                <th class="py-3">{{ 'Flight Date & Slot' | translate }}</th>
+                <th class="py-3">{{ 'Passengers (Pax)' | translate }}</th>
+                <th class="text-center py-3">{{ 'Status' | translate }}</th>
+                <th class="text-end py-3">{{ 'Agreed Amount' | translate }}</th>
+                <th class="text-end py-3">{{ 'Deposit / Paid' | translate }}</th>
+                <th class="text-end pe-3 py-3">{{ 'Rest to Pay' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (b of selectedAgency.bookings; track b.reservationId) {
+              <tr>
+                <td class="ps-3 py-3">
+                  <div class="fw-bold text-dark">{{ b.title || ('Reservation #' + b.reservationId) }}</div>
+                  @if (b.billetNumber) {
+                    <span class="badge bg-light text-muted border small mt-1"><i class="bi bi-ticket-perforated me-1"></i>{{ b.billetNumber }}</span>
+                  }
+                </td>
+                <td class="py-3">
+                  <div class="small fw-bold text-dark">{{ b.flightDate | date:'mediumDate' }}</div>
+                  <div class="small text-muted"><i class="bi bi-clock me-1 text-primary"></i>{{ b.flightTime || 'N/A' }}</div>
+                </td>
+                <td class="py-3">
+                  <span class="badge bg-primary-subtle text-primary fw-bold mb-1">{{ b.passengerCount }} {{ 'pax' | translate }}</span>
+                  <div class="small text-muted">{{ b.passengerNames.join(', ') }}</div>
+                </td>
+                <td class="text-center py-3">
+                  @if (b.status === 1) {
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">{{ 'Confirmed' | translate }}</span>
+                  } @else if (b.status === 0) {
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">{{ 'Pending' | translate }}</span>
+                  } @else {
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">{{ 'Cancelled' | translate }}</span>
+                  }
+                </td>
+                <td class="text-end py-3 fw-bold text-dark">${{ b.agreedPrice | number:'1.2-2' }}</td>
+                <td class="text-end py-3 fw-bold text-success">${{ b.paidAmount | number:'1.2-2' }}</td>
+                <td class="text-end pe-3 py-3">
+                  @if (b.restToPay > 0) {
+                    <span class="fw-bold text-danger">${{ b.restToPay | number:'1.2-2' }}</span>
+                  } @else {
+                    <span class="text-muted fw-bold">$0.00</span>
+                  }
+                </td>
+              </tr>
+              }
+
+              @empty {
+              <tr>
+                <td colspan="7" class="text-center py-4 text-muted">
+                  {{ 'No reservations recorded for this agency yet.' | translate }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer bg-light border-0 p-3">
+        <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold" data-bs-dismiss="modal">{{ 'Close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== AGENCY ADD / EDIT MODAL ==================== -->
 <div class="modal fade" id="agencyModal" tabindex="-1" aria-labelledby="agencyModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 rounded-5 shadow-lg">

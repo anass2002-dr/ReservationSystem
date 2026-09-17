@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using ReservationSystem_backend.DTOs;
 using ReservationSystem_backend.Models;
 using ReservationSystem_backend.Repository.AgencyRepo;
 
@@ -16,6 +18,11 @@ namespace ReservationSystem_backend.Services.AgencyService
         public List<Agency> GetAgencies()
         {
             return _repo.GetAgencies();
+        }
+
+        public List<AgencyAnalyticsDto> GetAgenciesAnalytics()
+        {
+            return _repo.GetAgenciesAnalytics();
         }
 
         public Agency GetAgencyById(int id)

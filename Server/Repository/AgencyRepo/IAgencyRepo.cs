@@ -6,6 +6,7 @@ namespace ReservationSystem_backend.Repository.AgencyRepo
     public interface IAgencyRepo
     {
         List<Agency> GetAgencies();
+        List<ReservationSystem_backend.DTOs.AgencyAnalyticsDto> GetAgenciesAnalytics();
         Agency GetAgencyById(int id);
         Agency AddAgency(Agency entity);
         Agency UpdateAgency(int id, Agency entity);
