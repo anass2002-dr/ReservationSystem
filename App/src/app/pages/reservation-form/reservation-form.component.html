@@ -77,15 +77,16 @@
           </div>
         </div>
 
-        <div class="row g-3 g-md-4 mb-4 mb-md-5 align-items-end">
-          <div class="col-12 col-sm-6 col-lg-3">
+        <!-- Booking Channel & Agency Information -->
+        <div class="row g-3 g-md-4 mb-4 mb-md-5">
+          <div [ngClass]="reservation.isAgencyBooking ? 'col-12 col-sm-6 col-lg-3' : 'col-12 col-sm-6'">
             <label class="form-label">{{ 'Booking Status' | translate }} <span class="text-danger">*</span></label>
             <select class="form-select p-2 height-60" name="status" [(ngModel)]="reservation.status" required>
               <option *ngFor="let opt of statusOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
             </select>
           </div>
 
-          <div class="col-12 col-sm-6 col-lg-3">
+          <div [ngClass]="reservation.isAgencyBooking ? 'col-12 col-sm-6 col-lg-3' : 'col-12 col-sm-6'">
             <label class="form-label">{{ 'Booking Channel' | translate }}</label>
             <select class="form-select p-2 height-60" name="isAgencyBooking" [(ngModel)]="reservation.isAgencyBooking"
               (change)="onAgencyPriceChange()">
@@ -109,7 +110,14 @@
             <input type="text" class="form-control p-2 height-60" name="billetNumber"
               [(ngModel)]="reservation.billetNumber" [placeholder]="'Billet / Ticket Number' | translate">
           </div>
+        </div>
 
+        <!-- Pricing & Payment Section -->
+        <div class="section-title mt-2">
+          <i class="bi bi-cash-coin"></i> {{ 'Pricing & Payment' | translate }}
+        </div>
+
+        <div class="row g-3 g-md-4 mb-4 mb-md-5 align-items-end">
           <div class="col-12 col-sm-6 col-lg-3">
             <label class="form-label">{{ 'Preferred Currency' | translate }}</label>
             <select class="form-select p-2 height-60" name="preferredCurrency"
@@ -131,12 +139,12 @@
             </div>
           </div>
 
-          <div class="col-12 col-lg-6">
+          <div class="col-12 col-sm-6 col-lg-3">
             <label class="form-label">{{ 'Deposit' | translate }} ({{ getCurrencyLabel(reservation.preferredCurrency || 0) }})</label>
             <div class="input-group deposit-input-group height-60">
               <span class="input-group-text bg-light border-end-0 h-100 text-success"><i
                   class="bi bi-cash-stack"></i></span>
-              <input type="number" class="form-control p-2 border-start-0 fw-bold text-success deposit-input-amount" name="deposit"
+              <input type="number" class="form-control p-2 border-start-0 border-end-0 fw-bold text-success deposit-input-amount" name="deposit"
                 [(ngModel)]="reservation.deposit" placeholder="0.00" (input)="onManualTotalChange()">
               <select class="form-select p-2 deposit-input-method" name="depositMethod" [(ngModel)]="reservation.depositMethod">
                 <option *ngFor="let opt of methodOptions" [ngValue]="opt.value">{{ opt.label | translate }}</option>
@@ -144,12 +152,17 @@
             </div>
           </div>
 
-          <div class="col-12 col-lg-4 text-start text-lg-end ms-auto mt-2 mt-lg-0">
-            <div class="p-2 p-sm-3 bg-light rounded-4 border d-flex flex-column justify-content-center h-100" style="min-height: 60px;">
-              <label class="small mb-0 text-muted line-height-1">{{ 'Rest to Pay' | translate }}</label>
-              <div class="h4 mb-0 text-danger fw-bold">
+          <div class="col-12 col-sm-6 col-lg-3">
+            <label class="form-label text-muted">{{ 'Rest to Pay' | translate }}</label>
+            <div class="rest-to-pay-card height-60 d-flex align-items-center justify-content-between px-3 rounded-3 border"
+                 [ngClass]="remainingBalance > 0 ? 'bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger' : 'bg-success bg-opacity-10 border-success border-opacity-25 text-success'">
+              <span class="small fw-semibold d-flex align-items-center">
+                <i class="bi me-2 fs-5" [ngClass]="remainingBalance > 0 ? 'bi-exclamation-circle' : 'bi-check-circle-fill'"></i>
+                <span>{{ (remainingBalance > 0 ? 'Balance' : 'Settled') | translate }}</span>
+              </span>
+              <span class="h5 mb-0 fw-bold">
                 {{ remainingBalance | number:'1.2-2' }} {{ getCurrencyLabel(reservation.preferredCurrency || 0) }}
-              </div>
+              </span>
             </div>
           </div>
         </div>
