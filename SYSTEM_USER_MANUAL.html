@@ -523,7 +523,7 @@
     <div class="nav-section-title">CRM & Finance</div>
     <ul class="nav-list">
       <li><a href="#customers" class="nav-link"><i class="bi bi-people"></i> 7. Customers Database</a></li>
-      <li><a href="#agencies" class="nav-link"><i class="bi bi-building"></i> 8. B2B Agencies</a></li>
+      <li><a href="#agencies" class="nav-link"><i class="bi bi-building"></i> 8. B2B Agencies & Analytics</a></li>
       <li><a href="#payments" class="nav-link"><i class="bi bi-credit-card-2-front"></i> 9. Payments & Ledger</a></li>
     </ul>
 
@@ -535,7 +535,8 @@
       <li><a href="#extra-services" class="nav-link"><i class="bi bi-camera-reels"></i> 13. Extra Services</a></li>
       <li><a href="#transport-groups" class="nav-link"><i class="bi bi-truck"></i> 14. Transport Shuttles</a></li>
       <li><a href="#exchange-rates" class="nav-link"><i class="bi bi-currency-exchange"></i> 15. Exchange Rates</a></li>
-      <li><a href="#daily-checklist" class="nav-link"><i class="bi bi-check2-all"></i> 16. Daily SOPs</a></li>
+      <li><a href="#multilingual" class="nav-link"><i class="bi bi-translate"></i> 16. Multilingual Interface</a></li>
+      <li><a href="#daily-checklist" class="nav-link"><i class="bi bi-check2-all"></i> 17. Daily SOPs</a></li>
     </ul>
   </aside>
 
@@ -1206,24 +1207,107 @@
     <section class="doc-chapter" id="agencies">
       <div class="chapter-header">
         <div>
-          <h2 class="chapter-title"><i class="bi bi-building-fill"></i> 8. B2B Travel Agencies & Partners</h2>
-          <p class="text-muted small mt-1">Manage tour operators, hotels, commissions, and external ticket reconciliations.</p>
+          <h2 class="chapter-title"><i class="bi bi-building-fill"></i> 8. B2B Travel Agencies & Financial Analytics</h2>
+          <p class="text-muted small mt-1">Manage partner tour operators, track booking volume, monitor outstanding debts, and generate official financial statements.</p>
         </div>
         <span class="route-badge">/agencies</span>
       </div>
 
+      <div class="callout-box callout-info mb-4">
+        <div class="callout-title"><i class="bi bi-graph-up-arrow"></i> Dual-Mode Agency Management</div>
+        <p class="mb-0">The Agencies module features two dedicated operational tabs: <strong>Analytics & Balances</strong> (for executive financial tracking, revenue volume, and debt collection) and <strong>Directory</strong> (for managing agency contact profiles, addresses, and staff contacts).</p>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-bar-chart-line-fill"></i> 8.1 Agency Performance & Financial Balances Tab</h3>
+      <p>The <strong>Analytics & Balances</strong> tab gives management a real-time command center showing exactly how many clients each agency has sent, total agreed turnover, payments collected, and remaining balance due (Rest to Pay).</p>
+
       <div class="screenshot-card">
-        <img src="manual_assets/10_agencies_page.png" alt="Agencies Page Screenshot">
+        <img src="manual_assets/10_agencies_page.png" alt="Agencies Analytics Page Screenshot">
         <div class="screenshot-caption">
-          <i class="bi bi-camera"></i> <strong>Figure 8.1:</strong> Travel agency partner roster and contact cards.
+          <i class="bi bi-camera"></i> <strong>Figure 8.1:</strong> Real-time agency analytics with 5 KPI summary cards, filter pills (All / Has Balance Due / Fully Settled), and financial balance table.
         </div>
       </div>
 
-      <h3 class="subsection-title"><i class="bi bi-plus-circle-fill"></i> 8.1 Add / Edit Agency Form Modal</h3>
+      <h4 class="fw-bold text-dark mt-4 mb-3"><i class="bi bi-calculator text-primary"></i> Key Performance Indicators (KPIs)</h4>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-building"></i></div>
+          <div class="step-content">
+            <div class="step-title">Total Agencies</div>
+            <div class="step-desc">Total count of active registered partner tour operators and travel desks.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-journal-bookmark"></i></div>
+          <div class="step-content">
+            <div class="step-title">Agency Bookings</div>
+            <div class="step-desc">Total number of reservation orders created through agency channels.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-people"></i></div>
+          <div class="step-content">
+            <div class="step-title">Total Clients Sent (Pax)</div>
+            <div class="step-desc">Total passengers flown or booked by all partner agencies.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-cash-stack"></i></div>
+          <div class="step-content">
+            <div class="step-title">Total Turnover (Agreed Business Volume)</div>
+            <div class="step-desc">Gross invoiced amount across all agency bookings (using custom agency contracted prices).</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="step-content">
+            <div class="step-title">Total Outstanding (Rest to Pay)</div>
+            <div class="step-desc">Net uncollected balance owed across all partner agencies, with glowing status badges.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title mt-5"><i class="bi bi-receipt-cutoff"></i> 8.2 Statement of Account & Ledger Modal</h3>
+      <p>Clicking the blue <strong>View Statement</strong> button next to any agency opens an official printable <strong>Statement of Account (Acente Hesap Ekstresi)</strong>.</p>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/10c_agency_statement.png" alt="Agency Statement Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 8.2:</strong> Detailed Statement of Account modal itemizing all flights, ticket numbers, passenger rosters, agreed prices, and collected deposits.
+        </div>
+      </div>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Financial Summary Header</div>
+            <div class="step-desc">Displays <strong>Total Agreed</strong>, <strong>Total Paid</strong>, and <strong>Rest to Pay (Balance Due)</strong> at a glance.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Itemized Booking Breakdown</div>
+            <div class="step-desc">Lists each reservation with flight date, time slot, passenger names, flight status (Confirmed / Pending / Cancelled), agreed price, and deposit paid.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Print Statement Action</div>
+            <div class="step-desc">Click <strong>Print Statement</strong> to generate a clean, branded PDF invoice or paper copy for monthly billing reconciliation.</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title mt-5"><i class="bi bi-card-list"></i> 8.3 Directory & Agency Profile Management</h3>
+      <p>The <strong>Directory</strong> tab allows dispatchers to add, update, or remove partner agency contact profiles.</p>
+
       <div class="screenshot-card">
         <img src="manual_assets/10b_agency_modal.png" alt="Agency Modal Screenshot">
         <div class="screenshot-caption">
-          <i class="bi bi-camera"></i> <strong>Figure 8.2:</strong> Agency registration modal for entering corporate details and office contact channels.
+          <i class="bi bi-camera"></i> <strong>Figure 8.3:</strong> Agency registration modal for entering corporate details and contact information.
         </div>
       </div>
 
@@ -1244,35 +1328,35 @@
               <td><span class="field-type">Text</span></td>
               <td><span class="req-badge">Required</span></td>
               <td>Official commercial name of the partner travel agency, tour operator, or hotel desk.</td>
-              <td><span class="example-code">Pegas Touristik Turkey</span></td>
+              <td><span class="example-code">Sky Tourism & Travel</span></td>
             </tr>
             <tr>
               <td class="field-name">Contact Person</td>
               <td><span class="field-type">Text</span></td>
               <td><span class="opt-badge">Optional</span></td>
               <td>Name of the lead booking manager, hotel concierge, or operational rep.</td>
-              <td><span class="example-code">Murat Demir</span></td>
+              <td><span class="example-code">Sarah Jenkins</span></td>
             </tr>
             <tr>
               <td class="field-name">Phone Number</td>
               <td><span class="field-type">Tel / Text</span></td>
               <td><span class="opt-badge">Optional</span></td>
               <td>Direct phone number or WhatsApp line for booking coordination.</td>
-              <td><span class="example-code">+90 252 616 7788</span></td>
+              <td><span class="example-code">+90 532 111 2233</span></td>
             </tr>
             <tr>
               <td class="field-name">Email Address</td>
               <td><span class="field-type">Email</span></td>
               <td><span class="opt-badge">Optional</span></td>
               <td>Official agency email for sending booking vouchers and monthly invoice statements.</td>
-              <td><span class="example-code">booking@pegastour.com</span></td>
+              <td><span class="example-code">booking@skytravel.com</span></td>
             </tr>
             <tr>
               <td class="field-name">Office Address</td>
               <td><span class="field-type">Textarea</span></td>
               <td><span class="opt-badge">Optional</span></td>
               <td>Physical office address, branch location, or resort hotel desk location.</td>
-              <td><span class="example-code">Main Seaside Boulevard No:14</span></td>
+              <td><span class="example-code">Oludeniz Beach Caddesi No:12</span></td>
             </tr>
           </tbody>
         </table>
@@ -1976,10 +2060,52 @@
       </div>
     </section>
 
+    <section class="doc-chapter" id="multilingual">
+      <div class="chapter-header">
+        <div>
+          <h2 class="chapter-title"><i class="bi bi-translate"></i> 16. Multilingual Interface (English & Turkish)</h2>
+          <p class="text-muted small mt-1">Full localization system with instant real-time translation across all modules, tables, badges, and modals.</p>
+        </div>
+        <span class="route-badge">Header Dropdown</span>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="manual_assets/18_language_switcher.png" alt="Language Switcher Screenshot">
+        <div class="screenshot-caption">
+          <i class="bi bi-camera"></i> <strong>Figure 16.1:</strong> Header language switcher dropdown supporting English 🇬🇧 and Türkçe 🇹🇷 with instant UI re-rendering.
+        </div>
+      </div>
+
+      <h3 class="subsection-title"><i class="bi bi-globe2"></i> Multilingual Architecture Features</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-flag"></i></div>
+          <div class="step-content">
+            <div class="step-title">One-Click Language Switch</div>
+            <div class="step-desc">Click the flag/language dropdown in the top right navigation bar to toggle between <strong>English (🇬🇧)</strong> and <strong>Türkçe (🇹🇷)</strong> without page reload.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-hdd-network"></i></div>
+          <div class="step-content">
+            <div class="step-title">Persistent Preference (LocalStorage)</div>
+            <div class="step-desc">The user's preferred language is automatically saved in the browser, ensuring it stays active upon future logins and session restarts.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"><i class="bi bi-layers"></i></div>
+          <div class="step-content">
+            <div class="step-title">Comprehensive System-Wide Translation</div>
+            <div class="step-desc">All forms, buttons, table headers, financial statement modals, status badges (e.g., <em>Confirmed/Onaylandı</em>, <em>Settled/Ödendi</em>), and notification toasts are 100% translated.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="doc-chapter" id="daily-checklist">
       <div class="chapter-header">
         <div>
-          <h2 class="chapter-title"><i class="bi bi-calendar-check-fill"></i> 16. Standard Operating Procedures (Daily SOPs)</h2>
+          <h2 class="chapter-title"><i class="bi bi-calendar-check-fill"></i> 17. Standard Operating Procedures (Daily SOPs)</h2>
           <p class="text-muted small mt-1">Daily operational checklist for flight dispatchers and cashiers.</p>
         </div>
         <span class="route-badge">SOP Workflow</span>
