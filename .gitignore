@@ -1,23 +1,40 @@
-# Node.js
+# Node.js & Angular
 node_modules/
 dist/
 App/dist/
 App/.angular/
+.npm/
 
-# .NET Core
+# .NET Core & Build Output
 bin/
 obj/
+Publish/
+App_Data/
 
-# Visual Studio
+# Visual Studio & IDEs
 .vs/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 *.vsidx
+.vscode/
+.idea/
 
-# Environment
+# Archives & Binaries
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.docx
+*.pdf
+
+# Environment & Secrets
 .env
+.env.local
+.env.*.local
+*.log
 
-# MacOS
+# MacOS & System
 .DS_Store
+Thumbs.db
